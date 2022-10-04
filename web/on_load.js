@@ -2,11 +2,13 @@ var slider;
 var output;
 var okresy_names = JSON.parse(data);
 var covid_data = {};
-console.log(okresy_names);
+var covid_data_days_max = {};
+// console.log(okresy_names);
 
 // Initialize and modify webpage on startup
 function onIframeLoad()
 {
+    loadCovidData();
     slider = document.getElementById("slider");
     output = document.getElementById("slider_text");
     slider.oninput = sliderTextUpdate;
@@ -35,7 +37,6 @@ function onIframeLoad()
         });
     }
     sliderTextUpdate();
-    loadCovidData();
 }
 
 function loadCovidData()
@@ -88,19 +89,37 @@ function onClickMap(name, okres_lau)
 // process data returned by AJAX by page load
 function processCovidData(result)
 {
+    // format all data into one big dictionary
     result.forEach(element => {
         if (!covid_data[element['datum']])
         {
-            covid_data[element['datum']] = [];
+            covid_data[element['datum']] = {};
         };
-        covid_data[element['datum']].push({
-            key: element['okres_lau_kod'],
-            value: {"kumulativni_pocet_nakazenych": element['kumulativni_pocet_nakazenych'],
-                    "kumulativni_pocet_vylecenych": element['kumulativni_pocet_vylecenych'],
-                    "kumulativni_pocet_umrti": element['kumulativni_pocet_umrti']}
-        });
+        covid_data[element['datum']][element['okres_lau_kod']] = 
+            {"kumulativni_pocet_nakazenych": element['kumulativni_pocet_nakazenych'],
+             "kumulativni_pocet_vylecenych": element['kumulativni_pocet_vylecenych'],
+             "kumulativni_pocet_umrti": element['kumulativni_pocet_umrti'],
+             "soucesny_pocet_nakazenych": element['kumulativni_pocet_nakazenych'] - element['kumulativni_pocet_vylecenych']};
     }
     );
+
+    // save all maximums for each day
+    for (var key in covid_data){
+        var max = 0;
+        for ([okres, values] of Object.entries(covid_data[key]))
+        {
+            // console.log(okres);
+            pocet = covid_data[key][okres]['soucesny_pocet_nakazenych'];
+            if (pocet > max)
+            {
+                max = pocet;
+            }
+        }
+        covid_data_days_max[key] = max;
+    }
+
+    console.log(covid_data);
+    console.log(covid_data_days_max);
 }
 
 // process data returned by AJAX by click
@@ -133,21 +152,28 @@ function sliderTextUpdate()
     var today = new Date();
     today.setDate(today.getDate() - 1);
     today = addDays(today, slider.value - 7);
+    var today_text = today.getFullYear()  + "-" + (today.getMonth()+1) + "-0" + today.getDate();
     output.innerHTML = today.toLocaleDateString("cs-CZ");
     var parent = iframe.contentWindow.document.querySelector("g");
     var children = parent.children;
     for (let i = 0; i < 77; i++)
     {
-        var color1 = [0, 209, 35];
-        var color2 = [209, 52, 0];
-        var w1 = Math.random();
+        var okres_lau = children[i].getAttribute('okres_lau');
+        var okres_value = covid_data[today_text][okres_lau]['soucesny_pocet_nakazenych'];
+        var maximum_day = covid_data_days_max[today_text];
+        console.log(today_text);
+        console.log(covid_data[today_text]);
+        console.log(okres_value);
+        var color1 =   [0, 209, 0];
+        var color2 =   [209, 0, 0];
+        var w1 = okres_value / maximum_day;
         var w2 = 1 - w1;
         var rgb = [Math.round(color1[0] * w1 + color2[0] * w2),
                    Math.round(color1[1] * w1 + color2[1] * w2),
                    Math.round(color1[2] * w1 + color2[2] * w2)];
-        // console.log(rgb[0])
-        var string = "#" + componentToHex(rgb[0]) + componentToHex(rgb[1]) + componentToHex(rgb[1]);
-        // console.log(string);
+        // // console.log(rgb[0])
+        var string = "#" + componentToHex(rgb[0]) + componentToHex(rgb[1]) + componentToHex(rgb[2]);
+        // // console.log(string);
         children[i].setAttribute("fill", string);
     }
 }
