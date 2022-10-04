@@ -39,7 +39,12 @@ function onIframeLoad()
 // click function - AJAX request
 function onClickMap(name, okres_lau)
 {
-    url = "https://onemocneni-aktualne.mzcr.cz/api/v3/kraj-okres-nakazeni-vyleceni-umrti?page=1&itemsPerPage=100&datum%5Bafter%5D=01-10-2022&okres_lau_kod=" + okres_lau + "&apiToken=c54d8c7d54a31d016d8f3c156b98682a";
+    var today = new Date();
+    today.setDate(today.getDate() - 1);
+    var today_text = today.getDate()  + "-" + (today.getMonth()+1) + "-" + today.getFullYear();
+
+    url = "https://onemocneni-aktualne.mzcr.cz/api/v3/kraj-okres-nakazeni-vyleceni-umrti?page=1&itemsPerPage=100&datum%5Bafter%5D=" + today_text + "&okres_lau_kod=" + okres_lau + "&apiToken=c54d8c7d54a31d016d8f3c156b98682a";
+    console.log(url);
     $.ajax({
         url: url,
         headers: { 'accept': 'application/json' },
@@ -59,9 +64,11 @@ function onClickMap(name, okres_lau)
 function processGetData(result, name)
 {
     text = document.getElementById("okres_info");
-    console.log(result);
+    // console.log(result);
     nakazenych = result[0]['kumulativni_pocet_nakazenych'] - result[0]['kumulativni_pocet_vylecenych']
-    text.innerHTML = "Název okresu: " + name + "<br>" + "LAU kód okresu: " + result[0]['okres_lau_kod'] + "<br>" + "Současný počet nakažených: " + nakazenych;
+    text.innerHTML = "Název okresu: " + name + "<br>" + "LAU kód okresu: " + result[0]['okres_lau_kod'] + "<br>" + "Současný počet nakažených: " + nakazenych
+    + "<br>" + "Kumulativní počet nakažených: " + result[0]['kumulativni_pocet_nakazenych']
+    + "<br>" + "Kumulativní počet vyléčených: " + result[0]['kumulativni_pocet_vylecenych'];
 }
 
 // function to add days to given date
