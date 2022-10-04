@@ -1,7 +1,8 @@
 var slider;
 var output;
-var mydata = JSON.parse(data);
-console.log(mydata);
+var okresy_names = JSON.parse(data);
+var covid_data = {};
+console.log(okresy_names);
 
 // Initialize and modify webpage on startup
 function onIframeLoad()
@@ -27,13 +28,37 @@ function onIframeLoad()
         children[i].setAttribute("fill-opacity", 0.7);
         children[i].setAttribute("fill", "#000000");
         children[i].setAttribute("stroke-width", 0.5);
-        children[i].setAttribute("name", mydata[i][1]);
-        children[i].setAttribute("okres_lau", mydata[i][0]);
+        children[i].setAttribute("name", okresy_names[i][1]);
+        children[i].setAttribute("okres_lau", okresy_names[i][0]);
         children[i].addEventListener('click', function(){
             onClickMap(this.getAttribute('name'), this.getAttribute('okres_lau'));
         });
     }
     sliderTextUpdate();
+    loadCovidData();
+}
+
+function loadCovidData()
+{
+    var today = new Date();
+    today.setDate(today.getDate() - 7);
+    var today_text = today.getDate()  + "-" + (today.getMonth()+1) + "-" + today.getFullYear();
+
+    url = "https://onemocneni-aktualne.mzcr.cz/api/v3/kraj-okres-nakazeni-vyleceni-umrti?itemsPerPage=1000&datum%5Bafter%5D=" + today_text + "&apiToken=c54d8c7d54a31d016d8f3c156b98682a";
+    console.log(url);
+    $.ajax({
+        url: url,
+        headers: { 'accept': 'application/json' },
+        type: "GET",
+        success: function(result)
+        {
+            processCovidData(result);
+        },
+        error: function(error)
+        {
+            console.log(error);
+        }
+    })
 }
 
 // click function - AJAX request
@@ -60,15 +85,33 @@ function onClickMap(name, okres_lau)
     })
 }
 
-// process data returned by AJAX
+// process data returned by AJAX by page load
+function processCovidData(result)
+{
+    result.forEach(element => {
+        if (!covid_data[element['datum']])
+        {
+            covid_data[element['datum']] = [];
+        };
+        covid_data[element['datum']].push({
+            key: element['okres_lau_kod'],
+            value: {"kumulativni_pocet_nakazenych": element['kumulativni_pocet_nakazenych'],
+                    "kumulativni_pocet_vylecenych": element['kumulativni_pocet_vylecenych'],
+                    "kumulativni_pocet_umrti": element['kumulativni_pocet_umrti']}
+        });
+    }
+    );
+}
+
+// process data returned by AJAX by click
 function processGetData(result, name)
 {
     text = document.getElementById("okres_info");
     // console.log(result);
     nakazenych = result[0]['kumulativni_pocet_nakazenych'] - result[0]['kumulativni_pocet_vylecenych']
-    text.innerHTML = "Název okresu: " + name + "<br>" + "LAU kód okresu: " + result[0]['okres_lau_kod'] + "<br>" + "Současný počet nakažených: " + nakazenych
-    + "<br>" + "Kumulativní počet nakažených: " + result[0]['kumulativni_pocet_nakazenych']
-    + "<br>" + "Kumulativní počet vyléčených: " + result[0]['kumulativni_pocet_vylecenych'];
+    text.innerHTML = "<b>Název okresu:</b> " + name + "<br>" + "<b>LAU kód okresu:</b> " + result[0]['okres_lau_kod'] + "<br>" + "<b>Současný počet nakažených:</b> " + nakazenych
+    + "<br>" + "<b>Kumulativní počet nakažených:</b> " + result[0]['kumulativni_pocet_nakazenych']
+    + "<br>" + "<b>Kumulativní počet vyléčených:</b> " + result[0]['kumulativni_pocet_vylecenych'];
 }
 
 // function to add days to given date
@@ -88,6 +131,7 @@ function componentToHex(c) {
 function sliderTextUpdate()
 {
     var today = new Date();
+    today.setDate(today.getDate() - 1);
     today = addDays(today, slider.value - 7);
     output.innerHTML = today.toLocaleDateString("cs-CZ");
     var parent = iframe.contentWindow.document.querySelector("g");
