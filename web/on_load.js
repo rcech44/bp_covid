@@ -9,6 +9,10 @@ var covid_data_days_max = {};
 function onIframeLoad()
 {
     loadCovidData();
+}
+
+function initPage()
+{
     slider = document.getElementById("slider");
     output = document.getElementById("slider_text");
     slider.oninput = sliderTextUpdate;
@@ -27,7 +31,7 @@ function onIframeLoad()
     var children = parent.children;
     for (let i = 0; i < 77; i++)
     {
-        children[i].setAttribute("fill-opacity", 0.7);
+        children[i].setAttribute("fill-opacity", 0.5);
         children[i].setAttribute("fill", "#000000");
         children[i].setAttribute("stroke-width", 0.5);
         children[i].setAttribute("name", okresy_names[i][1]);
@@ -118,8 +122,9 @@ function processCovidData(result)
         covid_data_days_max[key] = max;
     }
 
-    console.log(covid_data);
-    console.log(covid_data_days_max);
+    // console.log(covid_data);
+    // console.log(covid_data_days_max);
+    initPage();
 }
 
 // process data returned by AJAX by click
@@ -146,13 +151,44 @@ function componentToHex(c) {
     return hex.length == 1 ? "0" + hex : hex;
 }
 
+function getFormattedDate(date)
+{
+    var text = "";
+
+    // format year
+    text += date.getFullYear() + "-";
+
+    // format month (possibly add 0)
+    if ((date.getMonth() + 1) < 10)
+    {
+        text += "0" + (date.getMonth() + 1) + "-";
+    }
+    else
+    {
+        text += (date.getMonth() + 1) + "-";
+    }
+
+    // format day (possibly add 0)
+    if ((date.getDate()) < 10)
+    {
+        text += "0" + date.getDate();
+    }
+    else
+    {
+        text += date.getDate();
+    }
+
+    // console.log(text);  
+    return text;
+}
+
 // function that updates slider text
 function sliderTextUpdate()
 {
     var today = new Date();
     today.setDate(today.getDate() - 1);
     today = addDays(today, slider.value - 7);
-    var today_text = today.getFullYear()  + "-" + (today.getMonth()+1) + "-0" + today.getDate();
+    var today_text = getFormattedDate(today);
     output.innerHTML = today.toLocaleDateString("cs-CZ");
     var parent = iframe.contentWindow.document.querySelector("g");
     var children = parent.children;
@@ -161,19 +197,28 @@ function sliderTextUpdate()
         var okres_lau = children[i].getAttribute('okres_lau');
         var okres_value = covid_data[today_text][okres_lau]['soucesny_pocet_nakazenych'];
         var maximum_day = covid_data_days_max[today_text];
-        console.log(today_text);
-        console.log(covid_data[today_text]);
-        console.log(okres_value);
-        var color1 =   [0, 209, 0];
-        var color2 =   [209, 0, 0];
-        var w1 = okres_value / maximum_day;
-        var w2 = 1 - w1;
-        var rgb = [Math.round(color1[0] * w1 + color2[0] * w2),
-                   Math.round(color1[1] * w1 + color2[1] * w2),
-                   Math.round(color1[2] * w1 + color2[2] * w2)];
-        // // console.log(rgb[0])
-        var string = "#" + componentToHex(rgb[0]) + componentToHex(rgb[1]) + componentToHex(rgb[2]);
-        // // console.log(string);
-        children[i].setAttribute("fill", string);
+        if (okres_lau == "CZ0100")
+        {
+            console.log("Maximum per day: " + maximum_day);
+            console.log("Okres: " + okres_value);
+        }
+        var color1 =   [255, 0, 0];
+        var color2 =   [0, 255, 0];
+        if (okres_value > 0)
+        {
+            var w1 = okres_value / maximum_day;
+            var w2 = 1 - w1;
+            var rgb = [Math.round(color1[0] * w1 + color2[0] * w2),
+                    Math.round(color1[1] * w1 + color2[1] * w2),
+                    Math.round(color1[2] * w1 + color2[2] * w2)];
+            // // console.log(rgb[0])
+            var string = "#" + componentToHex(rgb[0]) + componentToHex(rgb[1]) + componentToHex(rgb[2]);
+            // // console.log(string);
+            children[i].setAttribute("fill", string);
+        }
+        else
+        {
+            children[i].setAttribute("fill", "#00FF00");
+        }
     }
 }
