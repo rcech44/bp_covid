@@ -3,6 +3,7 @@ var output;
 var okresy_names = JSON.parse(data);
 var covid_data = {};
 var covid_data_days_max = {};
+var covid_data_days_min = {};
 // console.log(okresy_names);
 
 // Initialize and modify webpage on startup
@@ -46,10 +47,10 @@ function initPage()
 function loadCovidData()
 {
     var today = new Date();
-    today.setDate(today.getDate() - 7);
+    today.setDate(today.getDate() - 30);
     var today_text = today.getDate()  + "-" + (today.getMonth()+1) + "-" + today.getFullYear();
 
-    url = "https://onemocneni-aktualne.mzcr.cz/api/v3/kraj-okres-nakazeni-vyleceni-umrti?itemsPerPage=1000&datum%5Bafter%5D=" + today_text + "&apiToken=c54d8c7d54a31d016d8f3c156b98682a";
+    url = "https://onemocneni-aktualne.mzcr.cz/api/v3/kraj-okres-nakazeni-vyleceni-umrti?itemsPerPage=100000&datum%5Bafter%5D=" + today_text + "&apiToken=c54d8c7d54a31d016d8f3c156b98682a";
     console.log(url);
     $.ajax({
         url: url,
@@ -71,7 +72,8 @@ function onClickMap(name, okres_lau)
 {
     var today = new Date();
     today.setDate(today.getDate() - 1);
-    var today_text = today.getDate()  + "-" + (today.getMonth()+1) + "-" + today.getFullYear();
+    today = addDays(today, slider.value - 30);
+    var today_text = getFormattedDate(today);
 
     url = "https://onemocneni-aktualne.mzcr.cz/api/v3/kraj-okres-nakazeni-vyleceni-umrti?page=1&itemsPerPage=100&datum%5Bafter%5D=" + today_text + "&okres_lau_kod=" + okres_lau + "&apiToken=c54d8c7d54a31d016d8f3c156b98682a";
     console.log(url);
@@ -110,6 +112,7 @@ function processCovidData(result)
     // save all maximums for each day
     for (var key in covid_data){
         var max = 0;
+        var min = Number.MAX_SAFE_INTEGER;
         for ([okres, values] of Object.entries(covid_data[key]))
         {
             // console.log(okres);
@@ -118,8 +121,13 @@ function processCovidData(result)
             {
                 max = pocet;
             }
+            if (pocet < min && pocet >= 0)
+            {
+                min = pocet;
+            }
         }
         covid_data_days_max[key] = max;
+        covid_data_days_min[key] = min;
     }
 
     // console.log(covid_data);
@@ -135,7 +143,33 @@ function processGetData(result, name)
     nakazenych = result[0]['kumulativni_pocet_nakazenych'] - result[0]['kumulativni_pocet_vylecenych']
     text.innerHTML = "<b>Název okresu:</b> " + name + "<br>" + "<b>LAU kód okresu:</b> " + result[0]['okres_lau_kod'] + "<br>" + "<b>Současný počet nakažených:</b> " + nakazenych
     + "<br>" + "<b>Kumulativní počet nakažených:</b> " + result[0]['kumulativni_pocet_nakazenych']
-    + "<br>" + "<b>Kumulativní počet vyléčených:</b> " + result[0]['kumulativni_pocet_vylecenych'];
+    + "<br>" + "<b>Kumulativní počet vyléčených:</b> " + result[0]['kumulativni_pocet_vylecenych']
+    + "<br>" + "<b>Datum: </b> " + result[0]['datum'];
+}
+
+// Sleep function
+// https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
+function sleep(ms) 
+{
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// handle animation button
+function handleAnimation()
+{
+    var max_value = parseInt(slider.getAttribute('max'));
+    var current_value = parseInt(slider.value);
+    // console.log("Current: " + current_value);
+    // console.log("Max: " + max_value);
+    console.log("current_value: " + slider.value + " | max_value: " + slider.getAttribute('max'));
+    console.log(current_value < max_value);
+    for (var cur = current_value; cur < max_value; cur++)
+    {
+        slider.value = cur + 1;
+        console.log("Changed from " + cur + " to " + slider.value);
+        sliderTextUpdate();
+        // await sleep(250);
+    }
 }
 
 // function to add days to given date
@@ -187,7 +221,7 @@ function sliderTextUpdate()
 {
     var today = new Date();
     today.setDate(today.getDate() - 1);
-    today = addDays(today, slider.value - 7);
+    today = addDays(today, slider.value - 30);
     var today_text = getFormattedDate(today);
     output.innerHTML = today.toLocaleDateString("cs-CZ");
     var parent = iframe.contentWindow.document.querySelector("g");
@@ -197,16 +231,20 @@ function sliderTextUpdate()
         var okres_lau = children[i].getAttribute('okres_lau');
         var okres_value = covid_data[today_text][okres_lau]['soucesny_pocet_nakazenych'];
         var maximum_day = covid_data_days_max[today_text];
-        if (okres_lau == "CZ0100")
-        {
-            console.log("Maximum per day: " + maximum_day);
-            console.log("Okres: " + okres_value);
-        }
+        var minimum_day = covid_data_days_min[today_text];
+        // if (okres_lau == "CZ0100")
+        // {
+        //     console.log("Maximum per day: " + maximum_day);
+        //     console.log("Minimum per day: " + minimum_day);
+        //     console.log("Okres: " + okres_value);
+        // }
         var color1 =   [255, 0, 0];
         var color2 =   [0, 255, 0];
         if (okres_value > 0)
         {
-            var w1 = okres_value / maximum_day;
+            var min_max_difference = maximum_day - minimum_day;
+            var w1 = (okres_value - minimum_day) / min_max_difference;
+            // var w1 = okres_value / maximum_day;
             var w2 = 1 - w1;
             var rgb = [Math.round(color1[0] * w1 + color2[0] * w2),
                     Math.round(color1[1] * w1 + color2[1] * w2),
