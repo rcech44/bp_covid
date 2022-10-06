@@ -1,9 +1,14 @@
 var slider;
 var output;
+var summary_nakazeni;
+var summary_vyleceni;
+var summary_umrti;
+var summary_obyvatel;
 var okresy_names = JSON.parse(data);
 var covid_data = {};
 var covid_data_days_max = {};
 var covid_data_days_min = {};
+var covid_summary = {};
 // console.log(okresy_names);
 
 // Initialize and modify webpage on startup
@@ -65,6 +70,22 @@ function loadCovidData()
             console.log(error);
         }
     })
+
+    url2 = "https://onemocneni-aktualne.mzcr.cz/api/v3/zakladni-prehled?page=1&itemsPerPage=100&apiToken=c54d8c7d54a31d016d8f3c156b98682a";
+    // console.log(url);
+    $.ajax({
+        url: url2,
+        headers: { 'accept': 'application/json' },
+        type: "GET",
+        success: function(result)
+        {
+            processCovidDataSummary(result);
+        },
+        error: function(error)
+        {
+            console.log(error);
+        }
+    })
 }
 
 // click function - AJAX request
@@ -92,7 +113,21 @@ function onClickMap(name, okres_lau)
     })
 }
 
-// process data returned by AJAX by page load
+// process data returned by AJAX by page load - summary
+function processCovidDataSummary(result)
+{
+    summary_nakazeni = document.getElementById("summary_nakazeni");
+    summary_vyleceni = document.getElementById("summary_vyleceni");
+    summary_umrti = document.getElementById("summary_umrti");
+    summary_obyvatel = document.getElementById("summary_obyvatel");
+    covid_summary = result[0];
+    summary_nakazeni.innerHTML = covid_summary['aktivni_pripady'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
+    summary_vyleceni.innerHTML = covid_summary['vyleceni'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
+    summary_umrti.innerHTML = covid_summary['umrti'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
+    summary_obyvatel.innerHTML = covid_summary['potvrzene_pripady_celkem'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
+}
+
+// process data returned by AJAX by page load - data
 function processCovidData(result)
 {
     // format all data into one big dictionary

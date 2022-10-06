@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" src="okresy_data.js" charset="utf-8"></script>
     <script type="text/javascript" src="on_load.js" charset="utf-8"></script>
@@ -63,61 +64,56 @@
 
   <!-- Header -->
   <header class="w3-container" style="padding-top:22px">
-    <h5><b><i class="fa fa-dashboard"></i> My Dashboard</b></h5>
+    <h5><b><i class="fa fa-globe-europe"></i> COVID-19 současné statistiky v České republice</b></h5>
   </header>
 
   <div class="w3-row-padding w3-margin-bottom">
     <div class="w3-quarter">
-      <div class="w3-container w3-red w3-padding-16">
-        <div class="w3-left"><i class="fa fa-comment w3-xxxlarge"></i></div>
+      <div class="w3-container w3-card-4 w3-orange w3-padding-16">
+        <div class="w3-left" style="padding-top:8px;"><i class="fas fa-head-side-cough w3-xxxlarge"></i></div>
         <div class="w3-right">
-          <h3>52</h3>
+          <h2 id="summary_nakazeni"></h2>
         </div>
         <div class="w3-clear"></div>
         <h4>Nakažení</h4>
+        <h6>V tento den: 256</h6>
       </div>
     </div>
     <div class="w3-quarter">
-      <div class="w3-container w3-blue w3-padding-16">
-        <div class="w3-left"><i class="fa fa-eye w3-xxxlarge"></i></div>
+      <div class="w3-container w3-card-4 w3-green w3-padding-16">
+        <div class="w3-left" style="padding-top:8px;"><i class="far fa-smile-beam w3-xxxlarge"></i></div>
         <div class="w3-right">
-          <h3>99</h3>
-        </div>
-        <div class="w3-clear"></div>
-        <h4>Úmrtí</h4>
-      </div>
-    </div>
-    <div class="w3-quarter">
-      <div class="w3-container w3-teal w3-padding-16">
-        <div class="w3-left"><i class="fa fa-share-alt w3-xxxlarge"></i></div>
-        <div class="w3-right">
-          <h3>23</h3>
+          <h2 id="summary_vyleceni"></h2>
         </div>
         <div class="w3-clear"></div>
         <h4>Vyléčení</h4>
       </div>
     </div>
     <div class="w3-quarter">
-      <div class="w3-container w3-orange w3-text-white w3-padding-16">
-        <div class="w3-left"><i class="fa fa-users w3-xxxlarge"></i></div>
+      <div class="w3-container w3-card-4 w3-grey w3-padding-16">
+        <div class="w3-left" style="padding-top:8px;"><i class="fas fa-cross w3-xxxlarge"></i></div>
         <div class="w3-right">
-          <h3>50</h3>
+          <h2 id="summary_umrti"></h2>
         </div>
         <div class="w3-clear"></div>
-        <h4>Celkový počet ovlivněných obyvatel</h4>
+        <h4>Úmrtí</h4>
+      </div>
+    </div>
+    <div class="w3-quarter">
+      <div class="w3-container w3-card-4 w3-blue w3-text-white w3-padding-16">
+        <div class="w3-left" style="padding-top:8px;"><i class="fa fa-users w3-xxxlarge"></i></div>
+        <div class="w3-right">
+          <h2 id="summary_obyvatel"></h2>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Počet ovlivněných obyvatel</h4>
       </div>
     </div>
   </div>
 
   <div class="w3-panel">
     <div class="w3-row-padding" style="margin:0 -16px">
-      <div class="w3-twothird">
-        <h5>Regions</h5>
-        <div class="w3-card-4">
-            <iframe id="iframe" class="responsive-iframe" src="index_test.html" style="height:650px;width:100%;border:none;" title="Iframe Example" onload="onIframeLoad()"></iframe>
-        </div>
-      </div>
-      <div class="w3-third">
+      <div class="w3-quarter">
         <h5>Zvolení data</h5>
         <div class="w3-card w3-container w3-white" style="padding-top:16px;padding-bottom:16px;">
             <div>
@@ -167,6 +163,12 @@
                 <td><b id="text_okres_datum"></b></td>
             </tr>
             </table>
+        </div>
+      </div>
+      <div class="w3-threequarter">
+        <h5>Mapa okresů ČR</h5>
+        <div class="w3-card-4">
+            <iframe id="iframe" class="responsive-iframe" src="index_test.html" style="height:650px;width:100%;border:none;" title="Iframe Example" onload="onIframeLoad()"></iframe>
         </div>
       </div>
     </div>
