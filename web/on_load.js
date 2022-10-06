@@ -138,13 +138,27 @@ function processCovidData(result)
 // process data returned by AJAX by click
 function processGetData(result, name)
 {
-    text = document.getElementById("okres_info");
+    var okres_nazev = document.getElementById("text_okres_nazev");
+    var okres_kod = document.getElementById("text_okres_kod");
+    var okres_nakazeni = document.getElementById("text_okres_nakazeni");
+    var okres_celkem_nakazeni = document.getElementById("text_okres_celkem_nakazeni");
+    var okres_celkem_vyleceni = document.getElementById("text_okres_celkem_vyleceni");
+    var okres_datum = document.getElementById("text_okres_datum");
     // console.log(result);
-    nakazenych = result[0]['kumulativni_pocet_nakazenych'] - result[0]['kumulativni_pocet_vylecenych']
-    text.innerHTML = "<b>Název okresu:</b> " + name + "<br>" + "<b>LAU kód okresu:</b> " + result[0]['okres_lau_kod'] + "<br>" + "<b>Současný počet nakažených:</b> " + nakazenych
-    + "<br>" + "<b>Kumulativní počet nakažených:</b> " + result[0]['kumulativni_pocet_nakazenych']
-    + "<br>" + "<b>Kumulativní počet vyléčených:</b> " + result[0]['kumulativni_pocet_vylecenych']
-    + "<br>" + "<b>Datum: </b> " + result[0]['datum'];
+    var nakazenych = result[0]['kumulativni_pocet_nakazenych'] - result[0]['kumulativni_pocet_vylecenych'];
+
+    okres_nazev.innerHTML = name;
+    okres_kod.innerHTML = result[0]['okres_lau_kod'];
+    okres_nakazeni.innerHTML = nakazenych;
+    okres_celkem_nakazeni.innerHTML = result[0]['kumulativni_pocet_nakazenych'];
+    okres_celkem_vyleceni.innerHTML = result[0]['kumulativni_pocet_vylecenych'];
+    okres_datum.innerHTML = getFormattedDateLocal(new Date(result[0]['datum']));
+
+    // old
+    // text.innerHTML = "<b>Název okresu:</b> " + name + "<br>" + "<b>LAU kód okresu:</b> " + result[0]['okres_lau_kod'] + "<br>" + "<b>Současný počet nakažených:</b> " + nakazenych
+    // + "<br>" + "<b>Kumulativní počet nakažených:</b> " + result[0]['kumulativni_pocet_nakazenych']
+    // + "<br>" + "<b>Kumulativní počet vyléčených:</b> " + result[0]['kumulativni_pocet_vylecenych']
+    // + "<br>" + "<b>Datum: </b> " + getFormattedDateLocal(new Date(result[0]['datum']));
 }
 
 // Sleep function
@@ -155,20 +169,20 @@ function sleep(ms)
 }
 
 // handle animation button
-function handleAnimation()
+async function handleAnimation()
 {
     var max_value = parseInt(slider.getAttribute('max'));
     var current_value = parseInt(slider.value);
     // console.log("Current: " + current_value);
     // console.log("Max: " + max_value);
-    console.log("current_value: " + slider.value + " | max_value: " + slider.getAttribute('max'));
-    console.log(current_value < max_value);
+    // console.log("current_value: " + slider.value + " | max_value: " + slider.getAttribute('max'));
+    // console.log(current_value < max_value);
     for (var cur = current_value; cur < max_value; cur++)
     {
         slider.value = cur + 1;
-        console.log("Changed from " + cur + " to " + slider.value);
+        // console.log("Changed from " + cur + " to " + slider.value);
         sliderTextUpdate();
-        // await sleep(250);
+        await sleep(250);
     }
 }
 
@@ -183,6 +197,11 @@ function addDays(date, days) {
 function componentToHex(c) {
     var hex = c.toString(16);
     return hex.length == 1 ? "0" + hex : hex;
+}
+
+function getFormattedDateLocal(date)
+{
+    return date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear(); 
 }
 
 function getFormattedDate(date)
