@@ -7,21 +7,22 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" src="okresy_data.js" charset="utf-8"></script>
     <script type="text/javascript" src="on_load.js" charset="utf-8"></script>
     <style>
-        html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+        html,body,h1,h2,h3,h4,h5 {font-family: 'Open Sans'}
     </style>
 </head>
 <body class="w3-light-grey">
 
 <!-- Top container -->
-<div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
+<div class="w3-bar w3-top w3-black w3-large" style="z-index:4;width:100%">
   <!-- <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button> -->
-  <span class="w3-bar-item w3-center">Bakalářská práce</span>
+  <div class="w3-bar-item w3-center">Bakalářská práce</div>
 </div>
 
 <!-- Sidebar/menu -->
@@ -42,15 +43,7 @@
     <h5>Dashboard</h5>
   </div>
   <div class="w3-bar-block">
-    <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
     <a href="#" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-users fa-fw"></i>  Overview</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Views</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Traffic</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Geo</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-diamond fa-fw"></i>  Orders</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bell fa-fw"></i>  News</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bank fa-fw"></i>  General</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-history fa-fw"></i>  History</a>
     <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-cog fa-fw"></i>  Settings</a><br><br>
   </div>
 </nav>
@@ -68,46 +61,103 @@
     <h7>Data se vážou ke včerejšimu dni</h7>
   </header>
 
-  <div class="w3-row-padding w3-margin-bottom">
+  <div class="w3-row-padding">
+    <!-- <div class="w3-quarter">
+      <div class="w3-container w3-card-4 w3-amber w3-padding-16">
+        <table style="width:100%">
+          <tr>
+            <td><div><i class="fas fa-head-side-cough w3-xxxlarge"></i></div></td>
+            <td><div><h2 id="summary_nakazeni" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;text-align: right;"></h2></div></td>
+          </tr>
+          <tr>
+            <td><h4>Nakažení</h4></td>
+            <td style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;text-align: right;">Dnes: 12345</td>
+          </tr>
+        </table>
+         
+        </div>
+      </div> -->
     <div class="w3-quarter">
       <div class="w3-container w3-card-4 w3-orange w3-padding-16">
         <div class="w3-left" style="padding-top:8px;"><i class="fas fa-head-side-cough w3-xxxlarge"></i></div>
         <div class="w3-right">
-          <h2 id="summary_nakazeni"></h2>
+          <h2 id="summary_nakazeni" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"></h2>
         </div>
         <div class="w3-clear"></div>
         <h4>Nakažení</h4>
-        <h6>V tento den: 256</h6>
       </div>
     </div>
     <div class="w3-quarter">
       <div class="w3-container w3-card-4 w3-green w3-padding-16">
         <div class="w3-left" style="padding-top:8px;"><i class="far fa-smile-beam w3-xxxlarge"></i></div>
         <div class="w3-right">
-          <h2 id="summary_vyleceni"></h2>
+          <h2 id="summary_vyleceni" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"></h2>
         </div>
         <div class="w3-clear"></div>
         <h4>Vyléčení</h4>
       </div>
     </div>
     <div class="w3-quarter">
-      <div class="w3-container w3-card-4 w3-grey w3-padding-16">
+      <div class="w3-container w3-card-4 w3-dark-grey w3-padding-16">
         <div class="w3-left" style="padding-top:8px;"><i class="fas fa-cross w3-xxxlarge"></i></div>
         <div class="w3-right">
-          <h2 id="summary_umrti"></h2>
+          <h2 id="summary_umrti" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"></h2>
         </div>
         <div class="w3-clear"></div>
         <h4>Úmrtí</h4>
       </div>
     </div>
     <div class="w3-quarter">
-      <div class="w3-container w3-card-4 w3-blue w3-text-white w3-padding-16">
+      <div class="w3-container w3-card-4 w3-cyan w3-text-white w3-padding-16">
         <div class="w3-left" style="padding-top:8px;"><i class="fa fa-users w3-xxxlarge"></i></div>
         <div class="w3-right">
-          <h2 id="summary_obyvatel"></h2>
+          <h2 id="summary_obyvatel" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"></h2>
         </div>
         <div class="w3-clear"></div>
-        <h4>Počet ovlivněných obyvatel</h4>
+        <h4>Ovlivněno</h4>
+      </div>
+    </div>
+  </div>
+
+  <div class="w3-row-padding w3-margin-bottom">
+    <!-- <div class="w3-quarter">
+      <div class="w3-container w3-card-4 w3-amber w3-padding-16">
+        <table style="width:100%">
+          <tr>
+            <td><div><i class="fas fa-head-side-cough w3-xxxlarge"></i></div></td>
+            <td><div><h2 id="summary_nakazeni" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;text-align: right;"></h2></div></td>
+          </tr>
+          <tr>
+            <td><h4>Nakažení</h4></td>
+            <td style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;text-align: right;">Dnes: 12345</td>
+          </tr>
+        </table>
+         
+        </div>
+      </div> -->
+    <div class="w3-quarter">
+      <div class="w3-container w3-card-4 w3-amber" style="width:100%;padding-top: 5px; padding-bottom: 5px;">
+        <div class="w3-left">
+          Dne 2.10.2022:
+        </div>
+        <div class="w3-right"><b>
+          + 12345
+        </b></div>
+      </div>
+    </div>
+    <div class="w3-quarter">
+      <div class="w3-container w3-card-4 w3-light-green w3-padding-16">
+
+      </div>
+    </div>
+    <div class="w3-quarter">
+      <div class="w3-container w3-card-4 w3-grey w3-padding-16">
+
+      </div>
+    </div>
+    <div class="w3-quarter">
+      <div class="w3-container w3-card-4 w3-light-blue w3-text-white w3-padding-16">
+
       </div>
     </div>
   </div>
@@ -126,7 +176,7 @@
         </div>
         <br>
         <h5>Ovládání animace</h5>
-        <div class="w3-card w3-container w3-white" style="padding-top:16px;padding-bottom:16px;">
+        <div class="w3-card w3-container w3-white w3-center" style="padding-top:16px;padding-bottom:16px;">
             <button type="button" class="btn btn-secondary" onclick="handleAnimation()">Start animation from selected date</button>
         </div>
         <br>
@@ -136,7 +186,7 @@
             <tr>
                 <td width="10%"><i class="material-icons" style="font-size:18px">place</i></td>
                 <td width="50">Okres</td>
-                <td width="40%"><b id="text_okres_nazev"></b></td>
+                <td width="40%"><b id="text_okres_nazev">Zvolte kliknutím</b></td>
             </tr>
             <tr>
                 <td><i class="fa fa-bell w3-text-red w3-large"></i></td>
@@ -194,7 +244,7 @@
   </div>
   <hr>
 
-  <div class="w3-container">
+  <!-- <div class="w3-container">
     <h5>Countries</h5>
     <table class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white">
       <tr>
@@ -289,13 +339,13 @@
         <p>Interests</p>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <!-- Footer -->
-  <footer class="w3-container w3-padding-16 w3-light-grey">
+  <!-- <footer class="w3-container w3-padding-16 w3-light-grey">
     <h4>FOOTER</h4>
     <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
-  </footer>
+  </footer> -->
 
   <!-- End page content -->
 </div>
