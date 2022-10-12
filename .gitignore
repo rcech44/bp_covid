@@ -1,3 +1,4 @@
 web/distictsCzechiaLow.json
 web/twCounty2010.geo.json
 django/bp/bp/__pycache__
+django/bp/covid/__pycache__
