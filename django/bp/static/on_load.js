@@ -124,15 +124,15 @@ function onClickMap(name, okres_lau)
 // process data returned by AJAX by page load - summary
 function processCovidDataSummary(result)
 {
-    summary_nakazeni = document.getElementById("summary_nakazeni");
-    summary_vyleceni = document.getElementById("summary_vyleceni");
-    summary_umrti = document.getElementById("summary_umrti");
-    summary_obyvatel = document.getElementById("summary_obyvatel");
-    covid_summary = result[0];
-    summary_nakazeni.innerHTML = covid_summary['aktivni_pripady'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
-    summary_vyleceni.innerHTML = covid_summary['vyleceni'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
-    summary_umrti.innerHTML = covid_summary['umrti'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
-    summary_obyvatel.innerHTML = covid_summary['potvrzene_pripady_celkem'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
+    // summary_nakazeni = document.getElementById("summary_nakazeni");
+    // summary_vyleceni = document.getElementById("summary_vyleceni");
+    // summary_umrti = document.getElementById("summary_umrti");
+    // summary_obyvatel = document.getElementById("summary_obyvatel");
+    // covid_summary = result[0];
+    // summary_nakazeni.innerHTML = covid_summary['aktivni_pripady'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
+    // summary_vyleceni.innerHTML = covid_summary['vyleceni'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
+    // summary_umrti.innerHTML = covid_summary['umrti'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
+    // summary_obyvatel.innerHTML = covid_summary['potvrzene_pripady_celkem'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
 }
 
 // process data returned by AJAX by page load - data
