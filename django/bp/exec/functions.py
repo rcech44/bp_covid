@@ -31,7 +31,7 @@ def get_today_summary():
 
                 # Get values difference
                 if response[0][1] == datum_string_now and response[1][1] == datum_string_yesterday:
-                    result['rozdil_nakazeni'] = format_number(response[0][2] - response[1][2])
+                    result['rozdil_nakazeni'] = format_number(response[0][11] + response[0][24])
                     result['rozdil_vyleceni'] = format_number(response[0][23] - response[1][23])
                     result['rozdil_umrti'] = format_number(response[0][19] - response[1][19])
                     result['rozdil_ovlivneno'] = format_number(response[0][10] - response[1][10])
@@ -43,4 +43,13 @@ def get_today_summary():
 
     return result
 
-get_today_summary()
+def thirty_day_summary_graph():
+    graph = {}
+    graph['days'] = []
+    day_count = 30
+    for i in range(30):
+        graph['days'].append((datetime.now() - timedelta(days=day_count)).strftime("%d.%m."))
+        day_count -= 1
+    return graph
+
+# get_today_summary()

@@ -11,7 +11,8 @@ var okres_celkem_nakazeni;
 var okres_celkem_vyleceni;
 var okres_datum;
 var nakazenych;
-var okresy_names = JSON.parse(data);
+var okresy_names = JSON.parse(okresy_nazvy);
+var okresy_pocet_obyvatel = JSON.parse(pocet_obyvatel);
 var covid_data = {};
 var covid_data_days_max = {};
 var covid_data_days_min = {};
@@ -187,15 +188,19 @@ function processGetData(result, name)
     okres_celkem_nakazeni = document.getElementById("text_okres_celkem_nakazeni");
     okres_celkem_vyleceni = document.getElementById("text_okres_celkem_vyleceni");
     okres_datum = document.getElementById("text_okres_datum");
+    okres_pocet_obyvatel = document.getElementById("text_okres_pocet_obyvatel");
+    okres_pocet_obyvatel_procento = document.getElementById("text_okres_pocet_obyvatel_procento");
     // console.log(result);
     nakazenych = result[0]['kumulativni_pocet_nakazenych'] - result[0]['kumulativni_pocet_vylecenych'];
 
     okres_nazev.innerHTML = name;
     okres_kod.innerHTML = result[0]['okres_lau_kod'];
-    okres_nakazeni.innerHTML = nakazenych;
-    okres_celkem_nakazeni.innerHTML = result[0]['kumulativni_pocet_nakazenych'];
-    okres_celkem_vyleceni.innerHTML = result[0]['kumulativni_pocet_vylecenych'];
+    okres_nakazeni.innerHTML = nakazenych.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    okres_celkem_nakazeni.innerHTML = result[0]['kumulativni_pocet_nakazenych'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    okres_celkem_vyleceni.innerHTML = result[0]['kumulativni_pocet_vylecenych'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     okres_datum.innerHTML = getFormattedDateLocal(new Date(result[0]['datum']));
+    okres_pocet_obyvatel.innerHTML = okresy_pocet_obyvatel[result[0]['okres_lau_kod']].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    okres_pocet_obyvatel_procento.innerHTML = ((parseFloat(result[0]['kumulativni_pocet_nakazenych']) / parseFloat(okresy_pocet_obyvatel[result[0]['okres_lau_kod']])) * 100).toFixed(2) + "%";
 
     // old
     // text.innerHTML = "<b>Název okresu:</b> " + name + "<br>" + "<b>LAU kód okresu:</b> " + result[0]['okres_lau_kod'] + "<br>" + "<b>Současný počet nakažených:</b> " + nakazenych

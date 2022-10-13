@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 import os
-from covid.functions import *
+from exec.functions import *
 
 # Create your views here.
 
@@ -14,4 +14,5 @@ def map(request):
     return render(request, 'map.html', {})
 
 def statistics(request):
-    return render(request, 'statistics.html', {})
+    graph = thirty_day_summary_graph()
+    return render(request, 'statistics.html', {'labels': graph['days']})
