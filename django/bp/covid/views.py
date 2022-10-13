@@ -15,4 +15,4 @@ def map(request):
 
 def statistics(request):
     graph = thirty_day_summary_graph()
-    return render(request, 'statistics.html', {'labels': graph['days']})
+    return render(request, 'statistics.html', {'labels': graph['days'], 'data': graph['values'], 'colors': graph['colors'], 'colors_border': graph['colors_border']})

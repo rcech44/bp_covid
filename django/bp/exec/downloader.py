@@ -99,6 +99,8 @@ def downloader():
         
         sleep(300)
 
+# downloader()
+
 # def temp():
 #     try:
 #         with mysql.connector.connect(host="remotemysql.com", user="9qMwE320zO", password="gmnNuBYtIX", database="9qMwE320zO") as conn:

@@ -1,29 +1,25 @@
-const labels = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-  ];
+// var ctx = document.getElementById("myChart").getContext("2d");
 
-  const data = {
-    labels: labels,
-    datasets: [{
-      label: 'My First dataset',
-      backgroundColor: 'rgb(255, 99, 132)',
-      borderColor: 'rgb(255, 99, 132)',
-      data: [0, 10, 5, 2, 20, 30, 45],
-    }]
-  };
+// window.myObjBar = new Chart(ctx).Bar(barChartData, {
+//     responsive : true
+// });
 
-  const config = {
-    type: 'bar',
-    data: data,
-    options: {}
-  };
+// var bars = myObjBar.datasets[0].bars;
 
-  const myChart = new Chart(
-    document.getElementById('myChart'),
-    config
-  );
+// for(i=0;i<bars.length;i++){
+//     var color="orange";
+//     if(bars[i].value<3){
+//         color="orange";
+//     }
+//     else if(bars[i].value<5){
+//         color="orange"
+//     }
+//     else if(bars[i].value<8){
+//         color="orange"
+//     }
+//     else{
+//         color="orange"
+//     }
+//     bars[i].fillColor = color;
+// }
+// myObjBar.update(); //update the cahrt
