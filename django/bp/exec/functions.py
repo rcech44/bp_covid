@@ -77,7 +77,7 @@ def thirty_day_summary_graph():
 
                     # 'rgb(255, 99, 132)'
                     date_format = datetime.strptime(row[1], '%Y-%m-%d')
-                    graph['colors'].append(f"rgba({str(final_color[0])}, {str(final_color[1])}, {str(final_color[2])}, 0.4)")
+                    graph['colors'].append(f"rgba({str(final_color[0])}, {str(final_color[1])}, {str(final_color[2])}, 0.5)")
                     graph['colors_border'].append(f"rgb({str(final_color[0] - 30)}, {str(final_color[1] - 30)}, {str(final_color[2] - 30)})")
                     graph['days'].append(date_format.strftime("%d.%m."))
                     graph['values'].append(row[11] + row[24])

@@ -281,6 +281,7 @@ function getFormattedDate(date)
 // function that updates slider text
 function sliderTextUpdate()
 {
+    var totalValue = 0;
     var today = new Date();
     today.setDate(today.getDate() - 1);
     today = addDays(today, slider.value - 30);
@@ -292,6 +293,7 @@ function sliderTextUpdate()
     {
         var okres_lau = children[i].getAttribute('okres_lau');
         var okres_value = covid_data[today_text][okres_lau]['soucesny_pocet_nakazenych'];
+        totalValue += okres_value;
         var maximum_day = covid_data_days_max[today_text];
         var minimum_day = covid_data_days_min[today_text];
         if (okres_clicked == okres_lau)
@@ -322,4 +324,5 @@ function sliderTextUpdate()
             children[i].setAttribute("fill", "#00FF00");
         }
     }
+    console.log(totalValue);
 }
