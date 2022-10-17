@@ -18,6 +18,7 @@ var covid_data_days_max = {};
 var covid_data_days_min = {};
 var covid_summary = {};
 var okres_clicked = "";
+var okres_clicked_map_object = -1;
 
 // Initialize and modify webpage on startup
 function onIframeLoad()
@@ -51,10 +52,12 @@ function initPage()
         children[i].setAttribute("name", okresy_names[i][1]);
         children[i].setAttribute("okres_lau", okresy_names[i][0]);
         children[i].addEventListener('click', function(){
-            onClickMap(this.getAttribute('name'), this.getAttribute('okres_lau'));
+            onClickMap(this.getAttribute('name'), this.getAttribute('okres_lau'), this);
+            okres_clicked_map_object = i;
         });
     }
     sliderTextUpdate();
+    console.log(new_data);
 }
 
 function loadCovidData()
@@ -97,8 +100,13 @@ function loadCovidData()
 }
 
 // click function - AJAX request
-function onClickMap(name, okres_lau)
+function onClickMap(name, okres_lau, object)
 {
+    if (okres_clicked_map_object != -1)
+    {
+        iframe.contentWindow.document.querySelector("g").children[okres_clicked_map_object].setAttribute("stroke-width", 0.5);
+    }
+    object.setAttribute("stroke-width", 4.5);
     okres_clicked = okres_lau;
     var today = new Date();
     today.setDate(today.getDate() - 1);
@@ -113,7 +121,7 @@ function onClickMap(name, okres_lau)
         type: "GET",
         success: function(result)
         {
-            processGetData(result, name);
+            processGetData(result, name, okres_lau, today_text);
         },
         error: function(error)
         {
@@ -180,7 +188,7 @@ function processCovidData(result)
 }
 
 // process data returned by AJAX by click
-function processGetData(result, name)
+function processGetData(result, name, okres_lau, today_text)
 {
     okres_nazev = document.getElementById("text_okres_nazev");
     okres_kod = document.getElementById("text_okres_kod");
@@ -194,8 +202,8 @@ function processGetData(result, name)
     nakazenych = result[0]['kumulativni_pocet_nakazenych'] - result[0]['kumulativni_pocet_vylecenych'];
 
     okres_nazev.innerHTML = name;
-    okres_kod.innerHTML = result[0]['okres_lau_kod'];
-    okres_nakazeni.innerHTML = nakazenych.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    okres_kod.innerHTML = okres_lau;
+    okres_nakazeni.innerHTML = new_data[today_text][okres_lau]['nove_pripady'];
     okres_celkem_nakazeni.innerHTML = result[0]['kumulativni_pocet_nakazenych'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     okres_celkem_vyleceni.innerHTML = result[0]['kumulativni_pocet_vylecenych'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     okres_datum.innerHTML = getFormattedDateLocal(new Date(result[0]['datum']));
@@ -292,20 +300,20 @@ function sliderTextUpdate()
     for (let i = 0; i < 77; i++)
     {
         var okres_lau = children[i].getAttribute('okres_lau');
-        var okres_value = covid_data[today_text][okres_lau]['soucesny_pocet_nakazenych'];
+        var okres_value = new_data[today_text][okres_lau]['nove_pripady'];
         totalValue += okres_value;
-        var maximum_day = covid_data_days_max[today_text];
-        var minimum_day = covid_data_days_min[today_text];
+        var maximum_day = new_data[today_text]['90th_percentile_nove'];
+        var minimum_day = new_data[today_text]['min_nove'];
         if (okres_clicked == okres_lau)
         {
-            okres_nakazeni.innerHTML = parseInt(covid_data[today_text][okres_lau]['kumulativni_pocet_nakazenych']) - parseInt(covid_data[today_text][okres_lau]['kumulativni_pocet_vylecenych']);
-            okres_celkem_nakazeni.innerHTML = covid_data[today_text][okres_lau]['kumulativni_pocet_nakazenych'];
-            okres_celkem_vyleceni.innerHTML = covid_data[today_text][okres_lau]['kumulativni_pocet_vylecenych'];
-            okres_datum.innerHTML = today_text;
+            okres_nakazeni.innerHTML = parseInt(okres_value);
+            // okres_celkem_nakazeni.innerHTML = covid_data[today_text][okres_lau]['kumulativni_pocet_nakazenych'];
+            // okres_celkem_vyleceni.innerHTML = covid_data[today_text][okres_lau]['kumulativni_pocet_vylecenych'];
+            okres_datum.innerHTML = getFormattedDateLocal(new Date(today_text));
         }
         var color1 =   [255, 0, 0];
         var color2 =   [0, 255, 0];
-        if (okres_value > 0)
+        if (okres_value < maximum_day)
         {
             var min_max_difference = maximum_day - minimum_day;
             var w1 = (okres_value - minimum_day) / min_max_difference;
@@ -318,11 +326,12 @@ function sliderTextUpdate()
             var string = "#" + componentToHex(rgb[0]) + componentToHex(rgb[1]) + componentToHex(rgb[2]);
             // // console.log(string);
             children[i].setAttribute("fill", string);
+            console.log(maximum_day);
         }
         else
         {
-            children[i].setAttribute("fill", "#00FF00");
+            children[i].setAttribute("fill", "#FF0000");
         }
     }
-    console.log(totalValue);
+    // console.log(totalValue);
 }

@@ -1,3 +1,6 @@
+// import {a} from "/static/chartjs-plugin-datalabels.js";
+// alert(a);
+
 // var ctx = document.getElementById("myChart").getContext("2d");
 
 // window.myObjBar = new Chart(ctx).Bar(barChartData, {
