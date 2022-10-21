@@ -19,6 +19,7 @@ var covid_data_days_min = {};
 var covid_summary = {};
 var okres_clicked = "";
 var okres_clicked_map_object = -1;
+var analyze_fields = ["nakazeni-analyze", "vyleceni-analyze", "umrti-analyze", "ovlivneno-analyze"];
 
 // Initialize and modify webpage on startup
 function onIframeLoad()
@@ -335,3 +336,38 @@ function sliderTextUpdate()
     }
     // console.log(totalValue);
 }
+
+function myFunction(id) 
+{
+    analyze_fields.forEach((element) => 
+    {
+        if (element != id)
+        {
+            var field = document.getElementById(element);
+            field.className = field.className.replace(" w3-show", "");
+        }
+        else
+        {
+            var field = document.getElementById(element);
+            if (field.className.indexOf("w3-show") == -1)
+            {
+                field.className += " w3-show";
+            }
+            var color = field.getAttribute('color');
+            var outer_iframe = document.getElementById("outer-iframe");
+            var inner_iframe = document.getElementById("inner-iframe");
+            var outer_iframe_current_color = outer_iframe.getAttribute('color');
+            var inner_iframe_current_color = inner_iframe.getAttribute('color');
+            outer_iframe.className = outer_iframe.className.replace(outer_iframe_current_color, color);
+            inner_iframe.className = inner_iframe.className.replace(inner_iframe_current_color, color);
+            outer_iframe.setAttribute("color", color);
+            inner_iframe.setAttribute("color", color);
+        }
+    })
+    // var x = document.getElementById(id);
+    // if (x.className.indexOf("w3-show") == -1) {
+    //   x.className += " w3-show";
+    // } else { 
+    //   x.className = x.className.replace(" w3-show", "");
+    // }
+  }
