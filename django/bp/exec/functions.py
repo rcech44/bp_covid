@@ -7,6 +7,8 @@ import urllib.parse
 import mysql.connector
 from datetime import datetime, timedelta
 import random
+import os
+import sqlite3
 import numpy as np
 
 def format_number(num):
@@ -19,31 +21,79 @@ def get_today_summary():
     result = {}
     datum_string_now = datetime.now().strftime("%Y-%m-%d")
     datum_string_yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
+    datum_string_two_days_ago = (datetime.now() - timedelta(days=2)).strftime("%Y-%m-%d")
+
+    url_summary = 'https://onemocneni-aktualne.mzcr.cz/api/v3/zakladni-prehled?page=1&itemsPerPage=100&apiToken=c54d8c7d54a31d016d8f3c156b98682a'
+    url_ockovani = 'https://onemocneni-aktualne.mzcr.cz/api/v3/testy-pcr-antigenni?page=1&itemsPerPage=100&datum%5Bbefore%5D=XYZ&datum%5Bafter%5D=ABC&apiToken=c54d8c7d54a31d016d8f3c156b98682a'
+    url_umrti_now = 'https://onemocneni-aktualne.mzcr.cz/api/v3/umrti?page=1&itemsPerPage=10000&datum%5Bbefore%5D=XYZ&datum%5Bafter%5D=ABC&apiToken=c54d8c7d54a31d016d8f3c156b98682a'
+    url_vyleceni_now = 'https://onemocneni-aktualne.mzcr.cz/api/v3/vyleceni?page=1&itemsPerPage=3&datum%5Bbefore%5D=XYZ&datum%5Bafter%5D=ABC&apiToken=c54d8c7d54a31d016d8f3c156b98682a'
+    url_ockovani = url_ockovani.replace('XYZ', datum_string_now)
+    url_ockovani = url_ockovani.replace('ABC', datum_string_yesterday)
+    url_umrti_now = url_umrti_now.replace('XYZ', datum_string_now)
+    url_umrti_now = url_umrti_now.replace('ABC', datum_string_yesterday)
+    url_vyleceni_now = url_vyleceni_now.replace('XYZ', datum_string_now)
+    url_vyleceni_now = url_vyleceni_now.replace('ABC', datum_string_yesterday)
+
+    # Basic summary
+    req = urllib.request.Request(url_summary)
+    req.add_header('accept', 'application/json')
+    response = urllib.request.urlopen(req)
+    d = json.load(response)[0]
+
+    result['nakazeni'] = f"{d['aktivni_pripady']:,}"
+    result['vyleceni'] = f"{d['vyleceni']:,}"
+    result['umrti'] = f"{d['umrti']:,}"
+    result['rozdil_nakazeni'] = f"{format_number(d['potvrzene_pripady_vcerejsi_den'])}"
+
+    # Collection of PCR tests
+    req = urllib.request.Request(url_ockovani)
+    req.add_header('accept', 'application/json')
+    response = urllib.request.urlopen(req)
+    d = json.load(response)[0]
+
+    result['pocet_pcr_testu'] = f"{d['pocet_PCR_testy']:,}"
+    result['pocet_pcr_testu_pozitivni'] = f"{(d['PCR_pozit_sympt'] + d['PCR_pozit_asymp']):,} ({round(((d['PCR_pozit_sympt'] + d['PCR_pozit_asymp']) / d['pocet_PCR_testy']) * 100, 2)}%)"
+
+    # Deaths difference
+    req = urllib.request.Request(url_umrti_now)
+    req.add_header('accept', 'application/json')
+    response = urllib.request.urlopen(req)
+    d = json.load(response)
+
+    result['rozdil_umrti'] = format_number(len(d))
+
+    # Cured difference
+    req = urllib.request.Request(url_vyleceni_now)
+    req.add_header('accept', 'application/ld+json')
+    response = urllib.request.urlopen(req)
+    d = json.load(response)
+
+    result['rozdil_vyleceni'] = format_number(d['hydra:totalItems'])
 
     # Download data from database
-    try:
-        with mysql.connector.connect(host="remotemysql.com", user="9qMwE320zO", password="gmnNuBYtIX", database="9qMwE320zO") as conn:
-            cur = conn.cursor(buffered=True)
-            cur.execute('SELECT * FROM covid_summary ORDER BY id DESC LIMIT 2')
-            response = cur.fetchall()
-            if response is not None:
-                # Get current values
-                result['nakazeni'] = f"{response[0][2]:,}"
-                result['vyleceni'] = f"{response[0][23]:,}"
-                result['umrti'] = f"{response[0][19]:,}"
-                result['ovlivneno'] = f"{response[0][10]:,}"
+    # try:
+    #     with mysql.connector.connect(host="remotemysql.com", user="9qMwE320zO", password="gmnNuBYtIX", database="9qMwE320zO") as conn:
+    #         cur = conn.cursor(buffered=True)
+    #         cur.execute('SELECT * FROM covid_summary ORDER BY id DESC LIMIT 2')
+    #         response = cur.fetchall()
+    #         if response is not None:
+    #             # Get current values
+    #             result['nakazeni'] = f"{response[0][2]:,}"
+    #             result['vyleceni'] = f"{response[0][23]:,}"
+    #             result['umrti'] = f"{response[0][19]:,}"
+    #             result['ovlivneno'] = f"{response[0][10]:,}"
 
-                # Get values difference
-                if response[0][1] == datum_string_now and response[1][1] == datum_string_yesterday:
-                    result['rozdil_nakazeni'] = format_number(response[0][11] + response[0][24])
-                    result['rozdil_vyleceni'] = format_number(response[0][23] - response[1][23])
-                    result['rozdil_umrti'] = format_number(response[0][19] - response[1][19])
-                    result['rozdil_ovlivneno'] = format_number(response[0][10] - response[1][10])
-            else:
-                return {}
+    #             # Get values difference
+    #             if response[0][1] == datum_string_now and response[1][1] == datum_string_yesterday:
+    #                 result['rozdil_nakazeni'] = format_number(response[0][11] + response[0][24])
+    #                 result['rozdil_vyleceni'] = format_number(response[0][23] - response[1][23])
+    #                 result['rozdil_umrti'] = format_number(response[0][19] - response[1][19])
+    #                 result['rozdil_ovlivneno'] = format_number(response[0][10] - response[1][10])
+    #         else:
+    #             return {}
 
-    except mysql.connector.Error as e:
-        print(e)
+    # except mysql.connector.Error as e:
+    #     print(e)
 
     return result
 
@@ -92,9 +142,9 @@ def thirty_day_summary_graph():
 def thirty_day_map():
     data = {}
     try:
-        with mysql.connector.connect(host="remotemysql.com", user="9qMwE320zO", password="gmnNuBYtIX", database="9qMwE320zO") as conn:
-            cur = conn.cursor(buffered=True)
-            cur.execute('SELECT * FROM covid_unikatni_okresy ORDER BY id')
+        with sqlite3.connect('sql/database.sqlite') as conn:
+            cur = conn.cursor()
+            cur.execute('SELECT * FROM covid_datum_okres ORDER BY id')
             response = cur.fetchall()
             if response is not None:
                 for row in response:
@@ -137,9 +187,9 @@ def thirty_day_map():
 
             # pprint.pprint(data)
 
-
-    except mysql.connector.Error as e:
-        pass
+    except sqlite3.Error as e:
+        print(e)
+        print(os.getcwd())
     
     return data
 

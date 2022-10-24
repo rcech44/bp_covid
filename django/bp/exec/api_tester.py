@@ -5,14 +5,15 @@ import urllib.parse
 import mysql.connector
 from datetime import datetime, timedelta
 import pprint
+import sqlite3
 
 url_obce = 'https://onemocneni-aktualne.mzcr.cz/api/v3/obce?page=1&itemsPerPage=10000&datum%5Bafter%5D=XYZ&datum%5Bbefore%5D=XYZ&apiToken=c54d8c7d54a31d016d8f3c156b98682a'
 datum = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
 dny = {'xd': 'xd'}
 
 try:
-    with mysql.connector.connect(host="bokwyuhygiwtcosyd4q1-mysql.services.clever-cloud.com", user="utpirq9a5gv867iq", password="wYN2Fu5lybBFbG3FozpV", database="bokwyuhygiwtcosyd4q1") as conn:
-        cur = conn.cursor(buffered=True)
+    with sqlite3.connect('../sql/database.db') as conn:
+        cur = conn.cursor()
         for i in range(30):
             datum = (datetime.now() - timedelta(days=i+1)).strftime("%Y-%m-%d")
             url = url_obce.replace('XYZ', datum)
@@ -38,7 +39,7 @@ try:
                     dny[datum][obec['okres_lau_kod']]['nove_pripady_65_vek'] += obec['nove_pripady_65']
             # print(dny)
             for okres in dny[datum]:
-                cur.execute('INSERT INTO covid_unikatni_okresy (datum, okres, nove_pripady, aktivni_pripady, nove_pripady_7, nove_pripady_14, nove_pripady_65_vek) VALUES (%s, %s, %s, %s, %s, %s, %s)', \
+                cur.execute('INSERT INTO covid_datum_okres (datum, okres, nove_pripady, aktivni_pripady, nove_pripady_7, nove_pripady_14, nove_pripady_65_vek) VALUES (?, ?, ?, ?, ?, ?, ?)', \
                     [
                         datum,
                         okres,
@@ -50,7 +51,7 @@ try:
                     ])
                 conn.commit()
 
-except mysql.connector.Error as e:
+except sqlite3.Error as e:
     print(e)
 
 # with open("test.log", "w") as log_file:

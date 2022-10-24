@@ -337,7 +337,7 @@ function sliderTextUpdate()
     // console.log(totalValue);
 }
 
-function myFunction(id) 
+function selectAnalysis(id) 
 {
     analyze_fields.forEach((element) => 
     {
