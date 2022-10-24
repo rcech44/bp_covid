@@ -11,7 +11,7 @@ datum = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
 dny = {'xd': 'xd'}
 
 try:
-    with mysql.connector.connect(host="remotemysql.com", user="9qMwE320zO", password="gmnNuBYtIX", database="9qMwE320zO") as conn:
+    with mysql.connector.connect(host="bokwyuhygiwtcosyd4q1-mysql.services.clever-cloud.com", user="utpirq9a5gv867iq", password="wYN2Fu5lybBFbG3FozpV", database="bokwyuhygiwtcosyd4q1") as conn:
         cur = conn.cursor(buffered=True)
         for i in range(30):
             datum = (datetime.now() - timedelta(days=i+1)).strftime("%Y-%m-%d")
@@ -36,6 +36,7 @@ try:
                     dny[datum][obec['okres_lau_kod']]['nove_pripady_7'] += obec['nove_pripady_7_dni']
                     dny[datum][obec['okres_lau_kod']]['nove_pripady_14'] += obec['nove_pripady_14_dni']
                     dny[datum][obec['okres_lau_kod']]['nove_pripady_65_vek'] += obec['nove_pripady_65']
+            # print(dny)
             for okres in dny[datum]:
                 cur.execute('INSERT INTO covid_unikatni_okresy (datum, okres, nove_pripady, aktivni_pripady, nove_pripady_7, nove_pripady_14, nove_pripady_65_vek) VALUES (%s, %s, %s, %s, %s, %s, %s)', \
                     [
