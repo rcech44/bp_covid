@@ -11,6 +11,8 @@ import os
 import sqlite3
 import numpy as np
 
+pocet_obyvatel = {"CZ0100": 1275406, "CZ0201": 99323, "CZ0202": 96624,"CZ0203": 164493,"CZ0204": 103894,"CZ0205": 75683,"CZ0206": 109354,"CZ0207": 127592,"CZ0208": 101120,"CZ0209": 188384,"CZ020A": 151093,"CZ020B": 114366,"CZ020C": 54898,"CZ0311": 195533,"CZ0312": 60096,"CZ0313": 89283,"CZ0314": 70769,"CZ0315": 50230,"CZ0316": 69773,"CZ0317": 101363,"CZ0321": 54391,"CZ0322": 84614,"CZ0323": 188407,"CZ0324": 68918,"CZ0325": 80666,"CZ0326": 48770,"CZ0327": 52941,"CZ0411": 87958,"CZ0412": 110052,"CZ0413": 85200,"CZ0421": 126294,"CZ0422": 121480,"CZ0423": 117582,"CZ0424": 85381,"CZ0425": 106773,"CZ0426": 124472,"CZ0427": 116916,"CZ0511": 101962,"CZ0512": 90171,"CZ0513": 173890,"CZ0514": 71547,"CZ0521": 162400,"CZ0522": 78713,"CZ0523": 107973,"CZ0524": 78424,"CZ0525": 115073,"CZ0531": 103746,"CZ0532": 172224,"CZ0533": 102866,"CZ0534": 135682,"CZ0631": 93692,"CZ0632": 112415,"CZ0633": 71571,"CZ0634": 109183,"CZ0635": 117164,"CZ0641": 107912,"CZ0642": 379466,"CZ0643": 225514,"CZ0644": 114801,"CZ0645": 151096,"CZ0646": 92317,"CZ0647": 113462,"CZ0711": 36752,"CZ0712": 233588,"CZ0713": 107580,"CZ0714": 126613,"CZ0715": 118397,"CZ0721": 103445,"CZ0722": 139829,"CZ0723": 140171,"CZ0724": 188987,"CZ0801": 89547,"CZ0802": 212347,"CZ0803": 240319,"CZ0804": 149919,"CZ0805": 173753,"CZ0806": 312104}
+
 def format_number(num):
     if num >= 0:
         return "+ " + str(f"{abs(num):,}")
@@ -140,6 +142,7 @@ def thirty_day_summary_graph():
     return graph
 
 def thirty_day_map():
+    global pocet_obyvatel
     data = {}
     try:
         with sqlite3.connect('sql/database.sqlite') as conn:
@@ -148,42 +151,62 @@ def thirty_day_map():
             response = cur.fetchall()
             if response is not None:
                 for row in response:
+                    if row[2] is None:
+                        continue
                     if row[1] not in data:
                         data[row[1]] = {}
                     if row[2] not in data[row[1]]:
                         data[row[1]][row[2]] = {}
                     data[row[1]][row[2]]['nove_pripady'] = row[3]
+                    data[row[1]][row[2]]['nove_pripady_sto_tisic'] = row[3] / (pocet_obyvatel[row[2]] / 100000)
                     data[row[1]][row[2]]['aktivni_pripady'] = row[4]
+                    data[row[1]][row[2]]['aktivni_pripady_sto_tisic'] = row[4] / (pocet_obyvatel[row[2]] / 100000)
                     data[row[1]][row[2]]['nove_pripady_7'] = row[5]
                     data[row[1]][row[2]]['nove_pripady_14'] = row[6]
                     data[row[1]][row[2]]['nove_pripady_65_vek'] = row[7]
 
             for datum in data:
                 count_aktivni = 0
+                count_aktivni_sto_tisic = 0
                 count_nove = 0
+                count_nove_sto_tisic = 0
                 max_nove = 0
+                max_nove_sto_tisic = 0
                 min_nove = 99999999
+                min_nove_sto_tisic = 99999999
                 max_aktivni = 0
+                max_aktivni_sto_tisic = 0
                 min_aktivni = 99999999
-                values_nove = []
-                values_aktivni = []
+                min_aktivni_sto_tisic = 99999999
+                # values_nove = []
+                # values_aktivni = []
                 for okres in data[datum]:
                     count_aktivni += data[datum][okres]['aktivni_pripady']
+                    count_aktivni_sto_tisic += data[datum][okres]['aktivni_pripady_sto_tisic']
                     count_nove += data[datum][okres]['nove_pripady']
-                    values_nove.append(data[datum][okres]['nove_pripady'])
-                    values_aktivni.append(data[datum][okres]['aktivni_pripady'])
+                    count_nove_sto_tisic += data[datum][okres]['nove_pripady_sto_tisic']
+                    # values_nove.append(data[datum][okres]['nove_pripady'])
+                    # values_aktivni.append(data[datum][okres]['aktivni_pripady'])
                     if data[datum][okres]['aktivni_pripady'] > max_aktivni: max_aktivni = data[datum][okres]['aktivni_pripady']
                     if data[datum][okres]['aktivni_pripady'] < min_aktivni: min_aktivni = data[datum][okres]['aktivni_pripady']
                     if data[datum][okres]['nove_pripady'] > max_nove: max_nove = data[datum][okres]['nove_pripady']
                     if data[datum][okres]['nove_pripady'] < min_nove: min_nove = data[datum][okres]['nove_pripady']
+                    if data[datum][okres]['aktivni_pripady_sto_tisic'] > max_aktivni_sto_tisic: max_aktivni_sto_tisic = data[datum][okres]['aktivni_pripady_sto_tisic']
+                    if data[datum][okres]['aktivni_pripady_sto_tisic'] < min_aktivni_sto_tisic: min_aktivni_sto_tisic = data[datum][okres]['aktivni_pripady_sto_tisic']
+                    if data[datum][okres]['nove_pripady_sto_tisic'] > max_nove_sto_tisic: max_nove_sto_tisic = data[datum][okres]['nove_pripady_sto_tisic']
+                    if data[datum][okres]['nove_pripady_sto_tisic'] < min_nove_sto_tisic: min_nove_sto_tisic = data[datum][okres]['nove_pripady_sto_tisic']
                 data[datum]['max_aktivni'] = max_aktivni
+                data[datum]['max_aktivni_sto_tisic'] = max_aktivni_sto_tisic
                 data[datum]['min_aktivni'] = min_aktivni
+                data[datum]['min_aktivni_sto_tisic'] = min_aktivni_sto_tisic
                 data[datum]['max_nove'] = max_nove
+                data[datum]['max_nove_sto_tisic'] = max_nove_sto_tisic
                 data[datum]['min_nove'] = min_nove
+                data[datum]['min_nove_sto_tisic'] = min_nove_sto_tisic
                 data[datum]['avg_aktivni'] = count_aktivni / 76
                 data[datum]['avg_nove'] = count_nove / 76
-                data[datum]['90th_percentile_nove'] = np.percentile(values_nove, 97)
-                data[datum]['90th_percentile_aktivni'] = np.percentile(values_aktivni, 97)
+                # data[datum]['90th_percentile_nove'] = np.percentile(values_nove, 97)
+                # data[datum]['90th_percentile_aktivni'] = np.percentile(values_aktivni, 97)
 
             # pprint.pprint(data)
 

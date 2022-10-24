@@ -7,6 +7,7 @@ var summary_obyvatel;
 var okres_nazev;
 var okres_kod;
 var okres_nakazeni;
+var okres_nakazeni_sto_tisic;
 var okres_celkem_nakazeni;
 var okres_celkem_vyleceni;
 var okres_datum;
@@ -20,6 +21,7 @@ var covid_summary = {};
 var okres_clicked = "";
 var okres_clicked_map_object = -1;
 var analyze_fields = ["nakazeni-analyze", "vyleceni-analyze", "umrti-analyze", "ovlivneno-analyze"];
+var current_analysis;
 
 // Initialize and modify webpage on startup
 function onIframeLoad()
@@ -194,6 +196,7 @@ function processGetData(result, name, okres_lau, today_text)
     okres_nazev = document.getElementById("text_okres_nazev");
     okres_kod = document.getElementById("text_okres_kod");
     okres_nakazeni = document.getElementById("text_okres_nakazeni");
+    okres_nakazeni_sto_tisic = document.getElementById("text_okres_nakazeni_sto_tisic");
     okres_celkem_nakazeni = document.getElementById("text_okres_celkem_nakazeni");
     okres_celkem_vyleceni = document.getElementById("text_okres_celkem_vyleceni");
     okres_datum = document.getElementById("text_okres_datum");
@@ -205,6 +208,7 @@ function processGetData(result, name, okres_lau, today_text)
     okres_nazev.innerHTML = name;
     okres_kod.innerHTML = okres_lau;
     okres_nakazeni.innerHTML = new_data[today_text][okres_lau]['nove_pripady'];
+    okres_nakazeni_sto_tisic.innerHTML = new_data[today_text][okres_lau]['nove_pripady_sto_tisic'].toFixed(2);
     okres_celkem_nakazeni.innerHTML = result[0]['kumulativni_pocet_nakazenych'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     okres_celkem_vyleceni.innerHTML = result[0]['kumulativni_pocet_vylecenych'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     okres_datum.innerHTML = getFormattedDateLocal(new Date(result[0]['datum']));
@@ -301,21 +305,41 @@ function sliderTextUpdate()
     for (let i = 0; i < 77; i++)
     {
         var okres_lau = children[i].getAttribute('okres_lau');
-        var okres_value = new_data[today_text][okres_lau]['nove_pripady'];
+        var okres_value = new_data[today_text][okres_lau]['nove_pripady_sto_tisic'].toFixed(2);
         totalValue += okres_value;
-        var maximum_day = new_data[today_text]['90th_percentile_nove'];
-        var minimum_day = new_data[today_text]['min_nove'];
+        var maximum_day = new_data[today_text]['max_nove_sto_tisic'].toFixed(2);
+        var minimum_day = new_data[today_text]['min_nove_sto_tisic'];
         if (okres_clicked == okres_lau)
         {
-            okres_nakazeni.innerHTML = parseInt(okres_value);
+            okres_nakazeni_sto_tisic.innerHTML = okres_value;
+            okres_nakazeni.innerHTML = parseInt(new_data[today_text][okres_lau]['nove_pripady']);
             // okres_celkem_nakazeni.innerHTML = covid_data[today_text][okres_lau]['kumulativni_pocet_nakazenych'];
             // okres_celkem_vyleceni.innerHTML = covid_data[today_text][okres_lau]['kumulativni_pocet_vylecenych'];
             okres_datum.innerHTML = getFormattedDateLocal(new Date(today_text));
         }
-        var color1 =   [255, 0, 0];
-        var color2 =   [0, 255, 0];
-        if (okres_value < maximum_day)
+        var color1 = [255, 0, 0];
+        var color2 = [0, 255, 0];
+        switch(current_analysis)
         {
+            case "nakazeni-analyze":
+                color1 =   [255, 174, 0];
+                color2 =   [255, 255, 255];
+                break;
+            case "vyleceni-analyze":
+                color1 =   [0, 150, 0];
+                color2 =   [255, 255, 255];
+                break;
+            case "umrti-analyze":
+                color1 =   [30, 30, 30];
+                color2 =   [255, 255, 255];
+                break;
+            case "ovlivneno-analyze":
+                color1 =   [0, 0, 200];
+                color2 =   [255, 255, 255];
+                break;
+        }
+        // if (okres_value <= maximum_day)
+        // {
             var min_max_difference = maximum_day - minimum_day;
             var w1 = (okres_value - minimum_day) / min_max_difference;
             // var w1 = okres_value / maximum_day;
@@ -327,18 +351,22 @@ function sliderTextUpdate()
             var string = "#" + componentToHex(rgb[0]) + componentToHex(rgb[1]) + componentToHex(rgb[2]);
             // // console.log(string);
             children[i].setAttribute("fill", string);
-            console.log(maximum_day);
-        }
-        else
-        {
-            children[i].setAttribute("fill", "#FF0000");
-        }
+            // console.log(maximum_day);
+        // }
+        // else
+        // {
+        //     console.log("Okres value: " + okres_value);
+        //     console.log("Maximum value: " + maximum_day);
+        //     children[i].setAttribute("fill", "#FF0000");
+        // }
     }
     // console.log(totalValue);
 }
 
 function selectAnalysis(id) 
 {
+    current_analysis = id;
+    sliderTextUpdate();
     analyze_fields.forEach((element) => 
     {
         if (element != id)
