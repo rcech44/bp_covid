@@ -51,3 +51,6 @@ def map(request):
 def statistics(request):
     graph = thirty_day_summary_graph()
     return render(request, 'statistics.html', {'labels': graph['days'], 'data': graph['values'], 'colors': graph['colors'], 'colors_border': graph['colors_border']})
+
+def root(request):
+    return redirect('main')

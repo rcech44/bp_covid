@@ -220,6 +220,7 @@ def checkUpToDate():
     print('[DATABASE-CHECKER] Checking if database is up-to-date')
     delta = 0
     url_obce = 'https://onemocneni-aktualne.mzcr.cz/api/v3/obce?page=1&itemsPerPage=10000&datum%5Bafter%5D=XYZ&datum%5Bbefore%5D=XYZ&apiToken=c54d8c7d54a31d016d8f3c156b98682a'
+    url_prehled = 'https://onemocneni-aktualne.mzcr.cz/api/v3/zakladni-prehled?page=1&itemsPerPage=100&apiToken=c54d8c7d54a31d016d8f3c156b98682a'
     datum_string_now = datetime.now().strftime("%Y-%m-%d")
     datum_string_yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
 
@@ -275,6 +276,45 @@ def checkUpToDate():
                             conn.commit()
                         print(f"Downloaded data from {update_date}")
 
+            cur = conn.cursor()
+            cur.execute('SELECT * FROM covid_datum_okres ORDER BY id DESC LIMIT 1')
+            response = cur.fetchall()
+            if response is not None:
+                if response[0][1] != datum_string_now:
+                    req = urllib.request.Request(url_prehled)
+                    req.add_header('accept', 'application/json')
+                    response = urllib.request.urlopen(req)
+                    prehled = json.load(response)[0]
+                    if prehled['datum'] == datum_string_now:
+                        cur.execute('INSERT INTO zakladni_prehled (datum, provedene_testy_celkem, potvrzene_pripady_celkem, aktivni_pripady, vyleceni, umrti, aktualne_hospitalizovani, provedene_testy_vcerejsi_den, potvrzene_pripady_vcerejsi_den, provedene_testy_vcerejsi_den_datum, potvrzene_pripady_vcerejsi_den_datum, provedene_antigenni_testy_celkem, provedene_antigenni_testy_vcerejsi_den, provedene_antigenni_testy_vcerejsi_den_datum, vykazana_ockovani_celkem, vykazana_ockovani_vcerejsi_den, vykazana_ockovani_vcerejsi_den_datum, potvrzene_pripady_65_celkem, potvrzene_pripady_65_vcerejsi_den, potvrzene_pripady_65_vcerejsi_den_datum, ockovane_osoby_celkem, ockovane_osoby_vcerejsi_den, ockovane_osoby_vcerejsi_den_datum) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', \
+                            [
+                                prehled['datum'],
+                                prehled['provedene_testy_celkem'],
+                                prehled['potvrzene_pripady_celkem'],
+                                prehled['aktivni_pripady'],
+                                prehled['vyleceni'],
+                                prehled['umrti'],
+                                prehled['aktualne_hospitalizovani'],
+                                prehled['provedene_testy_vcerejsi_den'],
+                                prehled['potvrzene_pripady_vcerejsi_den'],
+                                prehled['provedene_testy_vcerejsi_den_datum'],
+                                prehled['potvrzene_pripady_vcerejsi_den_datum'],
+                                prehled['provedene_antigenni_testy_celkem'],
+                                prehled['provedene_antigenni_testy_vcerejsi_den'],
+                                prehled['provedene_antigenni_testy_vcerejsi_den_datum'],
+                                prehled['vykazana_ockovani_celkem'],
+                                prehled['vykazana_ockovani_vcerejsi_den'],
+                                prehled['vykazana_ockovani_vcerejsi_den_datum'],
+                                prehled['potvrzene_pripady_65_celkem'],
+                                prehled['potvrzene_pripady_65_vcerejsi_den'],
+                                prehled['potvrzene_pripady_65_vcerejsi_den_datum'],
+                                prehled['ockovane_osoby_celkem'],
+                                prehled['ockovane_osoby_vcerejsi_den'],
+                                prehled['ockovane_osoby_vcerejsi_den_datum']
+                            ])
+                        conn.commit()
+                    else:
+                        pass
 
     except sqlite3.Error as e:
         print(e)
@@ -286,4 +326,5 @@ def checkUpToDate():
     else:
         print('[DATABASE-CHECKER] Database is up-to-date')
         return True
+        
 # checkUpToDate()

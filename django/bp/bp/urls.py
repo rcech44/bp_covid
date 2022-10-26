@@ -20,6 +20,7 @@ import covid.views
 
 
 urlpatterns = [
+    path('', covid.views.root, name='root'),
     path('admin/', admin.site.urls, name='admin'),
     path('main/', covid.views.main, name='main'),
     path('map/', covid.views.map, name='map'),
