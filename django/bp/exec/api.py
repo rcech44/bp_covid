@@ -10,9 +10,11 @@ def getData(range_from, range_to, type):
         d1 = datetime.strptime(range_from, '%Y-%m-%d')
         d2 = datetime.strptime(range_to, '%Y-%m-%d')
         if (d1 > d2):
-            return {}
+            print('[API] Requested dates are not valid - from is larger than to')
+            return 'Requested dates are not valid - from is larger than to'
     except Exception as e:
-        return {}
+        print(f"[API] Requested dates are not valid - {e}")
+        return 'Requested dates are not valid'
 
     # If correct, generate all needed dates
     count = 0
@@ -41,7 +43,7 @@ def getData(range_from, range_to, type):
                         return_data[date][okres[2]]['nove_pripady_65_vek'] = okres[7]
     
     except sqlite3.Error as e:
-        print(e)
-        return {}
+        print(f"[API] Database error - {e}")
+        return f"Database error - {e}"
 
     return return_data
