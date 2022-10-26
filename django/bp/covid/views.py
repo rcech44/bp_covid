@@ -15,7 +15,8 @@ def main(request):
     global cache_summary
     global loaded_cache
 
-    checkUpToDate()
+    if checkUpToDate() is False:
+        loaded_cache = False
 
     if (loaded_cache == False):
         new_data = thirty_day_map()

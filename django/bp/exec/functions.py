@@ -281,7 +281,9 @@ def checkUpToDate():
         # print(os.getcwd())
 
     if delta != 0:
-        print("[DATABASE-CHECKER] Database update with {delta} days")
+        print("[DATABASE-CHECKER] Database updated with {delta} days")
+        return False
     else:
         print('[DATABASE-CHECKER] Database is up-to-date')
+        return True
 # checkUpToDate()
