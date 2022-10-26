@@ -147,7 +147,7 @@ def thirty_day_map():
     try:
         with sqlite3.connect('sql/database.sqlite') as conn:
             cur = conn.cursor()
-            cur.execute('SELECT * FROM covid_datum_okres ORDER BY id')
+            cur.execute('SELECT * FROM covid_datum_okres ORDER BY id DESC LIMIT 2400')
             response = cur.fetchall()
             if response is not None:
                 for row in response:
@@ -216,4 +216,72 @@ def thirty_day_map():
     
     return data
 
-# thirty_day_map()
+def checkUpToDate():
+    print('[DATABASE-CHECKER] Checking if database is up-to-date')
+    delta = 0
+    url_obce = 'https://onemocneni-aktualne.mzcr.cz/api/v3/obce?page=1&itemsPerPage=10000&datum%5Bafter%5D=XYZ&datum%5Bbefore%5D=XYZ&apiToken=c54d8c7d54a31d016d8f3c156b98682a'
+    datum_string_now = datetime.now().strftime("%Y-%m-%d")
+    datum_string_yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
+
+    try:
+        with sqlite3.connect('sql/database.sqlite') as conn:
+            cur = conn.cursor()
+            cur.execute('SELECT * FROM covid_datum_okres ORDER BY id DESC LIMIT 1')
+            response = cur.fetchall()
+            if response is not None:
+                if response[0][1] != datum_string_yesterday:
+                    # Data in database is not up to date...
+                    date_yesterday = datetime.strptime(datum_string_yesterday, "%Y-%m-%d")
+                    date_database = datetime.strptime(response[0][1], "%Y-%m-%d")
+                    delta_days = (date_yesterday - date_database).days
+                    delta = delta_days
+                    print(delta_days)
+
+                    # Update database
+                    for i in range(delta_days):
+                        update_date = (date_database + timedelta(days=i+1)).strftime("%Y-%m-%d")
+                        current_url = url_obce.replace('XYZ', update_date)
+                        req = urllib.request.Request(current_url)
+                        req.add_header('accept', 'application/json')
+                        response = urllib.request.urlopen(req)
+                        obce = json.load(response)
+                        dny = {}
+                        for obec in obce:
+                            if obec['okres_lau_kod'] not in dny:
+                                dny[obec['okres_lau_kod']] = {}
+                                dny[obec['okres_lau_kod']]['nove_pripady'] = obec['nove_pripady']
+                                dny[obec['okres_lau_kod']]['aktivni_pripady'] = obec['aktivni_pripady']
+                                dny[obec['okres_lau_kod']]['nove_pripady_7'] = obec['nove_pripady_7_dni']
+                                dny[obec['okres_lau_kod']]['nove_pripady_14'] = obec['nove_pripady_14_dni']
+                                dny[obec['okres_lau_kod']]['nove_pripady_65_vek'] = obec['nove_pripady_65']
+                            else:
+                                dny[obec['okres_lau_kod']]['nove_pripady'] += obec['nove_pripady']
+                                dny[obec['okres_lau_kod']]['aktivni_pripady'] += obec['aktivni_pripady']
+                                dny[obec['okres_lau_kod']]['nove_pripady_7'] += obec['nove_pripady_7_dni']
+                                dny[obec['okres_lau_kod']]['nove_pripady_14'] += obec['nove_pripady_14_dni']
+                                dny[obec['okres_lau_kod']]['nove_pripady_65_vek'] += obec['nove_pripady_65']
+                        # print(dny)
+                        for okres in dny:
+                            cur.execute('INSERT INTO covid_datum_okres (datum, okres, nove_pripady, aktivni_pripady, nove_pripady_7, nove_pripady_14, nove_pripady_65_vek) VALUES (?, ?, ?, ?, ?, ?, ?)', \
+                                [
+                                    update_date,
+                                    okres,
+                                    dny[okres]['nove_pripady'],
+                                    dny[okres]['aktivni_pripady'],
+                                    dny[okres]['nove_pripady_7'],
+                                    dny[okres]['nove_pripady_14'],
+                                    dny[okres]['nove_pripady_65_vek'],
+                                ])
+                            conn.commit()
+                        print(f"Downloaded data from {update_date}")
+
+
+    except sqlite3.Error as e:
+        print(e)
+        # print(os.getcwd())
+
+    if delta != 0:
+        print("[DATABASE-CHECKER] Database update with {delta} days")
+    else:
+        print('[DATABASE-CHECKER] Database is up-to-date')
+# checkUpToDate()

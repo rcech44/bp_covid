@@ -10,12 +10,14 @@ import sqlite3
 url_obce = 'https://onemocneni-aktualne.mzcr.cz/api/v3/obce?page=1&itemsPerPage=10000&datum%5Bafter%5D=XYZ&datum%5Bbefore%5D=XYZ&apiToken=c54d8c7d54a31d016d8f3c156b98682a'
 datum = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
 dny = {'xd': 'xd'}
+starting_datum = datetime.strptime("2022-02-18", '%Y-%m-%d')
+i = 0
 
 try:
-    with sqlite3.connect('../sql/database.db') as conn:
+    with sqlite3.connect('../sql/database.sqlite') as conn:
         cur = conn.cursor()
-        for i in range(30):
-            datum = (datetime.now() - timedelta(days=i+1)).strftime("%Y-%m-%d")
+        while True:
+            datum = (starting_datum + timedelta(days=i)).strftime("%Y-%m-%d")
             url = url_obce.replace('XYZ', datum)
             req = urllib.request.Request(url)
             req.add_header('accept', 'application/json')
@@ -50,6 +52,8 @@ try:
                         dny[datum][okres]['nove_pripady_65_vek'],
                     ])
                 conn.commit()
+            print(f"Downloaded data from {datum}")
+            i += 1
 
 except sqlite3.Error as e:
     print(e)

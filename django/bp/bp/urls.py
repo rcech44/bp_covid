@@ -21,8 +21,7 @@ import covid.views
 
 urlpatterns = [
     path('admin/', admin.site.urls, name='admin'),
-    path('summary/', covid.views.index, name='summary'),
-    path('main/', covid.views.index2, name='main'),
+    path('main/', covid.views.main, name='main'),
     path('map/', covid.views.map, name='map'),
     path('statistics/', covid.views.statistics, name='statistics')
 ]
