@@ -277,7 +277,7 @@ def checkUpToDate():
                         print(f"Downloaded data from {update_date}")
 
             cur = conn.cursor()
-            cur.execute('SELECT * FROM covid_datum_okres ORDER BY id DESC LIMIT 1')
+            cur.execute('SELECT * FROM zakladni_prehled ORDER BY id DESC LIMIT 1')
             response = cur.fetchall()
             if response is not None:
                 if response[0][1] != datum_string_now:
@@ -326,5 +326,5 @@ def checkUpToDate():
     else:
         print('[DATABASE-CHECKER] Database is up-to-date')
         return True
-        
+
 # checkUpToDate()
