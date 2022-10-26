@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import os
 import sys
 from exec.functions import *
+from exec.api import *
 
 # Create your views here.
 
@@ -54,3 +55,7 @@ def statistics(request):
 
 def root(request):
     return redirect('main')
+
+def api_range_days(request, range_from, range_to):
+    data = getData(range_from, range_to, 'day')
+    return JsonResponse(data, safe=False)
