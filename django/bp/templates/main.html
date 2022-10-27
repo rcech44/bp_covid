@@ -26,28 +26,15 @@
         html,body,h1,h2,h3,h4,h5 {font-family: 'Open Sans'}
     </style>
 </head>
-<body class="w3-light-grey">
+<body id="outer-page-background">
 
 <!-- Top container -->
-<div class="w3-bar w3-top w3-black w3-large" style="z-index:4;width:100%">
-  <!-- <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button> -->
-  <div class="w3-bar-item w3-center">Bakalářská práce</div>
-</div>
+<!-- <div class="w3-bar w3-top w3-black w3-large" style="z-index:4;width:100%">
+  <div class="w3-bar-item w3-center">Bakalářská práce - TODO: alpha channel u nevybranych casti, spojit kumulativni data se soucasnou databazi</div>
+</div> -->
 
 <!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
-  <!-- <div class="w3-container w3-row">
-    <div class="w3-col s4">
-      <img src="/w3images/avatar2.png" class="w3-circle w3-margin-right" style="width:46px">
-    </div>
-    <div class="w3-col s8 w3-bar">
-      <span>Welcome, <strong>Mike</strong></span><br>
-      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i></a>
-      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
-      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
-    </div>
-  </div>
-  <hr> -->
+<!-- <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
   <div class="w3-container">
     <h5>Dashboard</h5>
   </div>
@@ -56,19 +43,19 @@
     <a href="{% url 'statistics' %}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-chart-simple fa-fw"></i>  Statistics</a>
     <a href="{% url 'map' %}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-map fa-fw"></i>  Map</a><br><br>
   </div>
-</nav>
+</nav> -->
 
 
 <!-- Overlay effect when opening sidebar on small screens -->
 <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
 <!-- !PAGE CONTENT! -->
-<div class="w3-main" style="margin-left:300px;margin-top:43px;">
+<div class="w3-main" id="page-background" style="margin-left:150px;margin-right:150px;margin-top:43px;">
 
   <!-- Header -->
-  <header class="w3-container" style="padding-top:22px;padding-bottom: 20px;">
+  <header class="w3-container" style="padding-bottom: 20px;">
     <div class="w3-center" style="margin:auto">
-      <h4><b> COVID-19 současné statistiky v České republice</b></h4>
+      <h2><b> COVID-19 současné statistiky v České republice</b></h2>
     </div>
     <div class="w3-center" style="margin:auto">
       <h7>Data se vážou ke včerejšimu dni</h7>
@@ -92,7 +79,7 @@
         </div>
       </div> -->
     <div class="w3-quarter">
-      <div class="w3-container w3-card-4 w3-orange w3-padding-16">
+      <div id="quarter-1" class="w3-container w3-card-4 w3-orange w3-padding-16">
         <div class="w3-left" style="padding-top:8px;"><i class="fas fa-head-side-cough w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h2 id="summary_nakazeni" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">{{ nakazeni }}</h2>
@@ -106,13 +93,13 @@
           {{ rozdil_nakazeni }}
         </b></div>
         <button onclick="selectAnalysis('nakazeni-analyze')" class="w3-button w3-block w3-2020-saffron w3-left-align w3-center"><b>Zvolit ke zkoumání</b></button>
-        <div id="nakazeni-analyze" class="w3-hide w3-animate-opacity" color="w3-orange">
+        <div id="nakazeni-analyze" class="w3-hide w3-animate-opacity" color="w3-orange" background-color="#ffeecc">
           <a href="#" class="w3-button w3-block w3-left-align">Link 1</a>
         </div>
       </div>
     </div>
     <div class="w3-quarter">
-      <div class="w3-container w3-card-4 w3-green w3-padding-16">
+      <div id="quarter-2" class="w3-container w3-card-4 w3-green w3-padding-16">
         <div class="w3-left" style="padding-top:8px;"><i class="far fa-smile-beam w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h2 id="summary_vyleceni" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">{{ vyleceni }}</h2>
@@ -126,13 +113,13 @@
           {{ rozdil_vyleceni }}
         </b></div>
         <button onclick="selectAnalysis('vyleceni-analyze')" class="w3-button w3-block w3-light-green w3-left-align w3-center"><b>Zvolit ke zkoumání</b></button>
-        <div id="vyleceni-analyze" class="w3-hide w3-animate-opacity" color="w3-green">
+        <div id="vyleceni-analyze" class="w3-hide w3-animate-opacity" color="w3-green" background-color="#eeffee">
           <a href="#" class="w3-button w3-block w3-left-align">Link 1</a>
         </div>
       </div>
     </div>
     <div class="w3-quarter">
-      <div class="w3-container w3-card-4 w3-dark-grey w3-padding-16">
+      <div id="quarter-3" class="w3-container w3-card-4 w3-dark-grey w3-padding-16">
         <div class="w3-left" style="padding-top:8px;"><i class="fas fa-cross w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h2 id="summary_umrti" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">{{ umrti }}</h2>
@@ -146,13 +133,13 @@
           {{ rozdil_umrti }}
         </b></div>
         <button onclick="selectAnalysis('umrti-analyze')" class="w3-button w3-block w3-2021-ultimate-gray w3-left-align w3-center"><b>Zvolit ke zkoumání</b></button>
-        <div id="umrti-analyze" class="w3-hide w3-animate-opacity" color="w3-dark-grey">
+        <div id="umrti-analyze" class="w3-hide w3-animate-opacity" color="w3-dark-grey" background-color="#dfdfdf">
           <a href="#" class="w3-button w3-block w3-left-align">Link 1</a>
         </div>
       </div>
     </div>
     <div class="w3-quarter">
-      <div class="w3-container w3-card-4 w3-cyan w3-text-black w3-padding-16">
+      <div id="quarter-4" class="w3-container w3-card-4 w3-cyan w3-text-black w3-padding-16">
         <div class="w3-left" style="padding-top:8px;"><i class="fa fa-users w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h2 id="summary_obyvatel" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">{{ ovlivneno }}</h2>
@@ -166,7 +153,7 @@
           {{ rozdil_ovlivneno }}
         </b></div>
         <button onclick="selectAnalysis('ovlivneno-analyze')" class="w3-button w3-block w3-light-blue w3-left-align w3-center"><b>Zvolit ke zkoumání</b></button>
-        <div id="ovlivneno-analyze" class="w3-hide w3-animate-opacity" color="w3-cyan">
+        <div id="ovlivneno-analyze" class="w3-hide w3-animate-opacity" color="w3-cyan" background-color="#cceaff">
           <a href="#" class="w3-button w3-block w3-left-align">Link 1</a>
         </div>
       </div>

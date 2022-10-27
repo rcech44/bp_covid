@@ -85,21 +85,21 @@ function loadCovidData()
         }
     })
 
-    url2 = "https://onemocneni-aktualne.mzcr.cz/api/v3/zakladni-prehled?page=1&itemsPerPage=100&apiToken=c54d8c7d54a31d016d8f3c156b98682a";
-    // console.log(url);
-    $.ajax({
-        url: url2,
-        headers: { 'accept': 'application/json' },
-        type: "GET",
-        success: function(result)
-        {
-            processCovidDataSummary(result);
-        },
-        error: function(error)
-        {
-            console.log(error);
-        }
-    })
+    // url2 = "https://onemocneni-aktualne.mzcr.cz/api/v3/zakladni-prehled?page=1&itemsPerPage=100&apiToken=c54d8c7d54a31d016d8f3c156b98682a";
+    // // console.log(url);
+    // $.ajax({
+    //     url: url2,
+    //     headers: { 'accept': 'application/json' },
+    //     type: "GET",
+    //     success: function(result)
+    //     {
+    //         processCovidDataSummary(result);
+    //     },
+    //     error: function(error)
+    //     {
+    //         console.log(error);
+    //     }
+    // })
 }
 
 // click function - AJAX request
@@ -382,6 +382,11 @@ function selectAnalysis(id)
                 field.className += " w3-show";
             }
             var color = field.getAttribute('color');
+            var background_color = field.getAttribute('background-color');
+            var page_background = document.getElementById("page-background");
+            var outer_page_background = document.getElementById("outer-page-background");
+            page_background.style.backgroundColor = background_color;
+            outer_page_background.style.backgroundColor = background_color;
             var outer_iframe = document.getElementById("outer-iframe");
             var inner_iframe = document.getElementById("inner-iframe");
             var outer_iframe_current_color = outer_iframe.getAttribute('color');
@@ -390,6 +395,33 @@ function selectAnalysis(id)
             inner_iframe.className = inner_iframe.className.replace(inner_iframe_current_color, color);
             outer_iframe.setAttribute("color", color);
             inner_iframe.setAttribute("color", color);
+            switch(element)
+            {
+                case 'nakazeni-analyze':
+                    document.getElementById("quarter-1").style.opacity = 1;
+                    document.getElementById("quarter-2").style.opacity = 0.7;
+                    document.getElementById("quarter-3").style.opacity = 0.7;
+                    document.getElementById("quarter-4").style.opacity = 0.7;
+                    break;
+                case 'vyleceni-analyze':
+                    document.getElementById("quarter-1").style.opacity = 0.7;
+                    document.getElementById("quarter-2").style.opacity = 1;
+                    document.getElementById("quarter-3").style.opacity = 0.7;
+                    document.getElementById("quarter-4").style.opacity = 0.7;
+                    break;
+                case 'umrti-analyze':
+                    document.getElementById("quarter-1").style.opacity = 0.7;
+                    document.getElementById("quarter-2").style.opacity = 0.7;
+                    document.getElementById("quarter-3").style.opacity = 1;
+                    document.getElementById("quarter-4").style.opacity = 0.7;
+                    break;
+                case 'ovlivneno-analyze':
+                    document.getElementById("quarter-1").style.opacity = 0.7;
+                    document.getElementById("quarter-2").style.opacity = 0.7;
+                    document.getElementById("quarter-3").style.opacity = 0.7;
+                    document.getElementById("quarter-4").style.opacity = 1;
+                    break;
+            }
         }
     })
     // var x = document.getElementById(id);
