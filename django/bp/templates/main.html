@@ -24,6 +24,8 @@
     <script type="text/javascript" src="{% static 'on_load.js' %}" charset="utf-8"></script>
     <link type="text/css" rel="stylesheet" href="{% static 'double_range_slider.css' %}">
     <script type="text/javascript" src="{% static 'double_range_slider.js' %}" charset="utf-8" defer></script>
+    <link href="{% static 'nouislider.css' %}" rel="stylesheet">
+    <script src="{% static 'nouislider.js' %}"></script>
     <style>
         html,body,h1,h2,h3,h4,h5 {font-family: 'Open Sans'}
     </style>
@@ -170,11 +172,8 @@
         {% comment %} https://codepen.io/joosts/pen/rNLdxvK {% endcomment %}
         <h5>Zkoumání datového intervalu</h5>
         <div class="w3-card w3-container w3-white" style="padding-top:16px;padding-bottom:16px;">
-          <div class="min-max-slider" data-legendnum="2">
-            <label for="min">Minimum price</label>
-            <input id="min" class="min" name="min" type="range" step="1" min="0" max="3000" />
-            <label for="max">Maximum price</label>
-            <input id="max" class="max" name="max" type="range" step="1" min="0" max="3000" />
+          <div id="values-slider" class="slider-styled">
+
           </div>
         </div>
         <br>
