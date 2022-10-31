@@ -22,6 +22,8 @@
     </script>
     <script type="text/javascript" src="{% static 'okresy_data.js' %}" charset="utf-8"></script>
     <script type="text/javascript" src="{% static 'on_load.js' %}" charset="utf-8"></script>
+    <link type="text/css" rel="stylesheet" href="{% static 'double_range_slider.css' %}">
+    <script type="text/javascript" src="{% static 'double_range_slider.js' %}" charset="utf-8" defer></script>
     <style>
         html,body,h1,h2,h3,h4,h5 {font-family: 'Open Sans'}
     </style>
@@ -55,7 +57,7 @@
   <!-- Header -->
   <header class="w3-container" style="padding-bottom: 20px;">
     <div class="w3-center" style="margin:auto">
-      <h2><b> COVID-19 současné statistiky v České republice</b></h2>
+      <h2><b> COVID-19 statistiky v České republice</b></h2>
     </div>
     <div class="w3-center" style="margin:auto">
       <h7>Data se vážou ke včerejšimu dni</h7>
@@ -153,7 +155,7 @@
           {{ rozdil_ovlivneno }}
         </b></div>
         <button onclick="selectAnalysis('ovlivneno-analyze')" class="w3-button w3-block w3-light-blue w3-left-align w3-center"><b>Zvolit ke zkoumání</b></button>
-        <div id="ovlivneno-analyze" class="w3-hide w3-animate-opacity" color="w3-cyan" background-color="#cceaff">
+        <div id="ovlivneno-analyze" class="w3-hide w3-animate-opacity" color="w3-cyan" background-color="#ddeaff">
           <a href="#" class="w3-button w3-block w3-left-align">Link 1</a>
         </div>
       </div>
@@ -165,13 +167,24 @@
   <div class="w3-panel">
     <div class="w3-row-padding" style="margin:0 -16px">
       <div class="w3-quarter">
+        {% comment %} https://codepen.io/joosts/pen/rNLdxvK {% endcomment %}
+        <h5>Zkoumání datového intervalu</h5>
+        <div class="w3-card w3-container w3-white" style="padding-top:16px;padding-bottom:16px;">
+          <div class="min-max-slider" data-legendnum="2">
+            <label for="min">Minimum price</label>
+            <input id="min" class="min" name="min" type="range" step="1" min="0" max="3000" />
+            <label for="max">Maximum price</label>
+            <input id="max" class="max" name="max" type="range" step="1" min="0" max="3000" />
+          </div>
+        </div>
+        <br>
         <h5>Zvolení data</h5>
         <div class="w3-card w3-container w3-white" style="padding-top:16px;padding-bottom:16px;">
             <div>
                 <input id="slider" type="range" min="1" max="30" value="30" style="width:100%">
             </div>
             <div style="text-align:center;width:100%;">
-                <b><a id="slider_text"> </a></b>
+                <b><a id="slider_text">-</a></b>
             </div>
         </div>
         <br>
