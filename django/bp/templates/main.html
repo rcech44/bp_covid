@@ -54,7 +54,7 @@
 <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
 <!-- !PAGE CONTENT! -->
-<div class="w3-main" id="page-background" style="margin-left:150px;margin-right:150px;margin-top:43px;">
+<div class="w3-main" id="page-background" style="margin-left:150px;margin-right:150px">
 
   <!-- Header -->
   <header class="w3-container" style="padding-bottom: 20px;">
@@ -172,8 +172,27 @@
         {% comment %} https://codepen.io/joosts/pen/rNLdxvK {% endcomment %}
         <h5>Zkoumání datového intervalu</h5>
         <div class="w3-card w3-container w3-white" style="padding-top:16px;padding-bottom:16px;">
-          <div id="values-slider" class="slider-styled">
+          <div class="w3-center">
+            <label for="sel1">Zvolení hodnoty:  </label>
+            <select oninput="selectSliderType(this.value)" class="form-control" id="sel1" style="margin-top:0px">
+              <option>Den</option>
+              <option>Týden</option>
+              <option>Měsíc</option>
+              <option>Rok</option>
+            </select>
+        </div>
+          <div id="values-slider" class="slider-styled" style="margin-right:10px;margin-left:10px;margin-top:30px;margin-bottom:20px">
 
+          </div>
+          <div class="w3-left" id="slider-min" style="margin-left:10px;">
+              -
+          </div>
+          <div class="w3-right" id="slider-max" style="padding-bottom:10px;margin-right:10px"><b>
+              -
+          </b></div>
+          <br>
+          <div class="w3-center">
+            <button class="w3-button w3-block w3-light-gray w3-left-align w3-center"><b>Zvolit ke zkoumání</b></button>
           </div>
         </div>
         <br>

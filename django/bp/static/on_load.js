@@ -22,6 +22,9 @@ var okres_clicked = "";
 var okres_clicked_map_object = -1;
 var analyze_fields = ["nakazeni-analyze", "vyleceni-analyze", "umrti-analyze", "ovlivneno-analyze"];
 var current_analysis;
+var slider_values;
+var days_since_covid;
+var slider_current_type = "Den";
 
 // Initialize and modify webpage on startup
 function onIframeLoad()
@@ -404,43 +407,50 @@ function selectAnalysis(id)
             {
                 case 'nakazeni-analyze':
                     document.getElementById("quarter-1").style.opacity = 1;
-                    document.getElementById("quarter-2").style.opacity = 0.7;
-                    document.getElementById("quarter-3").style.opacity = 0.7;
-                    document.getElementById("quarter-4").style.opacity = 0.7;
+                    document.getElementById("quarter-2").style.opacity = 0.6;
+                    document.getElementById("quarter-3").style.opacity = 0.6;
+                    document.getElementById("quarter-4").style.opacity = 0.6;
                     break;
                 case 'vyleceni-analyze':
-                    document.getElementById("quarter-1").style.opacity = 0.7;
+                    document.getElementById("quarter-1").style.opacity = 0.6;
                     document.getElementById("quarter-2").style.opacity = 1;
-                    document.getElementById("quarter-3").style.opacity = 0.7;
-                    document.getElementById("quarter-4").style.opacity = 0.7;
+                    document.getElementById("quarter-3").style.opacity = 0.6;
+                    document.getElementById("quarter-4").style.opacity = 0.6;
                     break;
                 case 'umrti-analyze':
-                    document.getElementById("quarter-1").style.opacity = 0.7;
-                    document.getElementById("quarter-2").style.opacity = 0.7;
+                    document.getElementById("quarter-1").style.opacity = 0.6;
+                    document.getElementById("quarter-2").style.opacity = 0.6;
                     document.getElementById("quarter-3").style.opacity = 1;
-                    document.getElementById("quarter-4").style.opacity = 0.7;
+                    document.getElementById("quarter-4").style.opacity = 0.6;
                     break;
                 case 'ovlivneno-analyze':
-                    document.getElementById("quarter-1").style.opacity = 0.7;
-                    document.getElementById("quarter-2").style.opacity = 0.7;
-                    document.getElementById("quarter-3").style.opacity = 0.7;
+                    document.getElementById("quarter-1").style.opacity = 0.6;
+                    document.getElementById("quarter-2").style.opacity = 0.6;
+                    document.getElementById("quarter-3").style.opacity = 0.6;
                     document.getElementById("quarter-4").style.opacity = 1;
                     break;
             }
         }
     })
-    // var x = document.getElementById(id);
-    // if (x.className.indexOf("w3-show") == -1) {
-    //   x.className += " w3-show";
-    // } else { 
-    //   x.className = x.className.replace(" w3-show", "");
-    // }
   }
 
 function loadSlider()
 {
+    var today = new Date();
+    var covid_start = new Date("03/01/2020"); 
+    var difference = today.getTime() - covid_start.getTime();
+    days_since_covid = difference / (1000 * 3600 * 24);
+    slider_values = [];
+    for (var i = 0; i < days_since_covid; i++)
+    {
+        slider_values[i] = i+1;
+    }
     var valuesSlider = document.getElementById('values-slider');
-    var valuesForSlider = [1,2,3,4,5,6,7,8,10,12,14,16,20,24,28,32];
+    var snapValues = [
+        document.getElementById('slider-min'),
+        document.getElementById('slider-max')
+    ];
+    var valuesForSlider = slider_values;
     var format = {
         to: function(value) {
             return valuesForSlider[Math.round(value)];
@@ -456,8 +466,72 @@ function loadSlider()
         connect: [false, true, false],
         // steps of 1
         step: 1,
-        tooltips: true,
         format: format
     });
     valuesSlider.noUiSlider.set(['7', '28']);
+    // valuesSlider.noUiSlider.updateOptions({
+    //     range:
+    //     {
+    //         min: 5,
+    //         max: 10
+    //     }
+    // });
+    valuesSlider.noUiSlider.on('update', function (values, handle) {
+        var today = new Date();
+        switch (slider_current_type)
+        {
+            case "Den":
+                today.setDate(today.getDate() - (slider_values.length - values[handle]));
+                break;
+            case "Týden":
+                today.setDate(today.getDate() - (slider_values.length - (values[handle] * 7)));
+                break;
+            case "Měsíc":
+                today.setDate(today.getDate() - (slider_values.length - (values[handle] * 30)));
+                break;
+            case "Rok":
+                break;
+        }
+        var today_text = getFormattedDateLocal(today);
+        snapValues[handle].innerHTML = today_text;
+    });
+}
+
+function selectSliderType(value)
+{
+    var valuesSlider = document.getElementById('values-slider');
+    slider_current_type = value;
+
+    switch (value)
+    {
+        case "Den":
+            valuesSlider.noUiSlider.updateOptions({
+                range:
+                {
+                    min: 0,
+                    max: days_since_covid
+                }
+            });
+            break;
+        case "Týden":
+            valuesSlider.noUiSlider.updateOptions({
+                range:
+                {
+                    min: 0,
+                    max: days_since_covid / 7
+                }
+            });
+            break;
+        case "Měsíc":
+            valuesSlider.noUiSlider.updateOptions({
+                range:
+                {
+                    min: 0,
+                    max: days_since_covid / 30
+                }
+            });
+            break;
+        case "Rok":
+            break;
+    }
 }
