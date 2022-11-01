@@ -2,6 +2,7 @@
  * These styles are required for noUiSlider to function.
  * You don't need to change these rules to apply your design.
  */
+
 .noUi-target,
 .noUi-target * {
   -webkit-touch-callout: none;
@@ -85,9 +86,9 @@
   height: 18px;
 }
 .noUi-horizontal .noUi-handle {
-  width: 34px;
+  width: 15px;
   height: 28px;
-  right: -17px;
+  right: 0px;
   top: -6px;
 }
 .noUi-vertical {
@@ -116,7 +117,7 @@
   border-radius: 3px;
 }
 .noUi-connect {
-  background: #3FB8AF;
+  background: #376cfc;
 }
 /* Handles and cursors;
  */
@@ -138,7 +139,7 @@
 }
 /* Handle stripes;
  */
-.noUi-handle:before,
+/* .noUi-handle:before,
 .noUi-handle:after {
   content: "";
   display: block;
@@ -161,7 +162,7 @@
 }
 .noUi-vertical .noUi-handle:after {
   top: 17px;
-}
+} */
 /* Disabled state;
  */
 [disabled] .noUi-connect {

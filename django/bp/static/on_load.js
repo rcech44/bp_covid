@@ -26,11 +26,18 @@ var slider_values;
 var days_since_covid;
 var slider_current_type = "Den";
 var slider_current_values = [0,0];
+var mapa_celkem_nove_pripady;
+var mapa_celkem_aktivni_pripady;
+var mapa_datum;
+var slider_current_selected_date;
+var ongoing_animation = true;
+var animation_speed = 5;
 
 // Initialize and modify webpage on startup
 function onIframeLoad()
 {
-    loadSlider();
+    loadSlider1();
+    // loadSlider2();
     loadCovidData();
 }
 
@@ -40,6 +47,9 @@ function initPage()
     // sliders.forEach( function(slider) {
     //     init(slider);
     // });
+    mapa_celkem_nove_pripady = document.getElementById("text_celkem_nove_pripady");
+    mapa_celkem_aktivni_pripady = document.getElementById("text_celkem_aktivni_pripady");
+    mapa_datum = document.getElementById("text_datum_mapa");
     slider = document.getElementById("slider");
     output = document.getElementById("slider_text");
     slider.oninput = sliderTextUpdate;
@@ -79,7 +89,7 @@ function loadCovidData()
     var today_text = today.getDate()  + "-" + (today.getMonth()+1) + "-" + today.getFullYear();
 
     url = "https://onemocneni-aktualne.mzcr.cz/api/v3/kraj-okres-nakazeni-vyleceni-umrti?itemsPerPage=100000&datum%5Bafter%5D=" + today_text + "&apiToken=c54d8c7d54a31d016d8f3c156b98682a";
-    console.log(url);
+    // console.log(url);
     $.ajax({
         url: url,
         headers: { 'accept': 'application/json' },
@@ -123,7 +133,7 @@ function onClickMap(name, okres_lau, object)
     var today = new Date();
     today.setDate(today.getDate() - 1);
     today = addDays(today, slider.value - 30);
-    var today_text = getFormattedDate(today);
+    var today_text = getFormattedDate(slider_current_selected_date);
 
     url = "https://onemocneni-aktualne.mzcr.cz/api/v3/kraj-okres-nakazeni-vyleceni-umrti?page=1&itemsPerPage=100&datum%5Bafter%5D=" + today_text + "&okres_lau_kod=" + okres_lau + "&apiToken=c54d8c7d54a31d016d8f3c156b98682a";
     console.log(url);
@@ -214,15 +224,19 @@ function processGetData(result, name, okres_lau, today_text)
     // console.log(result);
     nakazenych = result[0]['kumulativni_pocet_nakazenych'] - result[0]['kumulativni_pocet_vylecenych'];
 
+    mapa_celkem_nove_pripady = document.getElementById("text_celkem_nove_pripady");
+    mapa_celkem_aktivni_pripady = document.getElementById("text_celkem_aktivni_pripady");
+    mapa_datum = document.getElementById("text_datum_mapa");
+
     okres_nazev.innerHTML = name;
     okres_kod.innerHTML = okres_lau;
     okres_nakazeni.innerHTML = new_data[today_text][okres_lau]['nove_pripady'];
     okres_nakazeni_sto_tisic.innerHTML = new_data[today_text][okres_lau]['nove_pripady_sto_tisic'].toFixed(2);
-    okres_celkem_nakazeni.innerHTML = result[0]['kumulativni_pocet_nakazenych'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    okres_celkem_vyleceni.innerHTML = result[0]['kumulativni_pocet_vylecenych'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    okres_datum.innerHTML = getFormattedDateLocal(new Date(result[0]['datum']));
+    // okres_celkem_nakazeni.innerHTML = result[0]['kumulativni_pocet_nakazenych'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    // okres_celkem_vyleceni.innerHTML = result[0]['kumulativni_pocet_vylecenych'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    // okres_datum.innerHTML = getFormattedDateLocal(new Date(result[0]['datum']));
     okres_pocet_obyvatel.innerHTML = okresy_pocet_obyvatel[result[0]['okres_lau_kod']].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    okres_pocet_obyvatel_procento.innerHTML = ((parseFloat(result[0]['kumulativni_pocet_nakazenych']) / parseFloat(okresy_pocet_obyvatel[result[0]['okres_lau_kod']])) * 100).toFixed(2) + "%";
+    // okres_pocet_obyvatel_procento.innerHTML = ((parseFloat(result[0]['kumulativni_pocet_nakazenych']) / parseFloat(okresy_pocet_obyvatel[result[0]['okres_lau_kod']])) * 100).toFixed(2) + "%";
 
     // old
     // text.innerHTML = "<b>Název okresu:</b> " + name + "<br>" + "<b>LAU kód okresu:</b> " + result[0]['okres_lau_kod'] + "<br>" + "<b>Současný počet nakažených:</b> " + nakazenych
@@ -241,14 +255,26 @@ function sleep(ms)
 // handle animation button
 async function handleAnimation()
 {
+    ongoing_animation = true;
     var max_value = parseInt(slider.getAttribute('max'));
     var current_value = parseInt(slider.value);
     for (var cur = current_value; cur < max_value; cur++)
     {
+        if (ongoing_animation == false) break;
         slider.value = cur + 1;
         sliderTextUpdate();
-        await sleep(50);
+        await sleep(animation_speed * 30);
     }
+}
+
+function stopAnimation()
+{
+    ongoing_animation = false;
+}
+
+function changeAnimationSpeed(value)
+{
+    animation_speed = 11 - parseInt(value);
 }
 
 // function to add days to given date
@@ -307,10 +333,15 @@ function sliderTextUpdate()
     var today = new Date();
     today.setDate(today.getDate() - Math.floor(days_since_covid - slider_current_values[0]) - 1);
     today = addDays(today, slider.value);
+    slider_current_selected_date = today;
     var today_text = getFormattedDate(today);
+    var today_text_local = getFormattedDateLocal(today);
     output.innerHTML = today.toLocaleDateString("cs-CZ");
     var parent = iframe.contentWindow.document.querySelector("g");
     var children = parent.children;
+    mapa_celkem_nove_pripady.innerHTML = "<b>Nové případy za tento den:</b> " + new_data[today_text]['nove_celkovy_pocet'];
+    mapa_celkem_aktivni_pripady.innerHTML = "<b>Současný počet případů za tento den:</b> " + new_data[today_text]['aktivni_celkovy_pocet'];
+    mapa_datum.innerHTML = today_text_local;
     for (let i = 0; i < 77; i++)
     {
         var okres_lau = children[i].getAttribute('okres_lau');
@@ -324,7 +355,7 @@ function sliderTextUpdate()
             okres_nakazeni.innerHTML = parseInt(new_data[today_text][okres_lau]['nove_pripady']);
             // okres_celkem_nakazeni.innerHTML = covid_data[today_text][okres_lau]['kumulativni_pocet_nakazenych'];
             // okres_celkem_vyleceni.innerHTML = covid_data[today_text][okres_lau]['kumulativni_pocet_vylecenych'];
-            okres_datum.innerHTML = getFormattedDateLocal(new Date(today_text));
+            // okres_datum.innerHTML = getFormattedDateLocal(new Date(today_text));
         }
         var color1 = [255, 0, 0];
         var color2 = [0, 255, 0];
@@ -411,31 +442,35 @@ function selectAnalysis(id)
                     document.getElementById("vyleceni-analyze").style.opacity = 0.6;
                     document.getElementById("umrti-analyze").style.opacity = 0.6;
                     document.getElementById("ovlivneno-analyze").style.opacity = 0.6;
+                    document.getElementsByClassName("noUi-connect")[0].style.background = "#ff9800";
                     break;
                 case 'vyleceni-analyze':
                     document.getElementById("nakazeni-analyze").style.opacity = 0.6;
                     document.getElementById("vyleceni-analyze").style.opacity = 1;
                     document.getElementById("umrti-analyze").style.opacity = 0.6;
                     document.getElementById("ovlivneno-analyze").style.opacity = 0.6;
+                    document.getElementsByClassName("noUi-connect")[0].style.background = "#4caf50";
                     break;
                 case 'umrti-analyze':
                     document.getElementById("nakazeni-analyze").style.opacity = 0.6;
                     document.getElementById("vyleceni-analyze").style.opacity = 0.6;
                     document.getElementById("umrti-analyze").style.opacity = 1;
                     document.getElementById("ovlivneno-analyze").style.opacity = 0.6;
+                    document.getElementsByClassName("noUi-connect")[0].style.background = "#616161";
                     break;
                 case 'ovlivneno-analyze':
                     document.getElementById("nakazeni-analyze").style.opacity = 0.6;
                     document.getElementById("vyleceni-analyze").style.opacity = 0.6;
                     document.getElementById("umrti-analyze").style.opacity = 0.6;
                     document.getElementById("ovlivneno-analyze").style.opacity = 1;
+                    document.getElementsByClassName("noUi-connect")[0].style.background = "#00bcd4";
                     break;
             }
         }
     })
   }
 
-function loadSlider()
+function loadSlider1()
 {
     var today = new Date();
     var covid_start = new Date("03/01/2020"); 
@@ -470,13 +505,63 @@ function loadSlider()
         format: format
     });
     valuesSlider.noUiSlider.set(['7', '28']);
-    // valuesSlider.noUiSlider.updateOptions({
-    //     range:
-    //     {
-    //         min: 5,
-    //         max: 10
-    //     }
-    // });
+    valuesSlider.noUiSlider.on('update', function (values, handle) {
+        var today = new Date();
+        switch (slider_current_type)
+        {
+            case "Den":
+                today.setDate(today.getDate() - (slider_values.length - values[handle]));
+                break;
+            case "Týden":
+                today.setDate(today.getDate() - (slider_values.length - (values[handle] * 7)));
+                break;
+            case "Měsíc":
+                today.setDate(today.getDate() - (slider_values.length - (values[handle] * 30)));
+                break;
+            case "Rok":
+                break;
+        }
+        var today_text = getFormattedDateLocal(today);
+        snapValues[handle].innerHTML = today_text;
+        slider_current_values[handle] = values[handle];
+    });
+}
+
+function loadSlider2()
+{
+    var today = new Date();
+    var covid_start = new Date("03/01/2020"); 
+    var difference = today.getTime() - covid_start.getTime();
+    days_since_covid = difference / (1000 * 3600 * 24);
+    slider_values = [];
+    for (var i = 0; i < days_since_covid; i++)
+    {
+        slider_values[i] = i+1;
+    }
+    var valuesSlider = document.getElementById('values-slider-2');
+    var snapValues = [
+        document.getElementById('slider-min'),
+        document.getElementById('slider-max')
+    ];
+    var valuesForSlider = slider_values;
+    var format = {
+        to: function(value) {
+            return valuesForSlider[Math.round(value)];
+        },
+        from: function (value) {
+            return valuesForSlider.indexOf(Number(value));
+        }
+    };
+    noUiSlider.create(valuesSlider, {
+        start: [8],
+        // A linear range from 0 to 15 (16 values)
+        range: { min: 0, max: valuesForSlider.length - 2 },
+        connect: [false, true, false],
+        // steps of 1
+        step: 1,
+        format: format
+    });
+    valuesSlider.noUiSlider.set(['7', '28']);
     valuesSlider.noUiSlider.on('update', function (values, handle) {
         var today = new Date();
         switch (slider_current_type)
@@ -563,6 +648,7 @@ function confirmRangeAnalysis()
     slider.setAttribute("max", slider_current_values[1] - slider_current_values[0]);
     slider.value = "0";
     var url = "http://127.0.0.1:8000/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
+    toast("Stahuji nová data...");
     $.ajax({
         url: url,
         headers: { 'accept': 'application/json' },
@@ -582,4 +668,17 @@ function processGetDataFromSlider(result)
 {
     new_data = result;
     sliderTextUpdate();
+    toast("Byla aktualizována data.");
 }
+
+function toast(message) {
+    // Get the snackbar DIV
+    var x = document.getElementById("snackbar");
+    x.innerHTML = message;
+  
+    // Add the "show" class to DIV
+    x.className = "show";
+  
+    // After 3 seconds, remove the show class from DIV
+    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
+  }

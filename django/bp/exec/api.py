@@ -35,8 +35,10 @@ def getData(range_from, range_to, type):
                 cur.execute('SELECT * FROM covid_datum_okres WHERE datum = ?', [date])
                 response = cur.fetchall()
                 return_data[date] = {}
+                nove_pocet = 0
                 nove_max = 0
                 nove_min = 999999
+                aktivni_pocet = 0
                 aktivni_max = 0
                 aktivni_min = 999999
                 for okres in response:
@@ -49,6 +51,8 @@ def getData(range_from, range_to, type):
                         return_data[date][okres[2]]['nove_pripady_65_vek'] = okres[7]
                         return_data[date][okres[2]]['nove_pripady_sto_tisic'] = okres[3] / (pocet_obyvatel[okres[2]] / 100000)
                         return_data[date][okres[2]]['aktivni_pripady_sto_tisic'] = okres[4] / (pocet_obyvatel[okres[2]] / 100000)
+                        nove_pocet += okres[3]
+                        aktivni_pocet += okres[4]
                         if return_data[date][okres[2]]['nove_pripady_sto_tisic'] > nove_max: nove_max = return_data[date][okres[2]]['nove_pripady_sto_tisic']
                         if return_data[date][okres[2]]['nove_pripady_sto_tisic'] < nove_min: nove_min = return_data[date][okres[2]]['nove_pripady_sto_tisic']
                         if return_data[date][okres[2]]['aktivni_pripady_sto_tisic'] > aktivni_max: aktivni_max = return_data[date][okres[2]]['aktivni_pripady_sto_tisic']
@@ -57,6 +61,8 @@ def getData(range_from, range_to, type):
                 return_data[date]['min_aktivni_sto_tisic'] = aktivni_min
                 return_data[date]['max_nove_sto_tisic'] = nove_max
                 return_data[date]['min_nove_sto_tisic'] = nove_min
+                return_data[date]['nove_celkovy_pocet'] = nove_pocet
+                return_data[date]['aktivni_celkovy_pocet'] = aktivni_pocet
     
     except sqlite3.Error as e:
         print(f"[API] Database error - {e}")

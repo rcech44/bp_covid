@@ -22,7 +22,7 @@
     </script>
     <script type="text/javascript" src="{% static 'okresy_data.js' %}" charset="utf-8"></script>
     <script type="text/javascript" src="{% static 'on_load.js' %}" charset="utf-8"></script>
-    <link type="text/css" rel="stylesheet" href="{% static 'double_range_slider.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'toast.css' %}">
     <script type="text/javascript" src="{% static 'double_range_slider.js' %}" charset="utf-8" defer></script>
     <link href="{% static 'nouislider.css' %}" rel="stylesheet">
     <script src="{% static 'nouislider.js' %}"></script>
@@ -168,13 +168,25 @@
         <h5>Zvolení data a animace</h5>
         <div class="w3-card w3-container w3-white" style="padding-top:16px;padding-bottom:16px;">
             <div>
-                <input id="slider" type="range" min="1" max="30" value="30" style="width:100%">
+                <input id="slider" type="range" min="1" max="30" value="30" style="width:100%;margin-bottom: 20px;">
             </div>
-            <div style="text-align:center;width:100%;">
-                <b><a id="slider_text">-</a></b>
-            </div>
+            <table style="width:100%">
+                <tr>
+                    <td style="width:75%">
+                        <label for="quantity">Rychlost: </label>
+                        <input onchange="changeAnimationSpeed(this.value)" type="number" id="quantity" name="quantity" min="1" max="10" value="5">
+                    </td>
+                    <td id="slider_text" style="width:25%;text-align: center;font-weight: bold;">
+                        -
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:75%"><button class="w3-button w3-block w3-light-gray w3-left-align w3-center" style="margin-top:10px" onclick="handleAnimation()"><b>Spustit animaci</b></button></td>
+                    <td style="width:25%"><button class="w3-button w3-block w3-light-gray w3-left-align w3-center" style="margin-top:10px" onclick="stopAnimation()"><b>Zastavit</b></button></td>
+                </tr>
+            </table>
             <div class="w3-center">
-                <button class="w3-button w3-block w3-light-gray w3-left-align w3-center" style="margin-top:10px" onclick="handleAnimation()"><b>Spustit animaci</b></button>
+                
             </div>
         </div>
         <br>
@@ -202,30 +214,10 @@
                 <td><b id="text_okres_nakazeni"></b></td>
             </tr>
             <tr>
-                <td><i class="material-icons" style="font-size:20px">coronavirus</i></td>
-                <td>Kumulativní počet nakažených</td>
-                <td><b id="text_okres_celkem_nakazeni"></b></td>
-            </tr>
-            <tr>
-                <td><i class="material-icons" style="font-size:20px">mood</i></td>
-                <td>Kumulativní počet vyléčených</td>
-                <td><b id="text_okres_celkem_vyleceni"></b></td>
-            </tr>
-            <tr>
-                <td><i class="material-icons" style="font-size:20px">event</i></td>
-                <td>Datum</td>
-                <td><b id="text_okres_datum"></b></td>
-            </tr>
-            <tr>
                 <td><i class="material-icons" style="font-size:20px">people</i></td>
                 <td>Počet obyvatel (1.1.2022)</td>
                 <td><b id="text_okres_pocet_obyvatel"></b></td>
             </tr>
-            <tr>
-              <td><i class="material-icons" style="font-size:20px">percent</i></td>
-              <td>Procento celkově nakažených obyvatel</td>
-              <td><b id="text_okres_pocet_obyvatel_procento"></b></td>
-          </tr>
             </table>
         </div>
       </div>
@@ -234,6 +226,20 @@
         <div id="outer-iframe" class="w3-card w3-white" style="padding-top: 8px; padding-bottom:4px;" color="w3-white">
           <div id="inner-iframe" class="w3-white" style="margin-right:8px; margin-left:8px;" color="w3-white">
             <iframe id="iframe" class="responsive-iframe" src="/../map" style="height:650px;width:100%;border:none;" title="Iframe Example" onload="onIframeLoad()"></iframe>
+          </div>
+          <div style="margin-left:8px;margin-right:8px">
+            <table style="width:100%">
+                <tr>
+                    <td id="text_celkem_nove_pripady" style="text-align:left;width:33%">-</td>
+                    <td style="text-align:center;width:33%"></td>
+                    <td id="text_datum_mapa" style="text-align:right;width:33%;font-size: larger;" rowspan="2" >-</td>
+                </tr>
+                <tr>
+                    <td id="text_celkem_aktivni_pripady"style="text-align:left;width:33%">-</td>
+                    <td style="text-align:center;width:33%"></td>
+                    <td style="text-align:right;width:33%"></td>
+                </tr>
+            </table>
           </div>
         </div>
       </div>
@@ -364,6 +370,7 @@
 
   <!-- End page content -->
 </div>
+<div id="snackbar">Some text some message..</div>
 
 <script>
 // Get the Sidebar
