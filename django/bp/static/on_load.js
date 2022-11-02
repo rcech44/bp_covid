@@ -378,7 +378,7 @@ function sliderTextUpdate()
                 okres_value = new_data[today_text][okres_lau]['aktivni_pripady_sto_tisic'].toFixed(2);
                 totalValue += okres_value;
                 maximum_day = new_data[today_text]['max_aktivni_sto_tisic'].toFixed(2);
-                minimum_day = new_data[today_text]['min_aktivni_sto_tisic'];
+                minimum_day = 0
                 text_current_data_sto_tisic.innerHTML = "Současný počet nakažených na 100 tisíc obyvatel";
                 text_current_data.innerHTML = "Současný počet nakažených";
                 break;
@@ -386,7 +386,7 @@ function sliderTextUpdate()
                 okres_value = new_data[today_text][okres_lau]['nove_pripady_sto_tisic'].toFixed(2);
                 totalValue += okres_value;
                 maximum_day = new_data[today_text]['max_nove_sto_tisic'].toFixed(2);
-                minimum_day = new_data[today_text]['min_nove_sto_tisic'];
+                minimum_day = 0
                 text_current_data_sto_tisic.innerHTML = "Nový počet nakažených na 100 tisíc obyvatel";
                 text_current_data.innerHTML = "Počet nově nakažených";
                 break;
@@ -753,3 +753,10 @@ function toast(message) {
     // After 3 seconds, remove the show class from DIV
     setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
   }
+
+function sliderDateChange(value)
+{
+    var curr = parseInt(slider.value);
+    slider.value = curr + value;
+    sliderTextUpdate();
+}
