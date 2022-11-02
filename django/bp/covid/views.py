@@ -32,7 +32,7 @@ def main(request):
         print('Loading cache')
 
     data['yesterday_date_text'] = "Dne " + (datetime.now() - timedelta(days=1)).strftime("%d.%m.%Y") + ":"
-    data['yesterday_date_text_testy'] = "Dne " + (datetime.now() - timedelta(days=1)).strftime("%d.%m.%Y") + " poz. PCR testů:"
+    data['yesterday_date_text_testy'] = "Dne " + (datetime.now() - timedelta(days=1)).strftime("%d.%m.%Y") + " poz.:"
     return render(request, 'main.html', {'nakazeni': data['nakazeni'],
                                             'vyleceni': data['vyleceni'],
                                             'umrti': data['umrti'],

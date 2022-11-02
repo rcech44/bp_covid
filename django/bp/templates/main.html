@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-win8.css">
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-2021.css">
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-2020.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
@@ -54,7 +55,7 @@
 <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
 <!-- !PAGE CONTENT! -->
-<div class="w3-main" id="page-background" style="margin-left:150px;margin-right:150px">
+<div class="w3-main" id="page-background" style="margin-left:150px;margin-right:150px;margin-top:30px">
 
   <!-- Header -->
   <header class="w3-container" style="padding-bottom: 20px;">
@@ -68,8 +69,19 @@
 
   <div class="w3-row-padding">
     <div class="w3-quarter">
-      <div id="nakazeni-analyze" class="w3-container w3-card-4 w3-orange w3-padding-16" onclick="selectAnalysis('nakazeni-analyze')" color="w3-orange" background-color="#ffeecc">
-        <div class="w3-left" style="padding-top:8px;"><i class="fas fa-head-side-cough w3-xxxlarge"></i></div>
+      <div id="nakazeni-analyze" class="w3-container w3-card-4 w3-orange w3-padding-16" onclick="selectAnalysis('nakazeni-analyze')" color="w3-orange" background-color="#fff6e3">
+        <table style="width:100%">
+          <tr>
+            <td rowspan="2" style="width:25%"><i class="fas fa-head-side-cough w3-xxxlarge"></i></td>
+            <td style="width:40%;text-align:left"><b style="font-size:20px">Nakažení</b></td>
+            <td style="width:40%;text-align:right"><b style="font-size:20px">{{ nakazeni }}</b></td>
+          </tr>
+          <tr>
+            <td style="width:40%;text-align:left">{{ yesterday_date_text }}</td>
+            <td style="width:40%;text-align:right">{{ rozdil_nakazeni }}</td>
+          </tr>
+        </table>
+        {% comment %} <div class="w3-left" style="padding-top:8px;"><i class="fas fa-head-side-cough w3-xxxlarge"></i></div>
         <div class="w3-right">
           <h2 id="summary_nakazeni" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">{{ nakazeni }}</h2>
         </div>
@@ -80,55 +92,52 @@
         </div>
         <div class="w3-right" style="padding-bottom:10px;"><b>
           {{ rozdil_nakazeni }}
-        </b></div>
+        </b></div> {% endcomment %}
       </div>
     </div>
     <div class="w3-quarter">
       <div id="vyleceni-analyze" class="w3-container w3-card-4 w3-green w3-padding-16" onclick="selectAnalysis('vyleceni-analyze')" color="w3-green" background-color="#eeffee">
-        <div class="w3-left" style="padding-top:8px;"><i class="far fa-smile-beam w3-xxxlarge"></i></div>
-        <div class="w3-right">
-          <h2 id="summary_vyleceni" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">{{ vyleceni }}</h2>
-        </div>
-        <div class="w3-clear"></div>
-        <h4>Vyléčení</h4>
-        <div class="w3-left" id="vyleceni_text">
-          {{ yesterday_date_text }}
-        </div>
-        <div class="w3-right" style="padding-bottom:10px;"><b>
-          {{ rozdil_vyleceni }}
-        </b></div>
+        <table style="width:100%">
+          <tr>
+            <td rowspan="2" style="width:25%"><i class="far fa-smile-beam w3-xxxlarge"></i></td>
+            <td style="width:40%;text-align:left"><b style="font-size:20px">Vyléčení</b></td>
+            <td style="width:40%;text-align:right"><b style="font-size:20px">{{ vyleceni }}</b></td>
+          </tr>
+          <tr>
+            <td style="width:40%;text-align:left">{{ yesterday_date_text }}</td>
+            <td style="width:40%;text-align:right">{{ rozdil_vyleceni }}</td>
+          </tr>
+        </table>
       </div>
     </div>
     <div class="w3-quarter">
-      <div id="umrti-analyze" class="w3-container w3-card-4 w3-dark-grey w3-padding-16" onclick="selectAnalysis('umrti-analyze')" color="w3-dark-grey" background-color="#dfdfdf">
-        <div class="w3-left" style="padding-top:8px;"><i class="fas fa-cross w3-xxxlarge"></i></div>
-        <div class="w3-right">
-          <h2 id="summary_umrti" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">{{ umrti }}</h2>
-        </div>
-        <div class="w3-clear"></div>
-        <h4>Úmrtí</h4>
-        <div class="w3-left" id="umrti_text">
-          {{ yesterday_date_text }}
-        </div>
-        <div class="w3-right" style="padding-bottom:10px;"><b>
-          {{ rozdil_umrti }}
-        </b></div>
+      <div id="umrti-analyze" class="w3-container w3-card-4 w3-dark-grey w3-padding-16" onclick="selectAnalysis('umrti-analyze')" color="w3-dark-grey" background-color="#ededed">
+        <table style="width:100%">
+          <tr>
+            <td rowspan="2" style="width:25%"><i class="fas fa-cross w3-xxxlarge"></i></td>
+            <td style="width:40%;text-align:left"><b style="font-size:20px">Úmrtí</b></td>
+            <td style="width:40%;text-align:right"><b style="font-size:20px">{{ umrti }}</b></td>
+          </tr>
+          <tr>
+            <td style="width:40%;text-align:left">{{ yesterday_date_text }}</td>
+            <td style="width:40%;text-align:right">{{ rozdil_umrti }}</td>
+          </tr>
+        </table>
       </div>
     </div>
     <div class="w3-quarter">
-      <div id="ovlivneno-analyze" class="w3-container w3-card-4 w3-cyan w3-text-black w3-padding-16" onclick="selectAnalysis('ovlivneno-analyze')" color="w3-cyan" background-color="#ddeaff">
-        <div class="w3-left" style="padding-top:8px;"><i class="fa fa-users w3-xxxlarge"></i></div>
-        <div class="w3-right">
-          <h2 id="summary_obyvatel" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">{{ ovlivneno }}</h2>
-        </div>
-        <div class="w3-clear"></div>
-        <h4>Provedené PCR testy</h4>
-        <div class="w3-left" id="ovlivneno_text">
-          {{ yesterday_date_text_testy }}
-        </div>
-        <div class="w3-right" style="padding-bottom:10px;"><b>
-          {{ rozdil_ovlivneno }}
-        </b></div>
+      <div id="ovlivneno-analyze" class="w3-container w3-card-4 w3-light-blue w3-text-black w3-padding-16" onclick="selectAnalysis('ovlivneno-analyze')" color="w3-light-blue" background-color="#e6efff">
+        <table style="width:100%">
+          <tr>
+            <td rowspan="2" style="width:25%"><i class="fa fa-users w3-xxxlarge"></i></td>
+            <td style="width:40%;text-align:left"><b style="font-size:20px">PCR testy</b></td>
+            <td style="width:40%;text-align:right"><b style="font-size:20px">{{ ovlivneno }}</b></td>
+          </tr>
+          <tr>
+            <td style="width:40%;text-align:left">{{ yesterday_date_text_testy }}</td>
+            <td style="width:40%;text-align:right">{{ rozdil_ovlivneno }}</td>
+          </tr>
+        </table>
       </div>
     </div>
   </div>
@@ -168,7 +177,7 @@
         <h5>Zvolení data a animace</h5>
         <div class="w3-card w3-container w3-white" style="padding-top:16px;padding-bottom:16px;">
             <div>
-                <input id="slider" type="range" min="1" max="30" value="30" style="width:100%;margin-bottom: 20px;">
+                <input id="slider" type="range" min="1" max="30" value="30" style="width:100%;margin-bottom: 20px">
             </div>
             <table style="width:100%">
                 <tr>
@@ -179,6 +188,15 @@
                     <td id="slider_text" style="width:25%;text-align: center;font-weight: bold;">
                         -
                     </td>
+                </tr>
+                <tr>
+                  <td colspan="2" style="width=100%">
+                    <label for="sel1">Pozorovaná data:  </label>
+                    <select oninput="selectSliderData(this.value)" class="form-control" id="sel2" style="margin-top:10px">
+                      <option>Současně nakažení</option>
+                      <option>Nové případy</option>
+                    </select>
+                  </td>
                 </tr>
                 <tr>
                     <td style="width:75%"><button class="w3-button w3-block w3-light-gray w3-left-align w3-center" style="margin-top:10px" onclick="handleAnimation()"><b>Spustit animaci</b></button></td>
@@ -205,12 +223,12 @@
             </tr>
             <tr>
                 <td><i class="material-icons" style="font-size:20px">coronavirus</i></td>
-                <td>Současný počet nakažených na 100 tisíc obyvatel</td>
+                <td id="text_current_data_sto_tisic">Současný počet nakažených na 100 tisíc obyvatel</td>
                 <td><b id="text_okres_nakazeni_sto_tisic"></b></td>
             </tr>
             <tr>
                 <td><i class="material-icons" style="font-size:20px">coronavirus</i></td>
-                <td>Současný počet nakažených</td>
+                <td id="text_current_data">Současný počet nakažených</td>
                 <td><b id="text_okres_nakazeni"></b></td>
             </tr>
             <tr>
