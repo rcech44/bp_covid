@@ -73,9 +73,9 @@ function initPage()
     var children = parent.children;
     for (let i = 0; i < 77; i++)
     {
-        children[i].setAttribute("fill-opacity", 0.5);
+        children[i].setAttribute("fill-opacity", 0.7);
         children[i].setAttribute("fill", "#000000");
-        children[i].setAttribute("stroke-width", 0.5);
+        children[i].setAttribute("stroke-width", 0.7);
         children[i].setAttribute("name", okresy_names[i][1]);
         children[i].setAttribute("okres_lau", okresy_names[i][0]);
         children[i].addEventListener('click', function(){
