@@ -30,6 +30,7 @@ var mapa_celkem_nove_pripady;
 var mapa_celkem_aktivni_pripady;
 var mapa_datum;
 var slider_current_selected_date;
+var slider_text_value;
 var ongoing_animation = true;
 var animation_speed = 5;
 var map_show_data = "Současně nakažení";
@@ -39,8 +40,8 @@ var text_current_data;
 // Initialize and modify webpage on startup
 function onIframeLoad()
 {
-    loadTimeFrameSlider();
     loadPageComponents();
+    loadTimeFrameSlider();
     initPage();
 }
 
@@ -69,6 +70,7 @@ function loadPageComponents()
     mapa_datum = document.getElementById("text_datum_mapa");
     slider = document.getElementById("slider");
     output = document.getElementById("slider_text");
+    slider_text_value = document.getElementById("slider-value");
 }
 
 function initPage()
@@ -235,63 +237,88 @@ function getFormattedDate(date)
 // function that updates slider text
 function updatePage()
 {
+    // Init needed variables
     var totalValue = 0;
     var okres_value;
     var maximum_day;
     var minimum_day;
-    var today = new Date();
-    today.setDate(today.getDate() - Math.floor(days_since_covid - slider_current_values[0]) - 1);
-    today = addDays(today, slider.value);
-    slider_current_selected_date = today;
-    var today_text = getFormattedDate(today);
-    var today_text_local = getFormattedDateLocal(today);
-    output.innerHTML = today.toLocaleDateString("cs-CZ");
+    var selected_date = new Date();
+
+    // Get all variables connected with date
+    switch (slider_current_type)
+    {
+        case "Den":
+            selected_date.setDate(selected_date.getDate() - Math.floor(days_since_covid - slider_current_values[0]) - 1);
+            break;
+        case "Týden":
+            selected_date.setDate(selected_date.getDate() - Math.floor(days_since_covid - (slider_current_values[0] * 7)) - 1);
+            break;
+        case "Měsíc":
+            selected_date.setDate(selected_date.getDate() - Math.floor(days_since_covid - (slider_current_values[0] * 30)) - 1);
+            break;
+        case "Rok":
+            break;
+    }
+    
+    selected_date = addDays(selected_date, slider.value);
+    slider_current_selected_date = selected_date;
+    var selected_date_text = getFormattedDate(selected_date);
+    var selected_date_text_local = getFormattedDateLocal(selected_date);
+
+    // Update some values and texts on page
+    output.innerHTML = selected_date.toLocaleDateString("cs-CZ");
+    mapa_celkem_nove_pripady.innerHTML = "<b>Nové případy za tento den:</b> " + numberWithCommas(new_data[selected_date_text]['nove_celkovy_pocet']);
+    mapa_celkem_aktivni_pripady.innerHTML = "<b>Současný počet případů za tento den:</b> " + numberWithCommas(new_data[selected_date_text]['aktivni_celkovy_pocet']);
+    mapa_celkem_pripady.innerHTML = "<b>Celkový počet zaznamenaných případů v tento den:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_pripady']);
+    mapa_datum.innerHTML = selected_date_text_local;
+
+    // Map district updating - go through all districts
     var parent = iframe.contentWindow.document.querySelector("g");
     var children = parent.children;
-    mapa_celkem_nove_pripady.innerHTML = "<b>Nové případy za tento den:</b> " + numberWithCommas(new_data[today_text]['nove_celkovy_pocet']);
-    mapa_celkem_aktivni_pripady.innerHTML = "<b>Současný počet případů za tento den:</b> " + numberWithCommas(new_data[today_text]['aktivni_celkovy_pocet']);
-    mapa_celkem_pripady.innerHTML = "<b>Celkový počet zaznamenaných případů v tento den:</b> " + numberWithCommas(new_data[today_text]['celkem_pripady']);
-    mapa_datum.innerHTML = today_text_local;
     for (let i = 0; i < 77; i++)
     {
+        // Get district LAU code
         var okres_lau = children[i].getAttribute('okres_lau');
+
+        // Get needed values that are required for later computations and set some texts on page according to selected data
         switch(map_show_data)
         {
             case "Současně nakažení":
-                okres_value = new_data[today_text][okres_lau]['aktivni_pripady_sto_tisic'].toFixed(2);
+                okres_value = new_data[selected_date_text][okres_lau]['aktivni_pripady_sto_tisic'].toFixed(2);
                 totalValue += okres_value;
-                maximum_day = new_data[today_text]['max_aktivni_sto_tisic'].toFixed(2);
+                maximum_day = new_data[selected_date_text]['max_aktivni_sto_tisic'].toFixed(2);
                 minimum_day = 0
                 text_current_data_sto_tisic.innerHTML = "Současný počet nakažených na 100 tisíc obyvatel";
                 text_current_data.innerHTML = "Současný počet nakažených";
                 break;
             case "Nové případy":
-                okres_value = new_data[today_text][okres_lau]['nove_pripady_sto_tisic'].toFixed(2);
+                okres_value = new_data[selected_date_text][okres_lau]['nove_pripady_sto_tisic'].toFixed(2);
                 totalValue += okres_value;
-                maximum_day = new_data[today_text]['max_nove_sto_tisic'].toFixed(2);
+                maximum_day = new_data[selected_date_text]['max_nove_sto_tisic'].toFixed(2);
                 minimum_day = 0
                 text_current_data_sto_tisic.innerHTML = "Nový počet nakažených na 100 tisíc obyvatel";
                 text_current_data.innerHTML = "Počet nově nakažených";
                 break;
         }
+
+        // Update text if current district is selected
         if (okres_clicked == okres_lau)
         {
             switch(map_show_data)
             {
                 case "Současně nakažení":
-                    okres_nakazeni.innerHTML = parseInt(new_data[today_text][okres_lau]['aktivni_pripady']);
+                    okres_nakazeni.innerHTML = parseInt(new_data[selected_date_text][okres_lau]['aktivni_pripady']);
                     break;
                 case "Nové případy":
-                    okres_nakazeni.innerHTML = parseInt(new_data[today_text][okres_lau]['nove_pripady']);
+                    okres_nakazeni.innerHTML = parseInt(new_data[selected_date_text][okres_lau]['nove_pripady']);
                     break;
             }
             okres_nakazeni_sto_tisic.innerHTML = okres_value;
-            // okres_celkem_nakazeni.innerHTML = covid_data[today_text][okres_lau]['kumulativni_pocet_nakazenych'];
-            // okres_celkem_vyleceni.innerHTML = covid_data[today_text][okres_lau]['kumulativni_pocet_vylecenych'];
-            // okres_datum.innerHTML = getFormattedDateLocal(new Date(today_text));
         }
-        var color1 = [255, 0, 0];
-        var color2 = [0, 255, 0];
+
+        // Calculate colors
+        var color1 = [];
+        var color2 = [];
         switch(current_analysis)
         {
             case "nakazeni-analyze":
@@ -310,56 +337,37 @@ function updatePage()
                 color1 =   [0, 0, 200];
                 color2 =   [255, 255, 255];
                 break;
+            default:
+                color1 = [255, 0, 0];
+                color2 = [0, 255, 0];
+                break;
         }
-        // if (okres_value <= maximum_day)
-        // {
-            var min_max_difference = maximum_day - minimum_day;
-            var w1 = (okres_value - minimum_day) / min_max_difference;
-            // var w1 = okres_value / maximum_day;
-            var w2 = 1 - w1;
-            var rgb = [Math.round(color1[0] * w1 + color2[0] * w2),
-                    Math.round(color1[1] * w1 + color2[1] * w2),
-                    Math.round(color1[2] * w1 + color2[2] * w2)];
-            // // console.log(rgb[0])
-            var string = "#" + componentToHex(rgb[0]) + componentToHex(rgb[1]) + componentToHex(rgb[2]);
-            // // console.log(string);
-            children[i].setAttribute("fill", string);
-            // console.log(maximum_day);
-        // }
-        // else
-        // {
-        //     console.log("Okres value: " + okres_value);
-        //     console.log("Maximum value: " + maximum_day);
-        //     children[i].setAttribute("fill", "#FF0000");
-        // }
+
+        // Calculate other stuff and set color
+        var min_max_difference = maximum_day - minimum_day;
+        var w1 = (okres_value - minimum_day) / min_max_difference;
+        var w2 = 1 - w1;
+        var rgb = [Math.round(color1[0] * w1 + color2[0] * w2),
+                Math.round(color1[1] * w1 + color2[1] * w2),
+                Math.round(color1[2] * w1 + color2[2] * w2)];
+        var color_string = "#" + componentToHex(rgb[0]) + componentToHex(rgb[1]) + componentToHex(rgb[2]);
+        children[i].setAttribute("fill", color_string);
     }
-    // console.log(totalValue);
 }
 
-function selectAnalysis(id) 
+// Select type of analysis (infected, recovered...)
+function selectAnalysis(type) 
 {
-    current_analysis = id;
+    current_analysis = type;
     updatePage();
     analyze_fields.forEach((element) => 
     {
-        if (element != id)
-        {
-            // var field = document.getElementById(element);
-            // field.className = field.className.replace(" w3-show", "");
-        }
-        else
+        // Set colors and other elements according to selected type of analysis
+        if (element == type)
         {
             var field = document.getElementById(element);
-            // if (field.className.indexOf("w3-show") == -1)
-            // {
-            //     field.className += " w3-show";
-            // }
             var color = field.getAttribute('color');
-            var background_color = field.getAttribute('background-color');
-            // var page_background = document.getElementById("page-background");
-            // var outer_page_background = document.getElementById("outer-page-background");
-            // page_background.style.backgroundColor = background_color;
-            // outer_page_background.style.backgroundColor = background_color;
+            // var background_color = field.getAttribute('background-color');
             var outer_iframe = document.getElementById("outer-iframe");
             var inner_iframe = document.getElementById("inner-iframe");
             var outer_iframe_current_color = outer_iframe.getAttribute('color');
@@ -408,9 +416,11 @@ function selectAnalysis(id)
                     break;
             }
         }
+        
     })
-  }
+}
 
+// Initializer for time frame slider
 function loadTimeFrameSlider()
 {
     var today = new Date();
@@ -447,80 +457,26 @@ function loadTimeFrameSlider()
     });
     valuesSlider.noUiSlider.set(['7', '28']);
     valuesSlider.noUiSlider.on('update', function (values, handle) {
-        var today = new Date();
+        var selected_date = new Date();
         switch (slider_current_type)
         {
             case "Den":
-                today.setDate(today.getDate() - (slider_values.length - values[handle]));
+                selected_date.setDate(selected_date.getDate() - (slider_values.length - values[handle]));
+                slider_text_value.innerHTML = "<i>" + (values[1] - values[0]) + " dní</i>";
                 break;
             case "Týden":
-                today.setDate(today.getDate() - (slider_values.length - (values[handle] * 7)));
+                selected_date.setDate(selected_date.getDate() - (slider_values.length - (values[handle] * 7)));
+                slider_text_value.innerHTML = "<i>" + (values[1] - values[0]) + " týdnů</i>";
                 break;
             case "Měsíc":
-                today.setDate(today.getDate() - (slider_values.length - (values[handle] * 30)));
+                selected_date.setDate(selected_date.getDate() - (slider_values.length - (values[handle] * 30)));
+                slider_text_value.innerHTML = "<i>" + (values[1] - values[0]) + " měsíců</i>";
                 break;
             case "Rok":
                 break;
         }
-        var today_text = getFormattedDateLocal(today);
-        snapValues[handle].innerHTML = today_text;
-        slider_current_values[handle] = values[handle];
-    });
-}
-
-function loadSlider2()
-{
-    var today = new Date();
-    var covid_start = new Date("03/01/2020"); 
-    var difference = today.getTime() - covid_start.getTime();
-    days_since_covid = difference / (1000 * 3600 * 24);
-    slider_values = [];
-    for (var i = 0; i < days_since_covid; i++)
-    {
-        slider_values[i] = i+1;
-    }
-    var valuesSlider = document.getElementById('values-slider-2');
-    var snapValues = [
-        document.getElementById('slider-min'),
-        document.getElementById('slider-max')
-    ];
-    var valuesForSlider = slider_values;
-    var format = {
-        to: function(value) {
-            return valuesForSlider[Math.round(value)];
-        },
-        from: function (value) {
-            return valuesForSlider.indexOf(Number(value));
-        }
-    };
-    noUiSlider.create(valuesSlider, {
-        start: [8],
-        // A linear range from 0 to 15 (16 values)
-        range: { min: 0, max: valuesForSlider.length - 2 },
-        connect: [false, true, false],
-        // steps of 1
-        step: 1,
-        format: format
-    });
-    valuesSlider.noUiSlider.set(['7', '28']);
-    valuesSlider.noUiSlider.on('update', function (values, handle) {
-        var today = new Date();
-        switch (slider_current_type)
-        {
-            case "Den":
-                today.setDate(today.getDate() - (slider_values.length - values[handle]));
-                break;
-            case "Týden":
-                today.setDate(today.getDate() - (slider_values.length - (values[handle] * 7)));
-                break;
-            case "Měsíc":
-                today.setDate(today.getDate() - (slider_values.length - (values[handle] * 30)));
-                break;
-            case "Rok":
-                break;
-        }
-        var today_text = getFormattedDateLocal(today);
-        snapValues[handle].innerHTML = today_text;
+        var selected_date_text = getFormattedDateLocal(selected_date);
+        snapValues[handle].innerHTML = "<b>" + selected_date_text + "</b>";
         slider_current_values[handle] = values[handle];
     });
 }

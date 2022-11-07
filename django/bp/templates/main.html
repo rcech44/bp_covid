@@ -162,12 +162,13 @@
           <div id="values-slider" class="slider-styled" style="margin-right:10px;margin-left:10px;margin-top:30px;margin-bottom:20px">
 
           </div>
-          <div class="w3-left" id="slider-min" style="margin-left:10px;">
-              -
-          </div>
-          <div class="w3-right" id="slider-max" style="padding-bottom:10px;margin-right:10px"><b>
-              -
-          </b></div>
+          <table width="100%">
+            <tr style="padding-bottom:10px">
+              <td id="slider-min" style="margin-left:10px;text-align:left;width:33%;"></td>
+              <td id="slider-value" style="text-align:center;width:33%;">-</td>
+              <td id="slider-max" style="margin-right:10px;text-align:right;width:33%;"></td>
+            </tr>
+          </table>
           <br>
           <div class="w3-center">
             <button class="w3-button w3-block w3-light-gray w3-left-align w3-center" onclick="confirmRangeAnalysis()"><b>Potvrdit</b></button>
@@ -185,16 +186,16 @@
             </table>
             <table style="width:100%">
                 <tr>
-                    <td style="width:75%">
+                    <td style="width:60%">
                         <label for="quantity">Rychlost: </label>
                         <input onchange="changeAnimationSpeed(this.value)" type="number" id="quantity" name="quantity" min="1" max="10" value="5">
                     </td>
-                    <td id="slider_text" style="width:25%;text-align: center;font-weight: bold">
+                    <td colspan="2" id="slider_text" style="width:40%;text-align: center;font-weight: bold">
                         -
                     </td>
                 </tr>
                 <tr>
-                  <td colspan="2" style="width=100%">
+                  <td colspan="3" style="width=100%">
                     <label for="sel1">Pozorovaná data:  </label>
                     <select oninput="selectSliderData(this.value)" class="form-control" id="sel2" style="margin-top:10px">
                       <option>Současně nakažení</option>
@@ -203,7 +204,8 @@
                   </td>
                 </tr>
                 <tr>
-                    <td style="width:75%"><button class="w3-button w3-block w3-light-gray w3-left-align w3-center" style="margin-top:10px" onclick="handleAnimation()"><b>Spustit animaci</b></button></td>
+                    <td style="width:50%"><button class="w3-button w3-block w3-light-gray w3-left-align w3-center" style="margin-top:10px" onclick="handleAnimation()"><b>Spustit animaci</b></button></td>
+                    <td style="width:25%"><button class="w3-button w3-block w3-light-gray w3-left-align w3-center" style="margin-top:10px" onclick="handleAnimation()"><b>Resetovat</b></button></td>
                     <td style="width:25%"><button class="w3-button w3-block w3-light-gray w3-left-align w3-center" style="margin-top:10px" onclick="stopAnimation()"><b>Zastavit</b></button></td>
                 </tr>
             </table>
