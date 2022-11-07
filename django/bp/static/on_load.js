@@ -39,25 +39,41 @@ var text_current_data;
 // Initialize and modify webpage on startup
 function onIframeLoad()
 {
-    loadSlider1();
-    // loadSlider2();
-    loadCovidData();
+    loadTimeFrameSlider();
+    loadPageComponents();
+    initPage();
 }
 
-function initPage()
+// DOM elements setter
+function loadPageComponents()
 {
-    // var sliders = document.querySelectorAll('.min-max-slider');
-    // sliders.forEach( function(slider) {
-    //     init(slider);
-    // });
+    okres_nazev = document.getElementById("text_okres_nazev");
+    okres_kod = document.getElementById("text_okres_kod");
+    okres_nakazeni = document.getElementById("text_okres_nakazeni");
+    okres_nakazeni_sto_tisic = document.getElementById("text_okres_nakazeni_sto_tisic");
+    okres_celkem_nakazeni = document.getElementById("text_okres_celkem_nakazeni");
+    okres_celkem_vyleceni = document.getElementById("text_okres_celkem_vyleceni");
+    okres_datum = document.getElementById("text_okres_datum");
+    okres_pocet_obyvatel = document.getElementById("text_okres_pocet_obyvatel");
+    okres_pocet_obyvatel_procento = document.getElementById("text_okres_pocet_obyvatel_procento");
+    mapa_celkem_nove_pripady = document.getElementById("text_celkem_nove_pripady");
+    mapa_celkem_aktivni_pripady = document.getElementById("text_celkem_aktivni_pripady");
+    text_current_data_sto_tisic = document.getElementById("text_current_data_sto_tisic");
+    text_current_data = document.getElementById("text_current_data");
+    mapa_datum = document.getElementById("text_datum_mapa");
     text_current_data_sto_tisic = document.getElementById("text_current_data_sto_tisic");
     text_current_data = document.getElementById("text_current_data");
     mapa_celkem_nove_pripady = document.getElementById("text_celkem_nove_pripady");
     mapa_celkem_aktivni_pripady = document.getElementById("text_celkem_aktivni_pripady");
+    mapa_celkem_pripady = document.getElementById("text_celkem_pripady");
     mapa_datum = document.getElementById("text_datum_mapa");
     slider = document.getElementById("slider");
     output = document.getElementById("slider_text");
-    slider.oninput = sliderTextUpdate;
+}
+
+function initPage()
+{
+    slider.oninput = updatePage;
     var iframe = document.getElementById("iframe");
     const elements = iframe.contentWindow.document.getElementsByClassName("leaflet-control-layers-toggle");
     while(elements.length > 0)
@@ -83,194 +99,49 @@ function initPage()
             okres_clicked_map_object = i;
         });
     }
-    sliderTextUpdate();
-    console.log(new_data);
-}
-
-function loadCovidData()
-{
-    var today = new Date();
-    today.setDate(today.getDate() - 30);
-    var today_text = today.getDate()  + "-" + (today.getMonth()+1) + "-" + today.getFullYear();
-
-    url = "https://onemocneni-aktualne.mzcr.cz/api/v3/kraj-okres-nakazeni-vyleceni-umrti?itemsPerPage=100000&datum%5Bafter%5D=" + today_text + "&apiToken=c54d8c7d54a31d016d8f3c156b98682a";
-    // console.log(url);
-    $.ajax({
-        url: url,
-        headers: { 'accept': 'application/json' },
-        type: "GET",
-        success: function(result)
-        {
-            processCovidData(result);
-        },
-        error: function(error)
-        {
-            console.log(error);
-        }
-    })
-
-    // url2 = "https://onemocneni-aktualne.mzcr.cz/api/v3/zakladni-prehled?page=1&itemsPerPage=100&apiToken=c54d8c7d54a31d016d8f3c156b98682a";
-    // // console.log(url);
-    // $.ajax({
-    //     url: url2,
-    //     headers: { 'accept': 'application/json' },
-    //     type: "GET",
-    //     success: function(result)
-    //     {
-    //         processCovidDataSummary(result);
-    //     },
-    //     error: function(error)
-    //     {
-    //         console.log(error);
-    //     }
-    // })
+    // updatePage();
 }
 
 // click function - AJAX request
 function onClickMap(name, okres_lau, object)
 {
+    // Remove additional stroke-width from previous district
     if (okres_clicked_map_object != -1)
     {
         iframe.contentWindow.document.querySelector("g").children[okres_clicked_map_object].setAttribute("stroke-width", 0.5);
     }
+
+    // Set selected district stroke-width
     object.setAttribute("stroke-width", 4.5);
+
+    // Get needed variables
     okres_clicked = okres_lau;
-    var today = new Date();
-    today.setDate(today.getDate() - 1);
-    today = addDays(today, slider.value - 30);
-    var today_text = getFormattedDate(slider_current_selected_date);
+    selected_date_text = getFormattedDate(slider_current_selected_date);
 
-    url = "https://onemocneni-aktualne.mzcr.cz/api/v3/kraj-okres-nakazeni-vyleceni-umrti?page=1&itemsPerPage=100&datum%5Bafter%5D=" + today_text + "&okres_lau_kod=" + okres_lau + "&apiToken=c54d8c7d54a31d016d8f3c156b98682a";
-    console.log(url);
-    $.ajax({
-        url: url,
-        headers: { 'accept': 'application/json' },
-        type: "GET",
-        success: function(result)
-        {
-            processGetData(result, name, okres_lau, today_text);
-        },
-        error: function(error)
-        {
-            console.log(error);
-        }
-    })
-}
-
-// process data returned by AJAX by page load - summary
-function processCovidDataSummary(result)
-{
-    // summary_nakazeni = document.getElementById("summary_nakazeni");
-    // summary_vyleceni = document.getElementById("summary_vyleceni");
-    // summary_umrti = document.getElementById("summary_umrti");
-    // summary_obyvatel = document.getElementById("summary_obyvatel");
-    // covid_summary = result[0];
-    // summary_nakazeni.innerHTML = covid_summary['aktivni_pripady'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
-    // summary_vyleceni.innerHTML = covid_summary['vyleceni'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
-    // summary_umrti.innerHTML = covid_summary['umrti'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
-    // summary_obyvatel.innerHTML = covid_summary['potvrzene_pripady_celkem'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
-}
-
-// process data returned by AJAX by page load - data
-function processCovidData(result)
-{
-    // format all data into one big dictionary
-    result.forEach(element => {
-        if (!covid_data[element['datum']])
-        {
-            covid_data[element['datum']] = {};
-        };
-        covid_data[element['datum']][element['okres_lau_kod']] = 
-            {"kumulativni_pocet_nakazenych": element['kumulativni_pocet_nakazenych'],
-             "kumulativni_pocet_vylecenych": element['kumulativni_pocet_vylecenych'],
-             "kumulativni_pocet_umrti": element['kumulativni_pocet_umrti'],
-             "soucesny_pocet_nakazenych": element['kumulativni_pocet_nakazenych'] - element['kumulativni_pocet_vylecenych']};
-    }
-    );
-
-    // save all maximums for each day
-    for (var key in covid_data){
-        var max = 0;
-        var min = Number.MAX_SAFE_INTEGER;
-        for ([okres, values] of Object.entries(covid_data[key]))
-        {
-            // console.log(okres);
-            pocet = covid_data[key][okres]['soucesny_pocet_nakazenych'];
-            if (pocet > max)
-            {
-                max = pocet;
-            }
-            if (pocet < min && pocet >= 0)
-            {
-                min = pocet;
-            }
-        }
-        covid_data_days_max[key] = max;
-        covid_data_days_min[key] = min;
-    }
-
-    // console.log(covid_data);
-    // console.log(covid_data_days_max);
-    initPage();
-}
-
-// process data returned by AJAX by click
-function processGetData(result, name, okres_lau, today_text)
-{
-    okres_nazev = document.getElementById("text_okres_nazev");
-    okres_kod = document.getElementById("text_okres_kod");
-    okres_nakazeni = document.getElementById("text_okres_nakazeni");
-    okres_nakazeni_sto_tisic = document.getElementById("text_okres_nakazeni_sto_tisic");
-    okres_celkem_nakazeni = document.getElementById("text_okres_celkem_nakazeni");
-    okres_celkem_vyleceni = document.getElementById("text_okres_celkem_vyleceni");
-    okres_datum = document.getElementById("text_okres_datum");
-    okres_pocet_obyvatel = document.getElementById("text_okres_pocet_obyvatel");
-    okres_pocet_obyvatel_procento = document.getElementById("text_okres_pocet_obyvatel_procento");
-    // console.log(result);
-    nakazenych = result[0]['kumulativni_pocet_nakazenych'] - result[0]['kumulativni_pocet_vylecenych'];
-
-    mapa_celkem_nove_pripady = document.getElementById("text_celkem_nove_pripady");
-    mapa_celkem_aktivni_pripady = document.getElementById("text_celkem_aktivni_pripady");
-    text_current_data_sto_tisic = document.getElementById("text_current_data_sto_tisic");
-    text_current_data = document.getElementById("text_current_data");
-    mapa_datum = document.getElementById("text_datum_mapa");
-
+    // Update text with selected district data
     okres_nazev.innerHTML = name;
     okres_kod.innerHTML = okres_lau;
+    okres_pocet_obyvatel.innerHTML = okresy_pocet_obyvatel[okres_lau].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     switch(map_show_data)
     {
         case "Současně nakažení":
-            var okres_value = new_data[today_text][okres_lau]['aktivni_pripady_sto_tisic'].toFixed(2);
-            okres_nakazeni.innerHTML = parseInt(new_data[today_text][okres_lau]['aktivni_pripady']);
+            var okres_value = new_data[selected_date_text][okres_lau]['aktivni_pripady_sto_tisic'].toFixed(2);
+            okres_nakazeni.innerHTML = parseInt(new_data[selected_date_text][okres_lau]['aktivni_pripady']);
             okres_nakazeni_sto_tisic.innerHTML = okres_value;
             text_current_data_sto_tisic.innerHTML = "Současný počet nakažených na 100 tisíc obyvatel";
             text_current_data.innerHTML = "Současný počet nakažených";
             break;
         case "Nové případy":
-            var okres_value = new_data[today_text][okres_lau]['nove_pripady_sto_tisic'].toFixed(2);
-            okres_nakazeni.innerHTML = parseInt(new_data[today_text][okres_lau]['nove_pripady']);
+            var okres_value = new_data[selected_date_text][okres_lau]['nove_pripady_sto_tisic'].toFixed(2);
+            okres_nakazeni.innerHTML = parseInt(new_data[selected_date_text][okres_lau]['nove_pripady']);
             okres_nakazeni_sto_tisic.innerHTML = okres_value;
             text_current_data_sto_tisic.innerHTML = "Nový počet nakažených na 100 tisíc obyvatel";
             text_current_data.innerHTML = "Počet nově nakažených";
             break;
     }
-    // okres_nakazeni.innerHTML = new_data[today_text][okres_lau]['nove_pripady'];
-    // okres_nakazeni_sto_tisic.innerHTML = new_data[today_text][okres_lau]['nove_pripady_sto_tisic'].toFixed(2);
-    // okres_celkem_nakazeni.innerHTML = result[0]['kumulativni_pocet_nakazenych'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    // okres_celkem_vyleceni.innerHTML = result[0]['kumulativni_pocet_vylecenych'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    // okres_datum.innerHTML = getFormattedDateLocal(new Date(result[0]['datum']));
-    okres_pocet_obyvatel.innerHTML = okresy_pocet_obyvatel[result[0]['okres_lau_kod']].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    // okres_pocet_obyvatel_procento.innerHTML = ((parseFloat(result[0]['kumulativni_pocet_nakazenych']) / parseFloat(okresy_pocet_obyvatel[result[0]['okres_lau_kod']])) * 100).toFixed(2) + "%";
-
-    // old
-    // text.innerHTML = "<b>Název okresu:</b> " + name + "<br>" + "<b>LAU kód okresu:</b> " + result[0]['okres_lau_kod'] + "<br>" + "<b>Současný počet nakažených:</b> " + nakazenych
-    // + "<br>" + "<b>Kumulativní počet nakažených:</b> " + result[0]['kumulativni_pocet_nakazenych']
-    // + "<br>" + "<b>Kumulativní počet vyléčených:</b> " + result[0]['kumulativni_pocet_vylecenych']
-    // + "<br>" + "<b>Datum: </b> " + getFormattedDateLocal(new Date(result[0]['datum']));
 }
 
-// Sleep function
-// https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
+// sleep function
 function sleep(ms) 
 {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -286,23 +157,32 @@ async function handleAnimation()
     {
         if (ongoing_animation == false) break;
         slider.value = cur + 1;
-        sliderTextUpdate();
+        updatePage();
         await sleep(animation_speed * 30);
     }
 }
 
+// handle stop animation button
 function stopAnimation()
 {
     ongoing_animation = false;
 }
 
+// handle change animation speed clicker
 function changeAnimationSpeed(value)
 {
     animation_speed = 11 - parseInt(value);
 }
 
+// https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
+function numberWithCommas(x) 
+{
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 // function to add days to given date
-function addDays(date, days) {
+function addDays(date, days)
+{
     var ms = new Date(date).getTime() + (86400000 * days);
     var result = new Date(ms);
     return result;
@@ -314,11 +194,13 @@ function componentToHex(c) {
     return hex.length == 1 ? "0" + hex : hex;
 }
 
+// return date formatted as string with Czech localization
 function getFormattedDateLocal(date)
 {
     return date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear(); 
 }
 
+// return date formatted as string
 function getFormattedDate(date)
 {
     var text = "";
@@ -351,7 +233,7 @@ function getFormattedDate(date)
 }
 
 // function that updates slider text
-function sliderTextUpdate()
+function updatePage()
 {
     var totalValue = 0;
     var okres_value;
@@ -366,8 +248,9 @@ function sliderTextUpdate()
     output.innerHTML = today.toLocaleDateString("cs-CZ");
     var parent = iframe.contentWindow.document.querySelector("g");
     var children = parent.children;
-    mapa_celkem_nove_pripady.innerHTML = "<b>Nové případy za tento den:</b> " + new_data[today_text]['nove_celkovy_pocet'];
-    mapa_celkem_aktivni_pripady.innerHTML = "<b>Současný počet případů za tento den:</b> " + new_data[today_text]['aktivni_celkovy_pocet'];
+    mapa_celkem_nove_pripady.innerHTML = "<b>Nové případy za tento den:</b> " + numberWithCommas(new_data[today_text]['nove_celkovy_pocet']);
+    mapa_celkem_aktivni_pripady.innerHTML = "<b>Současný počet případů za tento den:</b> " + numberWithCommas(new_data[today_text]['aktivni_celkovy_pocet']);
+    mapa_celkem_pripady.innerHTML = "<b>Celkový počet zaznamenaných případů v tento den:</b> " + numberWithCommas(new_data[today_text]['celkem_pripady']);
     mapa_datum.innerHTML = today_text_local;
     for (let i = 0; i < 77; i++)
     {
@@ -456,7 +339,7 @@ function sliderTextUpdate()
 function selectAnalysis(id) 
 {
     current_analysis = id;
-    sliderTextUpdate();
+    updatePage();
     analyze_fields.forEach((element) => 
     {
         if (element != id)
@@ -528,7 +411,7 @@ function selectAnalysis(id)
     })
   }
 
-function loadSlider1()
+function loadTimeFrameSlider()
 {
     var today = new Date();
     var covid_start = new Date("03/01/2020"); 
@@ -684,7 +567,7 @@ function selectSliderType(value)
 function selectSliderData(value)
 {
     map_show_data = value;
-    sliderTextUpdate();
+    updatePage();
     switch (value)
     {
         case "Den":
@@ -738,7 +621,7 @@ function confirmRangeAnalysis()
 function processGetDataFromSlider(result)
 {
     new_data = result;
-    sliderTextUpdate();
+    updatePage();
     toast("Byla aktualizována data.");
 }
 
@@ -758,5 +641,5 @@ function sliderDateChange(value)
 {
     var curr = parseInt(slider.value);
     slider.value = curr + value;
-    sliderTextUpdate();
+    updatePage();
 }

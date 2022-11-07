@@ -31,10 +31,14 @@ def getData(range_from, range_to, type):
     try:
         with sqlite3.connect('sql/database.sqlite') as conn:
             cur = conn.cursor()
+
+            # 27 because that is the first value in COVID database
+            celkem_pripady = 20
             for date in all_requested_dates:
                 cur.execute('SELECT * FROM covid_datum_okres WHERE datum = ?', [date])
                 response = cur.fetchall()
                 return_data[date] = {}
+                return_data[date]['celkem_pripady'] = celkem_pripady
                 nove_pocet = 0
                 nove_max = 0
                 nove_min = 999999
@@ -63,6 +67,8 @@ def getData(range_from, range_to, type):
                 return_data[date]['min_nove_sto_tisic'] = nove_min
                 return_data[date]['nove_celkovy_pocet'] = nove_pocet
                 return_data[date]['aktivni_celkovy_pocet'] = aktivni_pocet
+                celkem_pripady += nove_pocet
+                return_data[date]['celkem_pripady'] = celkem_pripady
     
     except sqlite3.Error as e:
         print(f"[API] Database error - {e}")
