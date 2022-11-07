@@ -26,9 +26,11 @@ var slider_values;
 var days_since_covid;
 var slider_current_type = "Den";
 var slider_current_values = [0,0];
-var mapa_celkem_nove_pripady;
-var mapa_celkem_aktivni_pripady;
-var mapa_datum;
+var map_info_1;
+var map_info_2;
+var map_info_3;
+var map_date;
+var map_title;
 var slider_current_selected_date;
 var slider_text_value;
 var ongoing_animation = true;
@@ -36,6 +38,10 @@ var animation_speed = 5;
 var map_show_data = "Současně nakažení";
 var text_current_data_sto_tisic;
 var text_current_data;
+var iframe;
+var map_enabled = false;
+var select_2;
+var snackbar;
 
 // Initialize and modify webpage on startup
 function onIframeLoad()
@@ -57,26 +63,28 @@ function loadPageComponents()
     okres_datum = document.getElementById("text_okres_datum");
     okres_pocet_obyvatel = document.getElementById("text_okres_pocet_obyvatel");
     okres_pocet_obyvatel_procento = document.getElementById("text_okres_pocet_obyvatel_procento");
-    mapa_celkem_nove_pripady = document.getElementById("text_celkem_nove_pripady");
-    mapa_celkem_aktivni_pripady = document.getElementById("text_celkem_aktivni_pripady");
     text_current_data_sto_tisic = document.getElementById("text_current_data_sto_tisic");
     text_current_data = document.getElementById("text_current_data");
-    mapa_datum = document.getElementById("text_datum_mapa");
+    map_date = document.getElementById("text_datum_mapa");
     text_current_data_sto_tisic = document.getElementById("text_current_data_sto_tisic");
     text_current_data = document.getElementById("text_current_data");
-    mapa_celkem_nove_pripady = document.getElementById("text_celkem_nove_pripady");
-    mapa_celkem_aktivni_pripady = document.getElementById("text_celkem_aktivni_pripady");
-    mapa_celkem_pripady = document.getElementById("text_celkem_pripady");
-    mapa_datum = document.getElementById("text_datum_mapa");
+    map_info_1 = document.getElementById("map_info_1");
+    map_info_2 = document.getElementById("map_info_2");
+    map_info_3 = document.getElementById("map_info_3");
+    map_date = document.getElementById("map_date");
+    map_title = document.getElementById("map_title");
     slider = document.getElementById("slider");
     output = document.getElementById("slider_text");
     slider_text_value = document.getElementById("slider-value");
+    iframe = document.getElementById("iframe");
+    select_2 = document.getElementById("sel2");
+    snackbar = document.getElementById("snackbar");
 }
 
 function initPage()
 {
     slider.oninput = updatePage;
-    var iframe = document.getElementById("iframe");
+    iframe = document.getElementById("iframe");
     const elements = iframe.contentWindow.document.getElementsByClassName("leaflet-control-layers-toggle");
     while(elements.length > 0)
     {
@@ -265,12 +273,18 @@ function updatePage()
     var selected_date_text = getFormattedDate(selected_date);
     var selected_date_text_local = getFormattedDateLocal(selected_date);
 
+    switch (current_analysis)
+    {
+        case "nakazeni-analyze":
+            map_info_1.innerHTML = "<b>Nové případy za tento den:</b> " + numberWithCommas(new_data[selected_date_text]['nove_celkovy_pocet']);
+            map_info_2.innerHTML = "<b>Současný počet případů za tento den:</b> " + numberWithCommas(new_data[selected_date_text]['aktivni_celkovy_pocet']);
+            map_info_3.innerHTML = "<b>Celkový počet zaznamenaných případů v tento den:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_pripady']);        
+            break;
+    }
+
     // Update some values and texts on page
     output.innerHTML = selected_date.toLocaleDateString("cs-CZ");
-    mapa_celkem_nove_pripady.innerHTML = "<b>Nové případy za tento den:</b> " + numberWithCommas(new_data[selected_date_text]['nove_celkovy_pocet']);
-    mapa_celkem_aktivni_pripady.innerHTML = "<b>Současný počet případů za tento den:</b> " + numberWithCommas(new_data[selected_date_text]['aktivni_celkovy_pocet']);
-    mapa_celkem_pripady.innerHTML = "<b>Celkový počet zaznamenaných případů v tento den:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_pripady']);
-    mapa_datum.innerHTML = selected_date_text_local;
+    map_date.innerHTML = selected_date_text_local;
 
     // Map district updating - go through all districts
     var parent = iframe.contentWindow.document.querySelector("g");
@@ -322,7 +336,7 @@ function updatePage()
         switch(current_analysis)
         {
             case "nakazeni-analyze":
-                color1 =   [255, 174, 0];
+                color1 =   [255, 105, 0];
                 color2 =   [255, 255, 255];
                 break;
             case "vyleceni-analyze":
@@ -359,23 +373,25 @@ function updatePage()
 function selectAnalysis(type) 
 {
     current_analysis = type;
-    updatePage();
     analyze_fields.forEach((element) => 
     {
         // Set colors and other elements according to selected type of analysis
         if (element == type)
         {
             var field = document.getElementById(element);
-            var color = field.getAttribute('color');
+            // var color = field.getAttribute('color');
             // var background_color = field.getAttribute('background-color');
-            var outer_iframe = document.getElementById("outer-iframe");
-            var inner_iframe = document.getElementById("inner-iframe");
-            var outer_iframe_current_color = outer_iframe.getAttribute('color');
-            var inner_iframe_current_color = inner_iframe.getAttribute('color');
-            outer_iframe.className = outer_iframe.className.replace(outer_iframe_current_color, color);
-            inner_iframe.className = inner_iframe.className.replace(inner_iframe_current_color, color);
-            outer_iframe.setAttribute("color", color);
-            inner_iframe.setAttribute("color", color);
+            // var outer_iframe = document.getElementById("outer-iframe");
+            // var inner_iframe = document.getElementById("inner-iframe");
+            // var outer_iframe_current_color = outer_iframe.getAttribute('color');
+            // var inner_iframe_current_color = inner_iframe.getAttribute('color');
+            // outer_iframe.className = outer_iframe.className.replace(outer_iframe_current_color, color);
+            // inner_iframe.className = inner_iframe.className.replace(inner_iframe_current_color, color);
+            // outer_iframe.setAttribute("color", color);
+            // inner_iframe.setAttribute("color", color);
+
+            select_2.innerHTML = "";
+
             switch(element)
             {
                 case 'nakazeni-analyze':
@@ -384,6 +400,15 @@ function selectAnalysis(type)
                     document.getElementById("umrti-analyze").style.opacity = 0.6;
                     document.getElementById("ovlivneno-analyze").style.opacity = 0.6;
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#ff9800";
+                    map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty nakažených";
+                    var option1 = document.createElement('option');
+                    option1.value = "Současně nakažení";
+                    option1.innerHTML = "Současně nakažení";
+                    var option2 = document.createElement('option');
+                    option2.value = "Nové případy";
+                    option2.innerHTML = "Nové případy";
+                    select_2.appendChild(option1);
+                    select_2.appendChild(option2);
                     // document.getElementById("slider").style.accentColor = "#ff9800";
                     // document.getElementById("slider").style.backgroundColor = "#ffffff";
                     break;
@@ -393,6 +418,7 @@ function selectAnalysis(type)
                     document.getElementById("umrti-analyze").style.opacity = 0.6;
                     document.getElementById("ovlivneno-analyze").style.opacity = 0.6;
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#4caf50";
+                    map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty vyléčených";
                     // document.getElementById("slider").style.accentColor = "#4caf50";
                     // document.getElementById("slider").style.background = "#ffffff";
                     break;
@@ -402,6 +428,7 @@ function selectAnalysis(type)
                     document.getElementById("umrti-analyze").style.opacity = 1;
                     document.getElementById("ovlivneno-analyze").style.opacity = 0.6;
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#616161";
+                    map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty úmrtí";
                     // document.getElementById("slider").style.accentColor = "#616161";
                     // document.getElementById("slider").style.background = "#ffffff";
                     break;
@@ -411,6 +438,7 @@ function selectAnalysis(type)
                     document.getElementById("umrti-analyze").style.opacity = 0.6;
                     document.getElementById("ovlivneno-analyze").style.opacity = 1;
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#00bcd4";
+                    map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty testů";
                     // document.getElementById("slider").style.accentColor = "#00bcd4";
                     // document.getElementById("slider").style.background = "#ffffff";
                     break;
@@ -418,6 +446,8 @@ function selectAnalysis(type)
         }
         
     })
+    selectSliderData(select_2.value);
+    updatePage();
 }
 
 // Initializer for time frame slider
@@ -493,7 +523,7 @@ function selectSliderType(value)
                 range:
                 {
                     min: 0,
-                    max: days_since_covid
+                    max: days_since_covid - 2
                 }
             });
             break;
@@ -502,7 +532,7 @@ function selectSliderType(value)
                 range:
                 {
                     min: 0,
-                    max: days_since_covid / 7
+                    max: (days_since_covid / 7) - 1
                 }
             });
             break;
@@ -511,7 +541,7 @@ function selectSliderType(value)
                 range:
                 {
                     min: 0,
-                    max: days_since_covid / 30
+                    max: (days_since_covid / 30) - 1
                 }
             });
             break;
@@ -523,42 +553,57 @@ function selectSliderType(value)
 function selectSliderData(value)
 {
     map_show_data = value;
-    updatePage();
     switch (value)
     {
-        case "Den":
+        case "Současně nakažení":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty nakažených - současný počet případů";
             break;
-        case "Týden":
+        case "Nové případy":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty nakažených - počet nově zjištěných případů";
             break;
     }
+    updatePage();
 }
 
 function confirmRangeAnalysis()
 {
+    if (current_analysis == null)
+    {
+        toast("Vyberte prosím data ke zkoumání");
+        return;
+    }
+    if (map_enabled == false)
+    {
+        iframe.style.pointerEvents = "auto";
+        map_enabled = true;
+    }
     var value_min = new Date();
     var value_max = new Date();
+
+    slider.setAttribute("min", 0);
     switch (slider_current_type)
     {
         case "Den":
             value_min.setDate(value_min.getDate() - (slider_values.length - slider_current_values[0]));
             value_max.setDate(value_max.getDate() - (slider_values.length - slider_current_values[1]));
+            slider.setAttribute("max", slider_current_values[1] - slider_current_values[0]);
             break;
         case "Týden":
             value_min.setDate(value_min.getDate() - (slider_values.length - (slider_current_values[0] * 7)));
             value_max.setDate(value_max.getDate() - (slider_values.length - (slider_current_values[1] * 7)));
+            slider.setAttribute("max", (slider_current_values[1] - slider_current_values[0]) * 7);
             break;
         case "Měsíc":
             value_min.setDate(value_min.getDate() - (slider_values.length - (slider_current_values[0] * 30)));
             value_max.setDate(value_max.getDate() - (slider_values.length - (slider_current_values[1] * 30)));
+            slider.setAttribute("max", (slider_current_values[1] - slider_current_values[0]) * 30);
             break;
         case "Rok":
             break;
     }
-    slider.setAttribute("min", 0);
-    slider.setAttribute("max", slider_current_values[1] - slider_current_values[0]);
     slider.value = "0";
     var url = "http://127.0.0.1:8000/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
-    toast("Stahuji nová data...");
+    loadingToast("Stahuji nová data...");
     $.ajax({
         url: url,
         headers: { 'accept': 'application/json' },
@@ -581,7 +626,8 @@ function processGetDataFromSlider(result)
     toast("Byla aktualizována data.");
 }
 
-function toast(message) {
+function toast(message) 
+{
     // Get the snackbar DIV
     var x = document.getElementById("snackbar");
     x.innerHTML = message;
@@ -591,11 +637,31 @@ function toast(message) {
   
     // After 3 seconds, remove the show class from DIV
     setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
-  }
+}
+
+function loadingToast(message) 
+{
+    // Get the snackbar DIV
+    snackbar.innerHTML = "<div class=\"spinner-border w3-center\" role=\"status\">" + "<span class=\"sr-only\"> Loading... </span>" + "</div>" + "<div>" + message + "</div>";
+  
+    // Add the "show" class to DIV
+    snackbar.className = "show";
+  
+    // After 3 seconds, remove the show class from DIV
+    setTimeout(function(){ snackbar.className = snackbar.className.replace("show", ""); }, 5000);
+}
 
 function sliderDateChange(value)
 {
     var curr = parseInt(slider.value);
     slider.value = curr + value;
     updatePage();
+}
+
+function iframeCheckClick()
+{
+    if (map_enabled == false)
+    {
+        toast("Prosím vyberte data na analyzování");
+    }
 }
