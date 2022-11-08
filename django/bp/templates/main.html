@@ -152,7 +152,7 @@
         {% comment %} https://codepen.io/joosts/pen/rNLdxvK {% endcomment %}
         <h5>Zkoumání datového intervalu</h5>
         <div class="w3-card w3-container w3-white" style="padding-top:16px;padding-bottom:16px;">
-          <div class="w3-center">
+        <div class="w3-center">
             <label for="sel1">Zvolení hodnoty:  </label>
             <select oninput="selectSliderType(this.value)" class="form-control" id="sel1" style="margin-top:0px">
               <option>Den</option>
@@ -171,7 +171,10 @@
               <td id="slider-max" style="margin-right:10px;text-align:right;width:33%;"></td>
             </tr>
           </table>
-          <br>
+        <div style="margin-top:7px">
+            <input type="checkbox" id="checkerCovidWave" checked="true" onclick="checkboxCovidWaveClick(this)">
+            <label for="checkerCovidWave"> Zobrazit covidové vlny</label>
+        </div>
           <div class="w3-center">
             <button class="w3-button w3-block w3-light-gray w3-left-align w3-center" onclick="confirmRangeAnalysis()"><b>Potvrdit</b></button>
           </div>

@@ -665,3 +665,15 @@ function iframeCheckClick()
         toast("Prosím vyberte data na analyzování");
     }
 }
+
+function checkboxCovidWaveClick(el)
+{
+    if (el.checked == false)
+    {
+        document.getElementsByClassName("noUi-target")[0].style.background = "#ffffff";
+    }
+    else
+    {
+        document.getElementsByClassName("noUi-target")[0].style.background = "linear-gradient(90deg, rgba(131,255,73,1) 0%, rgba(255,127,117,1) 21%, rgba(221,61,48,1) 30%, rgba(93,255,67,1) 49%, rgba(222,77,66,1) 68%, rgba(255,163,163,1) 100%)";
+    }
+}
