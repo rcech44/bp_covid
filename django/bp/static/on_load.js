@@ -449,14 +449,35 @@ function selectAnalysis(type)
                     document.getElementById("ovlivneno-analyze").style.opacity = 0.6;
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#4caf50";
                     map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty naočkovaných";
-                    var option1 = document.createElement('option');
-                    option1.value = "Naočkovaní obyvatelé - den";
-                    option1.innerHTML = "Naočkovaní obyvatelé - den";
-                    var option2 = document.createElement('option');
-                    option2.value = "Naočkovaní obyvatelé - doposud";
-                    option2.innerHTML = "Naočkovaní obyvatelé - doposud";
-                    select_2.appendChild(option1);
-                    select_2.appendChild(option2);
+
+                    var options =  ["Celkem všechny dávky / 100 tisíc", 
+                                    "Celkem všechny dávky",
+                                    "Celkem všechny dávky doposud",
+
+                                    "Celkem 1. dávka / 100 tisíc",
+                                    "Celkem 1. dávka doposud / 100 tisíc",
+                                    "Celkem 1. dávka",
+
+                                    "Celkem 2. dávka / 100 tisíc",
+                                    "Celkem 2. dávka doposud / 100 tisíc",
+                                    "Celkem 2. dávka",
+
+                                    "Celkem 3. dávka / 100 tisíc",
+                                    "Celkem 3. dávka doposud / 100 tisíc",
+                                    "Celkem 3. dávka",
+                                    
+                                    "Celkem 4. dávka / 100 tisíc",
+                                    "Celkem 4. dávka doposud / 100 tisíc",
+                                    "Celkem 4. dávka"
+                                   ]
+                    
+                    options.forEach((element) =>
+                    {
+                        var opt = document.createElement('option');
+                        opt.value = opt.innerHTML = element;
+                        select_2.appendChild(opt);
+                    }
+                    );
                     // document.getElementById("slider").style.accentColor = "#4caf50";
                     // document.getElementById("slider").style.background = "#ffffff";
                     break;
@@ -599,6 +620,51 @@ function selectSliderData(value)
         case "Nové případy":
             map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty nakažených - počet nově zjištěných případů";
             break;
+        case "Celkem všechny dávky / 100 tisíc":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných dávek očkování daný den na 100 tisíc obyvatel";
+            break;
+        case "Celkem všechny dávky":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných dávek očkování daný den";
+            break;
+        case "Celkem všechny dávky doposud":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných dávek očkování od začátku očkování";
+            break;
+        case "Celkem 1. dávka / 100 tisíc":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 1. dávek očkování daný den na 100 tisíc obyvatel";
+            break;
+        case "Celkem 1. dávka doposud / 100 tisíc":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 1. dávek očkování od začátku očkování na 100 tisíc obyvatel";
+            break;
+        case "Celkem 1. dávka":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 1. dávek očkování daný den";
+            break;
+        case "Celkem 2. dávka / 100 tisíc":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 2. dávek očkování daný den na 100 tisíc obyvatel";
+            break;
+        case "Celkem 2. dávka doposud / 100 tisíc":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 2. dávek očkování od začátku očkování na 100 tisíc obyvatel";
+            break;
+        case "Celkem 2. dávka":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 2. dávek očkování daný den";
+            break;
+        case "Celkem 3. dávka / 100 tisíc":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 3. dávek očkování daný den na 100 tisíc obyvatel";
+            break;
+        case "Celkem 3. dávka doposud / 100 tisíc":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 3. dávek očkování od začátku očkování na 100 tisíc obyvatel";
+            break;
+        case "Celkem 3. dávka":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 3. dávek očkování daný den";
+            break;
+        case "Celkem 4. dávka / 100 tisíc":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 4. dávek očkování daný den na 100 tisíc obyvatel";
+            break;
+        case "Celkem 4. dávka doposud / 100 tisíc":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 4. dávek očkování od začátku očkování na 100 tisíc obyvatel";
+            break;
+        case "Celkem 4. dávka":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 4. dávek očkování daný den";
+            break;
     }
     // updatePage();
 }
@@ -646,8 +712,10 @@ function confirmRangeAnalysis()
     {
         case "nakazeni-analyze":
             url = "http://127.0.0.1:8000/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max) + "&type=infection";
+            break;
         case "ockovani-analyze":
             url = "http://127.0.0.1:8000/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max) + "&type=vaccination";
+            break;
     }
 
     loadingToast("Stahuji nová data...");
