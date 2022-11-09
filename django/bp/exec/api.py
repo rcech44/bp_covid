@@ -28,50 +28,170 @@ def getData(range_from, range_to, type):
         count += 1
 
     # Get the data
-    try:
-        with sqlite3.connect('sql/database.sqlite') as conn:
-            cur = conn.cursor()
+    match type:
+        case 'infection':
+            try:
+                with sqlite3.connect('sql/database.sqlite') as conn:
+                    cur = conn.cursor()
 
-            # 27 because that is the first value in COVID database
-            celkem_pripady = 20
-            for date in all_requested_dates:
-                cur.execute('SELECT * FROM covid_datum_okres WHERE datum = ?', [date])
-                response = cur.fetchall()
-                return_data[date] = {}
-                return_data[date]['celkem_pripady'] = celkem_pripady
-                nove_pocet = 0
-                nove_max = 0
-                nove_min = 999999
-                aktivni_pocet = 0
-                aktivni_max = 0
-                aktivni_min = 999999
-                for okres in response:
-                    if okres[2] is not None:
-                        return_data[date][okres[2]] = {}
-                        return_data[date][okres[2]]['nove_pripady'] = okres[3]
-                        return_data[date][okres[2]]['aktivni_pripady'] = okres[4]
-                        return_data[date][okres[2]]['nove_pripady_7'] = okres[5]
-                        return_data[date][okres[2]]['nove_pripady_14'] = okres[6]
-                        return_data[date][okres[2]]['nove_pripady_65_vek'] = okres[7]
-                        return_data[date][okres[2]]['nove_pripady_sto_tisic'] = okres[3] / (pocet_obyvatel[okres[2]] / 100000)
-                        return_data[date][okres[2]]['aktivni_pripady_sto_tisic'] = okres[4] / (pocet_obyvatel[okres[2]] / 100000)
-                        nove_pocet += okres[3]
-                        aktivni_pocet += okres[4]
-                        if return_data[date][okres[2]]['nove_pripady_sto_tisic'] > nove_max: nove_max = return_data[date][okres[2]]['nove_pripady_sto_tisic']
-                        if return_data[date][okres[2]]['nove_pripady_sto_tisic'] < nove_min: nove_min = return_data[date][okres[2]]['nove_pripady_sto_tisic']
-                        if return_data[date][okres[2]]['aktivni_pripady_sto_tisic'] > aktivni_max: aktivni_max = return_data[date][okres[2]]['aktivni_pripady_sto_tisic']
-                        if return_data[date][okres[2]]['aktivni_pripady_sto_tisic'] < aktivni_min: aktivni_min = return_data[date][okres[2]]['aktivni_pripady_sto_tisic']
-                return_data[date]['max_aktivni_sto_tisic'] = aktivni_max
-                return_data[date]['min_aktivni_sto_tisic'] = aktivni_min
-                return_data[date]['max_nove_sto_tisic'] = nove_max
-                return_data[date]['min_nove_sto_tisic'] = nove_min
-                return_data[date]['nove_celkovy_pocet'] = nove_pocet
-                return_data[date]['aktivni_celkovy_pocet'] = aktivni_pocet
-                celkem_pripady += nove_pocet
-                return_data[date]['celkem_pripady'] = celkem_pripady
-    
-    except sqlite3.Error as e:
-        print(f"[API] Database error - {e}")
-        return f"Database error - {e}"
+                    # 27 because that is the first value in COVID database
+                    celkem_pripady = 20
+                    for date in all_requested_dates:
+                        cur.execute('SELECT * FROM covid_datum_okres WHERE datum = ?', [date])
+                        response = cur.fetchall()
+                        return_data[date] = {}
+                        return_data[date]['celkem_pripady'] = celkem_pripady
+                        nove_pocet = 0
+                        nove_max = 0
+                        nove_min = 999999
+                        aktivni_pocet = 0
+                        aktivni_max = 0
+                        aktivni_min = 999999
+                        for okres in response:
+                            if okres[2] is not None:
+                                return_data[date][okres[2]] = {}
+                                return_data[date][okres[2]]['nove_pripady'] = okres[3]
+                                return_data[date][okres[2]]['aktivni_pripady'] = okres[4]
+                                return_data[date][okres[2]]['nove_pripady_7'] = okres[5]
+                                return_data[date][okres[2]]['nove_pripady_14'] = okres[6]
+                                return_data[date][okres[2]]['nove_pripady_65_vek'] = okres[7]
+                                return_data[date][okres[2]]['nove_pripady_sto_tisic'] = okres[3] / (pocet_obyvatel[okres[2]] / 100000)
+                                return_data[date][okres[2]]['aktivni_pripady_sto_tisic'] = okres[4] / (pocet_obyvatel[okres[2]] / 100000)
+                                nove_pocet += okres[3]
+                                aktivni_pocet += okres[4]
+                                if return_data[date][okres[2]]['nove_pripady_sto_tisic'] > nove_max: nove_max = return_data[date][okres[2]]['nove_pripady_sto_tisic']
+                                if return_data[date][okres[2]]['nove_pripady_sto_tisic'] < nove_min: nove_min = return_data[date][okres[2]]['nove_pripady_sto_tisic']
+                                if return_data[date][okres[2]]['aktivni_pripady_sto_tisic'] > aktivni_max: aktivni_max = return_data[date][okres[2]]['aktivni_pripady_sto_tisic']
+                                if return_data[date][okres[2]]['aktivni_pripady_sto_tisic'] < aktivni_min: aktivni_min = return_data[date][okres[2]]['aktivni_pripady_sto_tisic']
+                        return_data[date]['max_aktivni_sto_tisic'] = aktivni_max
+                        return_data[date]['min_aktivni_sto_tisic'] = aktivni_min
+                        return_data[date]['max_nove_sto_tisic'] = nove_max
+                        return_data[date]['min_nove_sto_tisic'] = nove_min
+                        return_data[date]['nove_celkovy_pocet'] = nove_pocet
+                        return_data[date]['aktivni_celkovy_pocet'] = aktivni_pocet
+                        celkem_pripady += nove_pocet
+                        return_data[date]['celkem_pripady'] = celkem_pripady
+            
+            except sqlite3.Error as e:
+                print(f"[API] Database error - {e}")
+                return f"Database error - {e}"
+        
+        case 'vaccination':
+            try:
+                with sqlite3.connect('sql/database.sqlite') as conn:
+                    cur = conn.cursor()
+                    celkem_doposud = 0
+                    okres_1_absolute_max = 0
+                    for date in all_requested_dates:
+                        cur.execute('SELECT * FROM ockovani_datum_okres WHERE datum = ?', [date])
+                        response = cur.fetchall()
+                        return_data[date] = {}
+                        davka_1_max = 0
+                        davka_1_min = 9999999
+                        davka_2_max = 0
+                        davka_2_min = 9999999
+                        davka_3_max = 0
+                        davka_3_min = 9999999
+                        davka_4_max = 0
+                        davka_4_min = 9999999
+
+                        davka_1_doposud_max = 0
+                        davka_1_doposud_min = 9999999
+                        davka_2_doposud_max = 0
+                        davka_2_doposud_min = 9999999
+                        davka_3_doposud_max = 0
+                        davka_3_doposud_min = 9999999
+                        davka_4_doposud_max = 0
+                        davka_4_doposud_min = 9999999
+
+                        davka_celkem_den_max = 0 
+                        davka_celkem_den_min = 9999999 
+                        davka_celkem_doposud_max = 0 
+                        davka_celkem_doposud_min = 9999999 
+                        celkem_den = 0
+                        for okres in response:
+                            if okres[2] is not None:
+                                # Process data and get 100 thousand count
+                                return_data[date][okres[2]] = {}
+                                return_data[date][okres[2]]['davka_1_den'] = okres[3]
+                                return_data[date][okres[2]]['davka_1_den_sto_tisic'] = okres[3] / (pocet_obyvatel[okres[2]] / 100000)
+                                return_data[date][okres[2]]['davka_1_doposud'] = okres[4]
+                                return_data[date][okres[2]]['davka_1_doposud_sto_tisic'] = okres[4] / (pocet_obyvatel[okres[2]] / 100000)
+                                return_data[date][okres[2]]['davka_2_den'] = okres[5]
+                                return_data[date][okres[2]]['davka_2_den_sto_tisic'] = okres[5] / (pocet_obyvatel[okres[2]] / 100000)
+                                return_data[date][okres[2]]['davka_2_doposud'] = okres[6]
+                                return_data[date][okres[2]]['davka_2_doposud_sto_tisic'] = okres[6] / (pocet_obyvatel[okres[2]] / 100000)
+                                return_data[date][okres[2]]['davka_3_den'] = okres[7]
+                                return_data[date][okres[2]]['davka_3_den_sto_tisic'] = okres[7] / (pocet_obyvatel[okres[2]] / 100000)
+                                return_data[date][okres[2]]['davka_3_doposud'] = okres[8]
+                                return_data[date][okres[2]]['davka_3_doposud_sto_tisic'] = okres[8] / (pocet_obyvatel[okres[2]] / 100000)
+                                return_data[date][okres[2]]['davka_4_den'] = okres[9]
+                                return_data[date][okres[2]]['davka_4_den_sto_tisic'] = okres[9] / (pocet_obyvatel[okres[2]] / 100000)
+                                return_data[date][okres[2]]['davka_4_doposud'] = okres[10]
+                                return_data[date][okres[2]]['davka_4_doposud_sto_tisic'] = okres[10] / (pocet_obyvatel[okres[2]] / 100000)
+                                return_data[date][okres[2]]['davka_celkem_den'] = okres[11]
+                                celkem_den += okres[11]
+                                celkem_doposud += okres[11]
+                                return_data[date][okres[2]]['davka_celkem_den_sto_tisic'] = okres[11] / (pocet_obyvatel[okres[2]] / 100000)
+                                return_data[date][okres[2]]['davka_celkem_doposud'] = okres[12]
+                                return_data[date][okres[2]]['davka_celkem_doposud_sto_tisic'] = okres[12] / (pocet_obyvatel[okres[2]] / 100000)
+
+                                # Get minimums and maximums
+                                if return_data[date][okres[2]]['davka_1_den_sto_tisic'] > davka_1_max: davka_1_max = return_data[date][okres[2]]['davka_1_den_sto_tisic']
+                                if return_data[date][okres[2]]['davka_1_den_sto_tisic'] < davka_1_min: davka_1_min = return_data[date][okres[2]]['davka_1_den_sto_tisic']
+                                if return_data[date][okres[2]]['davka_2_den_sto_tisic'] > davka_2_max: davka_2_max = return_data[date][okres[2]]['davka_2_den_sto_tisic']
+                                if return_data[date][okres[2]]['davka_2_den_sto_tisic'] < davka_2_min: davka_2_min = return_data[date][okres[2]]['davka_2_den_sto_tisic']
+                                if return_data[date][okres[2]]['davka_3_den_sto_tisic'] > davka_3_max: davka_3_max = return_data[date][okres[2]]['davka_3_den_sto_tisic']
+                                if return_data[date][okres[2]]['davka_3_den_sto_tisic'] < davka_3_min: davka_3_min = return_data[date][okres[2]]['davka_3_den_sto_tisic']
+                                if return_data[date][okres[2]]['davka_4_den_sto_tisic'] > davka_4_max: davka_4_max = return_data[date][okres[2]]['davka_4_den_sto_tisic']
+                                if return_data[date][okres[2]]['davka_4_den_sto_tisic'] < davka_4_min: davka_4_min = return_data[date][okres[2]]['davka_4_den_sto_tisic']
+
+                                if return_data[date][okres[2]]['davka_1_doposud_sto_tisic'] > davka_1_doposud_max: davka_1_doposud_max = return_data[date][okres[2]]['davka_1_doposud_sto_tisic']
+                                if return_data[date][okres[2]]['davka_1_doposud_sto_tisic'] < davka_1_doposud_min: davka_1_doposud_min = return_data[date][okres[2]]['davka_1_doposud_sto_tisic']
+                                if return_data[date][okres[2]]['davka_2_doposud_sto_tisic'] > davka_2_doposud_max: davka_2_doposud_max = return_data[date][okres[2]]['davka_2_doposud_sto_tisic']
+                                if return_data[date][okres[2]]['davka_2_doposud_sto_tisic'] < davka_2_doposud_min: davka_2_doposud_min = return_data[date][okres[2]]['davka_2_doposud_sto_tisic']
+                                if return_data[date][okres[2]]['davka_3_doposud_sto_tisic'] > davka_3_doposud_max: davka_3_doposud_max = return_data[date][okres[2]]['davka_3_doposud_sto_tisic']
+                                if return_data[date][okres[2]]['davka_3_doposud_sto_tisic'] < davka_3_doposud_min: davka_3_doposud_min = return_data[date][okres[2]]['davka_3_doposud_sto_tisic']
+                                if return_data[date][okres[2]]['davka_4_doposud_sto_tisic'] > davka_4_doposud_max: davka_4_doposud_max = return_data[date][okres[2]]['davka_4_doposud_sto_tisic']
+                                if return_data[date][okres[2]]['davka_4_doposud_sto_tisic'] < davka_4_doposud_min: davka_4_doposud_min = return_data[date][okres[2]]['davka_4_doposud_sto_tisic']
+                                
+                                if return_data[date][okres[2]]['davka_celkem_den_sto_tisic'] > davka_celkem_den_max: davka_celkem_den_max = return_data[date][okres[2]]['davka_celkem_den_sto_tisic']
+                                if return_data[date][okres[2]]['davka_celkem_den_sto_tisic'] < davka_celkem_den_min: davka_celkem_den_min = return_data[date][okres[2]]['davka_celkem_den_sto_tisic']
+                                if return_data[date][okres[2]]['davka_celkem_doposud_sto_tisic'] > davka_celkem_doposud_max: davka_celkem_doposud_max = return_data[date][okres[2]]['davka_celkem_doposud_sto_tisic']
+                                if return_data[date][okres[2]]['davka_celkem_doposud_sto_tisic'] < davka_celkem_doposud_min: davka_celkem_doposud_min = return_data[date][okres[2]]['davka_celkem_doposud_sto_tisic']
+
+                                if return_data[date][okres[2]]['davka_1_doposud'] > okres_1_absolute_max: okres_1_absolute_max = return_data[date][okres[2]]['davka_1_doposud']
+
+                        return_data[date]['davka_1_max'] = davka_1_max
+                        return_data[date]['davka_1_min'] = davka_1_min
+                        return_data[date]['davka_2_max'] = davka_2_max
+                        return_data[date]['davka_2_min'] = davka_2_min
+                        return_data[date]['davka_3_max'] = davka_3_max
+                        return_data[date]['davka_3_min'] = davka_3_min
+                        return_data[date]['davka_4_max'] = davka_4_max
+                        return_data[date]['davka_4_min'] = davka_4_min
+
+                        return_data[date]['davka_1_doposud_max'] = davka_1_doposud_max
+                        return_data[date]['davka_1_doposud_min'] = davka_1_doposud_min
+                        return_data[date]['davka_2_doposud_max'] = davka_2_doposud_max
+                        return_data[date]['davka_2_doposud_min'] = davka_2_doposud_min
+                        return_data[date]['davka_3_doposud_max'] = davka_3_doposud_max
+                        return_data[date]['davka_3_doposud_min'] = davka_3_doposud_min
+                        return_data[date]['davka_4_doposud_max'] = davka_4_doposud_max
+                        return_data[date]['davka_4_doposud_min'] = davka_4_doposud_min
+
+                        return_data[date]['davka_celkem_den_max'] = davka_celkem_den_max
+                        return_data[date]['davka_celkem_den_min'] = davka_celkem_den_min
+                        return_data[date]['davka_celkem_doposud_max'] = davka_celkem_doposud_max
+                        return_data[date]['davka_celkem_doposud_min'] = davka_celkem_doposud_min
+                        return_data[date]['davka_celkem_den'] = celkem_den
+                        return_data[date]['davka_celkem_doposud'] = celkem_doposud
+                    
+                    return_data['davka_1_absolute_max_okres'] = okres_1_absolute_max
+            
+            except sqlite3.Error as e:
+                print(f"[API] Database error - {e}")
+                return f"Database error - {e}"
+
 
     return return_data

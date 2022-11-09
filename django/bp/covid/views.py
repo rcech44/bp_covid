@@ -56,6 +56,6 @@ def statistics(request):
 def root(request):
     return redirect('main')
 
-def api_range_days(request, range_from, range_to):
-    data = getData(range_from, range_to, 'day')
+def api_range_days(request, range_from, range_to, type):
+    data = getData(range_from, range_to, type)
     return JsonResponse(data, safe=False)

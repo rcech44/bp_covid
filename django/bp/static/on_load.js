@@ -20,7 +20,7 @@ var covid_data_days_min = {};
 var covid_summary = {};
 var okres_clicked = "";
 var okres_clicked_map_object = -1;
-var analyze_fields = ["nakazeni-analyze", "vyleceni-analyze", "umrti-analyze", "ovlivneno-analyze"];
+var analyze_fields = ["nakazeni-analyze", "ockovani-analyze", "umrti-analyze", "ovlivneno-analyze"];
 var current_analysis;
 var slider_values;
 var days_since_covid;
@@ -187,7 +187,10 @@ function changeAnimationSpeed(value)
 // https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
 function numberWithCommas(x) 
 {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    if (x != null)
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    else
+        return 0;
 }
 
 // function to add days to given date
@@ -280,6 +283,11 @@ function updatePage()
             map_info_2.innerHTML = "<b>Současný počet případů za tento den:</b> " + numberWithCommas(new_data[selected_date_text]['aktivni_celkovy_pocet']);
             map_info_3.innerHTML = "<b>Celkový počet zaznamenaných případů v tento den:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_pripady']);        
             break;
+        case "ockovani-analyze":
+            map_info_1.innerHTML = "<b>Nová očkování za tento den:</b> " + numberWithCommas(new_data[selected_date_text]['davka_celkem_den']);
+            map_info_3.innerHTML = "";
+            map_info_2.innerHTML = "<b>Celkový počet zaznamenaných případů v tento den:</b> " + numberWithCommas(new_data[selected_date_text]['davka_celkem_doposud']);        
+            break;
     }
 
     // Update some values and texts on page
@@ -313,6 +321,28 @@ function updatePage()
                 text_current_data_sto_tisic.innerHTML = "Nový počet nakažených na 100 tisíc obyvatel";
                 text_current_data.innerHTML = "Počet nově nakažených";
                 break;
+            case "Naočkovaní obyvatelé - den":
+                if (new_data[selected_date_text].hasOwnProperty(okres_lau))
+                    okres_value = new_data[selected_date_text][okres_lau]['davka_1_doposud'].toFixed(2);
+                else
+                    okres_value = 0
+                totalValue += okres_value;
+                maximum_day = new_data['davka_1_absolute_max_okres'].toFixed(2);
+                minimum_day = 0
+                text_current_data_sto_tisic.innerHTML = "Naočkovaní obyvatelé na 100 tisíc obyvatel";
+                text_current_data.innerHTML = "Počet naočkovaných";
+                break;
+            case "Naočkovaní obyvatelé - doposud":
+                if (new_data[selected_date_text].hasOwnProperty(okres_lau))
+                    okres_value = new_data[selected_date_text][okres_lau]['davka_celkem_doposud_sto_tisic'].toFixed(2);
+                else
+                    okres_value = new_data[selected_date_text]['davka_celkem_doposud_min'].toFixed(2);
+                totalValue += okres_value;
+                maximum_day = new_data[selected_date_text]['davka_celkem_doposud_max'].toFixed(2);
+                minimum_day = new_data[selected_date_text]['davka_celkem_doposud_min'].toFixed(2);
+                text_current_data_sto_tisic.innerHTML = "Naočkovaní obyvatelé na 100 tisíc obyvatel";
+                text_current_data.innerHTML = "Počet naočkovaných";
+                break;
         }
 
         // Update text if current district is selected
@@ -339,7 +369,7 @@ function updatePage()
                 color1 =   [255, 105, 0];
                 color2 =   [255, 255, 255];
                 break;
-            case "vyleceni-analyze":
+            case "ockovani-analyze":
                 color1 =   [0, 150, 0];
                 color2 =   [255, 255, 255];
                 break;
@@ -396,7 +426,7 @@ function selectAnalysis(type)
             {
                 case 'nakazeni-analyze':
                     document.getElementById("nakazeni-analyze").style.opacity = 1;
-                    document.getElementById("vyleceni-analyze").style.opacity = 0.6;
+                    document.getElementById("ockovani-analyze").style.opacity = 0.6;
                     document.getElementById("umrti-analyze").style.opacity = 0.6;
                     document.getElementById("ovlivneno-analyze").style.opacity = 0.6;
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#ff9800";
@@ -412,19 +442,27 @@ function selectAnalysis(type)
                     // document.getElementById("slider").style.accentColor = "#ff9800";
                     // document.getElementById("slider").style.backgroundColor = "#ffffff";
                     break;
-                case 'vyleceni-analyze':
+                case 'ockovani-analyze':
                     document.getElementById("nakazeni-analyze").style.opacity = 0.6;
-                    document.getElementById("vyleceni-analyze").style.opacity = 1;
+                    document.getElementById("ockovani-analyze").style.opacity = 1;
                     document.getElementById("umrti-analyze").style.opacity = 0.6;
                     document.getElementById("ovlivneno-analyze").style.opacity = 0.6;
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#4caf50";
-                    map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty vyléčených";
+                    map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty naočkovaných";
+                    var option1 = document.createElement('option');
+                    option1.value = "Naočkovaní obyvatelé - den";
+                    option1.innerHTML = "Naočkovaní obyvatelé - den";
+                    var option2 = document.createElement('option');
+                    option2.value = "Naočkovaní obyvatelé - doposud";
+                    option2.innerHTML = "Naočkovaní obyvatelé - doposud";
+                    select_2.appendChild(option1);
+                    select_2.appendChild(option2);
                     // document.getElementById("slider").style.accentColor = "#4caf50";
                     // document.getElementById("slider").style.background = "#ffffff";
                     break;
                 case 'umrti-analyze':
                     document.getElementById("nakazeni-analyze").style.opacity = 0.6;
-                    document.getElementById("vyleceni-analyze").style.opacity = 0.6;
+                    document.getElementById("ockovani-analyze").style.opacity = 0.6;
                     document.getElementById("umrti-analyze").style.opacity = 1;
                     document.getElementById("ovlivneno-analyze").style.opacity = 0.6;
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#616161";
@@ -434,7 +472,7 @@ function selectAnalysis(type)
                     break;
                 case 'ovlivneno-analyze':
                     document.getElementById("nakazeni-analyze").style.opacity = 0.6;
-                    document.getElementById("vyleceni-analyze").style.opacity = 0.6;
+                    document.getElementById("ockovani-analyze").style.opacity = 0.6;
                     document.getElementById("umrti-analyze").style.opacity = 0.6;
                     document.getElementById("ovlivneno-analyze").style.opacity = 1;
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#00bcd4";
@@ -447,7 +485,7 @@ function selectAnalysis(type)
         
     })
     selectSliderData(select_2.value);
-    updatePage();
+    // updatePage();
 }
 
 // Initializer for time frame slider
@@ -562,7 +600,7 @@ function selectSliderData(value)
             map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty nakažených - počet nově zjištěných případů";
             break;
     }
-    updatePage();
+    // updatePage();
 }
 
 function confirmRangeAnalysis()
@@ -602,7 +640,16 @@ function confirmRangeAnalysis()
             break;
     }
     slider.value = "0";
-    var url = "http://127.0.0.1:8000/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
+
+    var url;
+    switch (current_analysis)
+    {
+        case "nakazeni-analyze":
+            url = "http://127.0.0.1:8000/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max) + "&type=infection";
+        case "ockovani-analyze":
+            url = "http://127.0.0.1:8000/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max) + "&type=vaccination";
+    }
+
     loadingToast("Stahuji nová data...");
     $.ajax({
         url: url,
