@@ -29,9 +29,9 @@ import urllib.request
 
 
 # OCKOVANI DOWNLOADER 1
-# url = "https://onemocneni-aktualne.mzcr.cz/api/v3/ockovani-geografie?page=1&itemsPerPage=10000&datum%5Bbefore%5D=XYZ&datum%5Bafter%5D=XYZ&apiToken=c54d8c7d54a31d016d8f3c156b98682a"
+# url = "https://onemocneni-aktualne.mzcr.cz/api/v3/ockovani-geografie?page=1&itemsPerPage=10000&datum%5Bbefore%5D=XYZ&datum%5Bafter%5D=XYZ&orp_bydliste_kod=1000&apiToken=c54d8c7d54a31d016d8f3c156b98682a"
 # data = {}
-# starting_datum = datetime.strptime("2020-12-27", '%Y-%m-%d')
+# starting_datum = datetime.strptime("2021-02-12", '%Y-%m-%d')
 # datum_i = 0
 # celkem = 0
 # davka_1_celkem = 0
@@ -54,15 +54,15 @@ import urllib.request
 #             data[starting_datum] = {}
 #             for ockovani_info in ockovani_den:
 #                 orp_kod = ockovani_info['orp_bydliste_kod']
+#                 orp_nazev = ockovani_info['orp_bydliste']
 #                 poradi_davky = ockovani_info['poradi_davky']
 #                 pocet_davek = ockovani_info['pocet_davek']
-#                 pocet_davek_den_query = "davka_" + str(pocet_davek) + "_den"
-#                 cur.execute('SELECT cislo_okres FROM orp_okres_ciselnik WHERE cislo_orp = ?', [orp_kod])
+#                 # pocet_davek_den_query = "davka_" + str(pocet_davek) + "_den"
+#                 # cur.execute('SELECT cislo_okres FROM orp_okres_ciselnik WHERE cislo_orp = ?', [orp_kod])
 #                 celkem += pocet_davek
-#                 response = cur.fetchone()
-#                 if response is None:
-#                     continue
-#                 okres_kod = response[0]
+#                 # response = cur.fetchone()
+#                     # print(f"What is this? Kod: {orp_kod} Nazev: {orp_nazev}")
+#                 okres_kod = "CZ0100"
 
 #                 cur.execute('SELECT * FROM ockovani_datum_okres WHERE datum = ? AND okres = ?', [curr_datum, okres_kod])
 #                 response = cur.fetchone()
@@ -84,7 +84,7 @@ import urllib.request
 #                     cur.execute('UPDATE ockovani_datum_okres SET davka_4_den = davka_4_den + ? WHERE datum = ? AND okres = ?', [pocet_davek, curr_datum, okres_kod])
 
 #                 conn.commit()
-#             print(f"Processed {curr_datum}, total values: {celkem}")
+#                 print(f"Processed {curr_datum}, total values: {celkem}")
 
 # except sqlite3.Error as e:
 #     print(e)
@@ -92,7 +92,15 @@ import urllib.request
 
 # OCKOVANI DOWNLOADER 2
 url = "https://onemocneni-aktualne.mzcr.cz/api/v3/ockovani-geografie?page=1&itemsPerPage=1&datum%5Bbefore%5D=XYZ&datum%5Bafter%5D=XYZ&apiToken=c54d8c7d54a31d016d8f3c156b98682a"
+okresy_names = {"CZ0100": 1275406, "CZ0201": 99323, "CZ0202": 96624,"CZ0203": 164493,"CZ0204": 103894,"CZ0205": 75683,"CZ0206": 109354,"CZ0207": 127592,"CZ0208": 101120,"CZ0209": 188384,"CZ020A": 151093,"CZ020B": 114366,"CZ020C": 54898,"CZ0311": 195533,"CZ0312": 60096,"CZ0313": 89283,"CZ0314": 70769,"CZ0315": 50230,"CZ0316": 69773,"CZ0317": 101363,"CZ0321": 54391,"CZ0322": 84614,"CZ0323": 188407,"CZ0324": 68918,"CZ0325": 80666,"CZ0326": 48770,"CZ0327": 52941,"CZ0411": 87958,"CZ0412": 110052,"CZ0413": 85200,"CZ0421": 126294,"CZ0422": 121480,"CZ0423": 117582,"CZ0424": 85381,"CZ0425": 106773,"CZ0426": 124472,"CZ0427": 116916,"CZ0511": 101962,"CZ0512": 90171,"CZ0513": 173890,"CZ0514": 71547,"CZ0521": 162400,"CZ0522": 78713,"CZ0523": 107973,"CZ0524": 78424,"CZ0525": 115073,"CZ0531": 103746,"CZ0532": 172224,"CZ0533": 102866,"CZ0534": 135682,"CZ0631": 93692,"CZ0632": 112415,"CZ0633": 71571,"CZ0634": 109183,"CZ0635": 117164,"CZ0641": 107912,"CZ0642": 379466,"CZ0643": 225514,"CZ0644": 114801,"CZ0645": 151096,"CZ0646": 92317,"CZ0647": 113462,"CZ0711": 36752,"CZ0712": 233588,"CZ0713": 107580,"CZ0714": 126613,"CZ0715": 118397,"CZ0721": 103445,"CZ0722": 139829,"CZ0723": 140171,"CZ0724": 188987,"CZ0801": 89547,"CZ0802": 212347,"CZ0803": 240319,"CZ0804": 149919,"CZ0805": 173753,"CZ0806": 312104}
 okresy = {}
+for key in okresy_names:
+    okresy[key] = {}
+    okresy[key]['1'] = 0
+    okresy[key]['2'] = 0
+    okresy[key]['3'] = 0
+    okresy[key]['4'] = 0
+    okresy[key]['celkem'] = 0
 datum_i = 0
 celkem = 0
 
@@ -100,44 +108,49 @@ try:
     with sqlite3.connect('../sql/database.sqlite') as conn:
         cur = conn.cursor()
         start_datum = datetime.strptime("2020-12-27", '%Y-%m-%d')
+        start_datum_one_day_before = (start_datum - timedelta(days=1))
         datumy = []
         curr_datum = ''
         while curr_datum != '2022-11-08':
             curr_datum = (start_datum + timedelta(days=datum_i)).strftime('%Y-%m-%d')
             datum_i += 1
             datumy.append(curr_datum)
+        
+        # Process every date since 2020-12-27
         for datum in datumy:
             cur.execute('SELECT okres, davka_1_den, davka_2_den, davka_3_den, davka_4_den FROM ockovani_datum_okres WHERE datum = ?', [datum])
             response = cur.fetchall()
+
+            # Process every district in given date
             if response is not None:
                 for row in response:
                     okres = row[0]
-                    davka_1 = row[1]
-                    davka_2 = row[2]
-                    davka_3 = row[3]
-                    davka_4 = row[4]
-                    celkem_den = 0
-                    if okres not in okresy:
-                        okresy[okres] = {}
-                        okresy[okres]['1'] = 0
-                        okresy[okres]['2'] = 0
-                        okresy[okres]['3'] = 0
-                        okresy[okres]['4'] = 0
-                        okresy[okres]['celkem'] = 0
-                    okresy[okres]['1'] += davka_1
-                    okresy[okres]['2'] += davka_2
-                    okresy[okres]['3'] += davka_3
-                    okresy[okres]['4'] += davka_4
-                    okresy[okres]['celkem'] += (davka_1 + davka_2 + davka_3 + davka_4)
-                    celkem_den = davka_1 + davka_2 + davka_3 + davka_4
-                    cur.execute('UPDATE ockovani_datum_okres SET davka_1_doposud = ? WHERE datum = ? AND okres = ?', [okresy[okres]['1'], datum, okres])
-                    cur.execute('UPDATE ockovani_datum_okres SET davka_2_doposud = ? WHERE datum = ? AND okres = ?', [okresy[okres]['2'], datum, okres])
-                    cur.execute('UPDATE ockovani_datum_okres SET davka_3_doposud = ? WHERE datum = ? AND okres = ?', [okresy[okres]['3'], datum, okres])
-                    cur.execute('UPDATE ockovani_datum_okres SET davka_4_doposud = ? WHERE datum = ? AND okres = ?', [okresy[okres]['4'], datum, okres])
-                    cur.execute('UPDATE ockovani_datum_okres SET davka_celkem_doposud = ? WHERE datum = ? AND okres = ?', [okresy[okres]['celkem'], datum, okres])
-                    cur.execute('UPDATE ockovani_datum_okres SET davka_celkem_den = ? WHERE datum = ? AND okres = ?', [celkem_den, datum, okres])
+
+                    okresy[okres]['1'] += row[1]
+                    okresy[okres]['2'] += row[2]
+                    okresy[okres]['3'] += row[3]
+                    okresy[okres]['4'] += row[4]
+                    okresy[okres]['celkem'] += (row[1] + row[2] + row[3] + row[4])
+                    celkem_den = row[1] + row[2] + row[3] + row[4]
+                    if okres == "CZ0100":
+                        pass
+                        
+            
+            for key in okresy_names:
+                cur.execute('SELECT * FROM ockovani_datum_okres WHERE datum = ? AND okres = ?', [datum, key])
+                response = cur.fetchone()
+                if response is None:
+                    cur.execute('INSERT INTO ockovani_datum_okres (datum, okres, davka_1_den, davka_1_doposud, davka_2_den, davka_2_doposud, davka_3_den, davka_3_doposud, davka_4_den, davka_4_doposud, davka_celkem_den, davka_celkem_doposud) VALUES (?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)', [datum, key])
                     conn.commit()
-            print(f"Processed {datum}")
+    
+                cur.execute('UPDATE ockovani_datum_okres SET davka_1_doposud = ? WHERE datum = ? AND okres = ?', [okresy[key]['1'], datum, key])
+                cur.execute('UPDATE ockovani_datum_okres SET davka_2_doposud = ? WHERE datum = ? AND okres = ?', [okresy[key]['2'], datum, key])
+                cur.execute('UPDATE ockovani_datum_okres SET davka_3_doposud = ? WHERE datum = ? AND okres = ?', [okresy[key]['3'], datum, key])
+                cur.execute('UPDATE ockovani_datum_okres SET davka_4_doposud = ? WHERE datum = ? AND okres = ?', [okresy[key]['4'], datum, key])
+                cur.execute('UPDATE ockovani_datum_okres SET davka_celkem_doposud = ? WHERE datum = ? AND okres = ?', [okresy[key]['celkem'], datum, key])
+                cur.execute('UPDATE ockovani_datum_okres SET davka_celkem_den = (davka_1_den + davka_2_den + davka_3_den + davka_4_den) WHERE datum = ? AND okres = ?', [datum, key])
+                conn.commit()
+                print(f"Processed {datum}")
 
 
 except sqlite3.Error as e:

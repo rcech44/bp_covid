@@ -192,25 +192,48 @@
             <table style="width:100%">
                 <tr>
                     <td style="width:60%">
-                        <label for="quantity">Rychlost: </label>
+                        <label for="quantity">Rychlost animace: </label>
                         <input onchange="changeAnimationSpeed(this.value)" type="number" id="quantity" name="quantity" min="1" max="10" value="5">
                     </td>
                     <td colspan="2" id="slider_text" style="width:40%;text-align: center;font-weight: bold">
                         -
                     </td>
                 </tr>
+            </table>
+            <hr style="margin-top:10px;margin-bottom:15px">
+            <table style="width:100%">
                 <tr>
                   <td colspan="3" style="width:100%">
                     <!-- <label for="sel2">Pozorovaná data:  </label> -->
-                    <select oninput="selectSliderData(this.value)" class="form-control" id="sel2" style="margin-top:10px">
+                    <select oninput="selectSliderData(this.value)" class="form-control" id="sel2">
                       <!-- <option>Současně nakažení</option>
                       <option>Nové případy</option> -->
                     </select>
                   </td>
                 </tr>
                 <tr>
-                    <td style="width:75%"><button class="w3-button w3-block w3-light-gray w3-left-align w3-center" style="margin-top:10px" onclick="handleAnimation()"><b>Spustit animaci</b></button></td>
-                    <td style="width:25%"><button class="w3-button w3-block w3-light-gray w3-left-align w3-center" style="margin-top:10px" onclick="stopAnimation()"><b>Zastavit</b></button></td>
+                    <td colspan="3">
+                        Škála minima:  
+                    <input style="margin-left:10px;margin-top:20px" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked="true" onchange="checkboxGetMinimumType(&quot;zero&quot;)">
+                    <label for="flexRadioDefault1">Nula</label>
+                    <input type="radio" style="margin-left:10px;" name="flexRadioDefault" id="flexRadioDefault2" onchange="checkboxGetMinimumType(&quot;minimum&quot;)">
+                    <label for="flexRadioDefault2">Minimální hodnota</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <input type="checkbox" id="checkerCovidWave1" checked="false" onclick="changeRecalculation()">
+                        <label for="checkerCovidWave1"> Přepočet na 100 tisíc obyvatel</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:75%"><button class="w3-button w3-block w3-light-gray w3-left-align w3-center" onclick="handleAnimation()"><b>Spustit animaci</b></button></td>
+                    <td style="width:25%"><button class="w3-button w3-block w3-light-gray w3-left-align w3-center" onclick="stopAnimation()"><b>Zastavit</b></button></td>
                 </tr>
             </table>
             <div class="w3-center">
@@ -251,10 +274,25 @@
       </div>
       <div class="w3-threequarter">
         <h5 id="map_title"><b>Mapa okresů ČR</b></h5>
-        <div id="outer-iframe" class="w3-card w3-white" style="padding-top: 8px; padding-bottom:4px;" color="w3-white">
-            <div id="inner-iframe" class="w3-white" style="margin-right:8px; margin-left:8px" color="w3-white" onclick="iframeCheckClick()">
+        <div id="outer-iframe" class="w3-card w3-white" color="w3-white">
+            <div id="inner-iframe" class="w3-white" style="position: relative;" color="w3-white" onclick="iframeCheckClick()">
+                <div class="w3-card" style="margin-left:20px; margin-top:20px;z-index: 1;background-color: rgba(255, 255, 255, 0.534);overflow: hidden;position: absolute;width:150px;height:100px" >
+                    <div style="margin:10px">
+                        Test text
+                    </div>
+                </div>
+                <div class="w3-card" style="bottom:0;margin-left:20px; margin-bottom:25px;z-index: 1;background-color: rgba(255, 255, 255, 0.534);overflow: hidden;position: absolute;width:150px;height:100px" >
+                    <div style="margin:10px">
+                        Test text
+                    </div>
+                </div>
+                <div class="w3-card" style="right:0;margin-right:20px; margin-top:25px;z-index: 1;background-color: rgba(255, 255, 255, 0.534);overflow: hidden;position: absolute;width:150px;height:100px" >
+                    <div style="margin:10px">
+                        Test text
+                    </div>
+                </div>
                 <iframe id="iframe" class="responsive-iframe" src="/../map" style="height:700px;width:100%;border:none;pointer-events:none;" title="Iframe Example" onload="onIframeLoad()"></iframe>
-          </div>
+            </div>
           <div style="margin-left:8px;margin-right:8px">
             <table style="width:100%">
                 <tr>

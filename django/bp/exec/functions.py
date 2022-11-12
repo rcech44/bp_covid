@@ -219,13 +219,20 @@ def thirty_day_map():
 def checkUpToDate():
     print('[DATABASE-CHECKER] Checking if database is up-to-date')
     delta = 0
+    celkem = 0
     url_obce = 'https://onemocneni-aktualne.mzcr.cz/api/v3/obce?page=1&itemsPerPage=10000&datum%5Bafter%5D=XYZ&datum%5Bbefore%5D=XYZ&apiToken=c54d8c7d54a31d016d8f3c156b98682a'
     url_prehled = 'https://onemocneni-aktualne.mzcr.cz/api/v3/zakladni-prehled?page=1&itemsPerPage=100&apiToken=c54d8c7d54a31d016d8f3c156b98682a'
+    url_ockovani = "https://onemocneni-aktualne.mzcr.cz/api/v3/ockovani-geografie?page=1&itemsPerPage=10000&datum%5Bbefore%5D=XYZ&datum%5Bafter%5D=XYZ&apiToken=c54d8c7d54a31d016d8f3c156b98682a"
     datum_string_now = datetime.now().strftime("%Y-%m-%d")
     datum_string_yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
+    datum_string_two_days_ago = (datetime.now() - timedelta(days=2)).strftime("%Y-%m-%d")
 
     try:
         with sqlite3.connect('sql/database.sqlite') as conn:
+
+            # **********************
+            # UPDATE covid_datum_okres TABLE
+            # **********************
             cur = conn.cursor()
             cur.execute('SELECT * FROM covid_datum_okres ORDER BY id DESC LIMIT 1')
             response = cur.fetchall()
@@ -276,6 +283,9 @@ def checkUpToDate():
                             conn.commit()
                         print(f"Downloaded data from {update_date}")
 
+            # **********************
+            # UPDATE zakladni_prehled TABLE
+            # **********************
             cur = conn.cursor()
             cur.execute('SELECT * FROM zakladni_prehled ORDER BY id DESC LIMIT 1')
             response = cur.fetchall()
@@ -315,13 +325,67 @@ def checkUpToDate():
                         conn.commit()
                     else:
                         pass
+            
+            # **********************
+            # UPDATE ockovani_datum_okres TABLE
+            # **********************
+            cur = conn.cursor()
+            cur.execute('SELECT * FROM ockovani_datum_okres ORDER BY datum DESC LIMIT 1')
+            response = cur.fetchone()
+            if response is not None:
+                if response[1] != datum_string_yesterday:
+                    date_yesterday = datetime.strptime(datum_string_now, "%Y-%m-%d")
+                    date_database = datetime.strptime(response[1], "%Y-%m-%d")
+                    delta_days = (date_yesterday - date_database).days
+
+                    # Update database
+                    for i in range(delta_days):
+                        update_date = (date_database + timedelta(days=i+1)).strftime("%Y-%m-%d")
+                        current_url = url_ockovani.replace('XYZ', update_date)
+                        req = urllib.request.Request(current_url)
+                        req.add_header('accept', 'application/json')
+                        response = urllib.request.urlopen(req)
+                        ockovani = json.load(response)
+                        for ockovani_info in ockovani:
+                            orp_kod = ockovani_info['orp_bydliste_kod']
+                            poradi_davky = ockovani_info['poradi_davky']
+                            pocet_davek = ockovani_info['pocet_davek']
+                            cur.execute('SELECT cislo_okres FROM orp_okres_ciselnik WHERE cislo_orp = ?', [orp_kod])
+                            celkem += pocet_davek
+                            response = cur.fetchone()
+                            if response is None:
+                                continue
+                            okres_kod = response[0]
+
+                            cur.execute('SELECT * FROM ockovani_datum_okres WHERE datum = ? AND okres = ?', [update_date, okres_kod])
+                            response = cur.fetchone()
+                            if response is None:
+                                cur.execute('INSERT INTO ockovani_datum_okres (datum, okres, davka_1_den, davka_1_doposud, davka_2_den, davka_2_doposud, davka_3_den, davka_3_doposud, davka_4_den, davka_4_doposud, davka_celkem_den, davka_celkem_doposud) VALUES (?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)', [update_date, okres_kod])
+                                conn.commit()
+
+                            if poradi_davky == 1:
+                                # davka_1_celkem += pocet_davek
+                                cur.execute('UPDATE ockovani_datum_okres SET davka_1_den = davka_1_den + ? WHERE datum = ? AND okres = ?', [pocet_davek, update_date, okres_kod])
+                            if poradi_davky == 2:
+                                # davka_2_celkem += pocet_davek
+                                cur.execute('UPDATE ockovani_datum_okres SET davka_2_den = davka_2_den + ? WHERE datum = ? AND okres = ?', [pocet_davek, update_date, okres_kod])
+                            if poradi_davky == 3:
+                                # davka_3_celkem += pocet_davek
+                                cur.execute('UPDATE ockovani_datum_okres SET davka_3_den = davka_3_den + ? WHERE datum = ? AND okres = ?', [pocet_davek, update_date, okres_kod])
+                            if poradi_davky == 4:
+                                # davka_4_celkem += pocet_davek
+                                cur.execute('UPDATE ockovani_datum_okres SET davka_4_den = davka_4_den + ? WHERE datum = ? AND okres = ?', [pocet_davek, update_date, okres_kod])
+
+                            conn.commit()
+                        print(f"[DATABASE] Vaccination: Processed new {update_date}, total values: {celkem}")
+
 
     except sqlite3.Error as e:
         print(e)
         # print(os.getcwd())
 
     if delta != 0:
-        print(f"[DATABASE-CHECKER] Database updated with {delta} days")
+        print(f"[DATABASE-CHECKER] Database updated")
         return False
     else:
         print('[DATABASE-CHECKER] Database is up-to-date')
