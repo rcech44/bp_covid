@@ -23,6 +23,7 @@ urlpatterns = [
     path('', covid.views.root, name='root'),
     path('admin/', admin.site.urls, name='admin'),
     path('main/', covid.views.main, name='main'),
+    path('main2/', covid.views.main2, name='main2'),
     path('map/', covid.views.map, name='map'),
     path('statistics/', covid.views.statistics, name='statistics'),
     path('api/range/days/from=<str:range_from>&to=<str:range_to>&type=<str:type>', covid.views.api_range_days, name='api_range_days')

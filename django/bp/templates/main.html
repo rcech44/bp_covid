@@ -276,9 +276,35 @@
         <h5 id="map_title"><b>Mapa okresů ČR</b></h5>
         <div id="outer-iframe" class="w3-card w3-white" color="w3-white">
             <div id="inner-iframe" class="w3-white" style="position: relative;" color="w3-white" onclick="iframeCheckClick()">
-                <div class="w3-card" style="margin-left:20px; margin-top:20px;z-index: 1;background-color: rgba(255, 255, 255, 0.534);overflow: hidden;position: absolute;width:150px;height:100px" >
-                    <div style="margin:10px">
-                        Test text
+                <div class="w3-card" style="margin-left:20px; margin-top:20px;z-index: 1;background-color: rgba(255, 255, 255, 0.534);overflow: hidden;position: absolute;width:500px;height:300px" >
+                    <div>
+                        <table class="w3-table w3-striped w3-white">
+                        <tr>
+                            <td width="5%"><i class="material-icons" style="font-size:20px">location_on</i></td>
+                            <td width="60%">Okres</td>
+                            <td width="35%"><b id="text_okres_nazev">Zvolte kliknutím</b></td>
+                        </tr>
+                        <tr>
+                            <td><i class="material-icons" style="font-size:20px">article</i></td>
+                            <td>LAU kód okresu</td>
+                            <td><b id="text_okres_kod"></b></td>
+                        </tr>
+                        <tr>
+                            <td><i class="material-icons" style="font-size:20px">coronavirus</i></td>
+                            <td id="text_current_data_sto_tisic">Současný počet nakažených na 100 tisíc obyvatel</td>
+                            <td><b id="text_okres_nakazeni_sto_tisic"></b></td>
+                        </tr>
+                        <tr>
+                            <td><i class="material-icons" style="font-size:20px">coronavirus</i></td>
+                            <td id="text_current_data">Současný počet nakažených</td>
+                            <td><b id="text_okres_nakazeni"></b></td>
+                        </tr>
+                        <tr>
+                            <td><i class="material-icons" style="font-size:20px">people</i></td>
+                            <td>Počet obyvatel (1.1.2022)</td>
+                            <td><b id="text_okres_pocet_obyvatel"></b></td>
+                        </tr>
+                        </table>
                     </div>
                 </div>
                 <div class="w3-card" style="bottom:0;margin-left:20px; margin-bottom:25px;z-index: 1;background-color: rgba(255, 255, 255, 0.534);overflow: hidden;position: absolute;width:150px;height:100px" >
@@ -291,7 +317,7 @@
                         Test text
                     </div>
                 </div>
-                <iframe id="iframe" class="responsive-iframe" src="/../map" style="height:700px;width:100%;border:none;pointer-events:none;" title="Iframe Example" onload="onIframeLoad()"></iframe>
+                <iframe id="iframe" class="responsive-iframe" src="/../map" style="height:800px;width:100%;border:none;pointer-events:none;" title="Iframe Example" onload="onIframeLoad()"></iframe>
             </div>
           <div style="margin-left:8px;margin-right:8px">
             <table style="width:100%">

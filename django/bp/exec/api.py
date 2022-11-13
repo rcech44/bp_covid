@@ -92,7 +92,7 @@ def getData(range_from, range_to, type):
             try:
                 with sqlite3.connect('sql/database.sqlite') as conn:
                     cur = conn.cursor()
-                    okres_1_absolute_max = 0
+                    davka_2_doposud = 0
                     absolute_celkem = 0
                     okres_absolute_celkem = 0
                     for date in all_requested_dates:
@@ -168,6 +168,7 @@ def getData(range_from, range_to, type):
                                 return_data[date][okres[2]]['davka_celkem_den'] = okres[11]
                                 celkem_den += okres[11]
                                 celkem_doposud += okres[12]
+                                davka_2_doposud += okres[5]
                                 absolute_celkem += (okres[3] + okres[5] + okres[7] + okres[9])
                                 return_data[date][okres[2]]['davka_celkem_den_sto_tisic'] = okres[11] / (pocet_obyvatel[okres[2]] / 100000)
                                 return_data[date][okres[2]]['davka_celkem_doposud'] = okres[12]
@@ -220,7 +221,6 @@ def getData(range_from, range_to, type):
                                 if return_data[date][okres[2]]['davka_celkem_doposud_sto_tisic'] > davka_celkem_doposud_max_sto_tisic: davka_celkem_doposud_max_sto_tisic = return_data[date][okres[2]]['davka_celkem_doposud_sto_tisic']
                                 if return_data[date][okres[2]]['davka_celkem_doposud_sto_tisic'] < davka_celkem_doposud_min_sto_tisic: davka_celkem_doposud_min_sto_tisic = return_data[date][okres[2]]['davka_celkem_doposud_sto_tisic']
 
-                                if return_data[date][okres[2]]['davka_1_doposud'] > okres_1_absolute_max: okres_1_absolute_max = return_data[date][okres[2]]['davka_1_doposud']
                                 if return_data[date][okres[2]]['davka_celkem_doposud'] > okres_absolute_celkem: okres_absolute_celkem = return_data[date][okres[2]]['davka_celkem_doposud']
 
                         return_data[date]['davka_1_max'] = davka_1_max
@@ -269,8 +269,8 @@ def getData(range_from, range_to, type):
                         return_data[date]['davka_celkem_doposud_min_sto_tisic'] = davka_celkem_doposud_min_sto_tisic
                         return_data[date]['davka_celkem_den'] = celkem_den
                         return_data[date]['davka_celkem_doposud'] = celkem_doposud
+                        return_data[date]['davka_2_doposud'] = davka_2_doposud
                     
-                    return_data['davka_1_absolute_max_okres'] = okres_1_absolute_max
                     return_data['absolute_celkem'] = absolute_celkem
                     return_data['okres_absolute_max'] = okres_absolute_celkem
             
