@@ -22,6 +22,8 @@ var okres_clicked = "";
 var okres_clicked_map_object = -1;
 var analyze_fields = ["nakazeni-analyze", "ockovani-analyze", "umrti-analyze", "ovlivneno-analyze"];
 var current_analysis = "nakazeni-analyze";
+var analysis_selected = false;
+var analysis_changed = true;
 var slider_values;
 var days_since_covid;
 var slider_current_type = "Den";
@@ -45,7 +47,13 @@ var snackbar;
 var data_minimum_type = "zero";
 var data_recalculation = true;
 var covid_start = new Date("03/01/2020"); 
+var covid_start_string = "03/01/2020"; 
 var vaccination_start = new Date("12/27/2020"); 
+var current_values = []
+var analysis_name_value;
+var analysis_name_min_value;
+var analysis_name_max_value;
+var current_analysis_color;
 
 // Initialize and modify webpage on startup
 function onIframeLoad()
@@ -119,6 +127,12 @@ function initPage()
 // click function - AJAX request
 function onClickMap(name, okres_lau, object)
 {
+    // Save district
+    okres_clicked = okres_lau;
+
+    // Graph
+    initChart();
+
     // Remove additional stroke-width from previous district
     if (okres_clicked_map_object != -1)
     {
@@ -129,7 +143,6 @@ function onClickMap(name, okres_lau, object)
     object.setAttribute("stroke-width", 4.5);
 
     // Get needed variables
-    okres_clicked = okres_lau;
     selected_date_text = getFormattedDate(slider_current_selected_date);
 
     // Update text with selected district data
@@ -164,6 +177,11 @@ function sleep(ms)
 // handle animation button
 async function handleAnimation()
 {
+    if (analysis_changed)
+    {
+        toast("Prosím potvrďte nové změny");
+        return;
+    }
     ongoing_animation = true;
     var max_value = parseInt(slider.getAttribute('max'));
     var current_value = parseInt(slider.value);
@@ -192,7 +210,7 @@ function changeAnimationSpeed(value)
 function numberWithCommas(x) 
 {
     if (x != null)
-        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return parseInt(x).toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     else
         return 0;
 }
@@ -252,6 +270,8 @@ function getFormattedDate(date)
 // function that updates slider text
 function updatePage()
 {
+    current_values = []
+
     // Init needed variables
     var totalValue = 0;
     var okres_value;
@@ -316,6 +336,9 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['max_aktivni_sto_tisic'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['min_aktivni_sto_tisic'].toFixed(2);
                     text_current_data.innerHTML = "Současný počet nakažených na 100 tisíc obyvatel";
+                    analysis_name_value = "aktivni_pripady_sto_tisic";
+                    analysis_name_min_value = "min_aktivni_sto_tisic";
+                    analysis_name_max_value = "max_aktivni_sto_tisic";
                 }
                 else
                 {
@@ -323,6 +346,9 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['max_aktivni'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['min_aktivni'].toFixed(2);
                     text_current_data.innerHTML = "Současný počet nakažených";
+                    analysis_name_value = "aktivni_pripady";
+                    analysis_name_max_value = "max_aktivni";
+                    analysis_name_min_value = "min_aktivni";
                 }
                 break;
 
@@ -333,6 +359,9 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['max_nove_sto_tisic'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['min_nove_sto_tisic'].toFixed(2);
                     text_current_data.innerHTML = "Počet nově nakažených na 100 tisíc obyvatel";
+                    analysis_name_value = "nove_pripady_sto_tisic";
+                    analysis_name_max_value = "max_nove_sto_tisic";
+                    analysis_name_min_value = "min_nove_sto_tisic";
                 }
                 else
                 {
@@ -340,6 +369,9 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['max_nove'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['min_nove'].toFixed(2);
                     text_current_data.innerHTML = "Počet nově nakažených";
+                    analysis_name_value = "nove_pripady";
+                    analysis_name_max_value = "max_nove";
+                    analysis_name_min_value = "min_nove";
                 }
                 break;
 
@@ -350,6 +382,9 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['davka_celkem_den_max_sto_tisic'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['davka_celkem_den_min_sto_tisic'].toFixed(2);
                     text_current_data.innerHTML = "Naočkovaní obyvatelé na 100 tisíc obyvatel";
+                    analysis_name_value = "davka_celkem_den_sto_tisic";
+                    analysis_name_max_value = "davka_celkem_den_max_sto_tisic";
+                    analysis_name_min_value = "davka_celkem_den_min_sto_tisic";
                 }
                 else
                 {
@@ -357,6 +392,9 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['davka_celkem_den_max'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['davka_celkem_den_min'].toFixed(2);
                     text_current_data.innerHTML = "Naočkovaní obyvatelé";
+                    analysis_name_value = "davka_celkem_den";
+                    analysis_name_max_value = "davka_celkem_den_max";
+                    analysis_name_min_value = "davka_celkem_den_min";
                 }
                 break;
 
@@ -367,6 +405,9 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['davka_celkem_doposud_max_sto_tisic'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['davka_celkem_doposud_min_sto_tisic'].toFixed(2);
                     text_current_data.innerHTML = "Naočkovaní obyvatelé na 100 tisíc obyvatel";
+                    analysis_name_value = "davka_celkem_doposud_sto_tisic";
+                    analysis_name_max_value = "davka_celkem_doposud_max_sto_tisic";
+                    analysis_name_min_value = "davka_celkem_doposud_min_sto_tisic";
                 }
                 else
                 {
@@ -374,6 +415,9 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['davka_celkem_doposud_max'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['davka_celkem_doposud_min'].toFixed(2);
                     text_current_data.innerHTML = "Naočkovaní obyvatelé";
+                    analysis_name_value = "davka_celkem_doposud";
+                    analysis_name_max_value = "davka_celkem_doposud_max";
+                    analysis_name_min_value = "davka_celkem_doposud_min";
                 }
                 break;
 
@@ -384,6 +428,9 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['davka_1_max_sto_tisic'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['davka_1_min_sto_tisic'].toFixed(2);
                     text_current_data.innerHTML = "Naočkovaní obyvatelé první dávkou tento den na 100 tisíc obyvatel";
+                    analysis_name_value = "davka_1_den_sto_tisic";
+                    analysis_name_max_value = "davka_1_max_sto_tisic";
+                    analysis_name_min_value = "davka_1_min_sto_tisic";
                 }
                 else
                 {
@@ -391,6 +438,9 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['davka_1_max'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['davka_1_min'].toFixed(2);
                     text_current_data.innerHTML = "Naočkovaní obyvatelé první dávkou tento den";
+                    analysis_name_value = "davka_1_den";
+                    analysis_name_max_value = "davka_1_max";
+                    analysis_name_min_value = "davka_1_min";
                 }
                 break;
 
@@ -401,6 +451,9 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['davka_1_doposud_max_sto_tisic'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['davka_1_doposud_min_sto_tisic'].toFixed(2);
                     text_current_data.innerHTML = "Naočkovaní obyvatelé první dávkou na 100 tisíc obyvatel";
+                    analysis_name_value = "davka_1_doposud_sto_tisic";
+                    analysis_name_max_value = "davka_1_doposud_max_sto_tisic";
+                    analysis_name_min_value = "davka_1_doposud_min_sto_tisic";
                 }
                 else
                 {
@@ -408,6 +461,9 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['davka_1_doposud_max'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['davka_1_doposud_min'].toFixed(2);
                     text_current_data.innerHTML = "Naočkovaní obyvatelé první dávkou";
+                    analysis_name_value = "davka_1_doposud";
+                    analysis_name_max_value = "davka_1_doposud_max";
+                    analysis_name_min_value = "davka_1_doposud_min";
                 }
                 break;
 
@@ -418,6 +474,9 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['davka_2_max_sto_tisic'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['davka_2_min_sto_tisic'].toFixed(2);
                     text_current_data.innerHTML = "Naočkovaní obyvatelé druhou dávkou tento den na 100 tisíc obyvatel";
+                    analysis_name_value = "davka_2_den_sto_tisic";
+                    analysis_name_max_value = "davka_2_max_sto_tisic";
+                    analysis_name_min_value = "davka_2_min_sto_tisic";
                 }
                 else
                 {
@@ -425,6 +484,9 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['davka_2_max'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['davka_2_min'].toFixed(2);
                     text_current_data.innerHTML = "Naočkovaní obyvatelé druhou dávkou tento den";
+                    analysis_name_value = "davka_2_den";
+                    analysis_name_max_value = "davka_2_max";
+                    analysis_name_min_value = "davka_2_min";
                 }
                 break;
 
@@ -435,6 +497,9 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['davka_2_doposud_max_sto_tisic'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['davka_2_doposud_min_sto_tisic'].toFixed(2);
                     text_current_data.innerHTML = "Naočkovaní obyvatelé druhou dávkou na 100 tisíc obyvatel";
+                    analysis_name_value = "davka_2_doposud_sto_tisic";
+                    analysis_name_max_value = "davka_2_doposud_max_sto_tisic";
+                    analysis_name_min_value = "davka_2_doposud_min_sto_tisic";
                 }
                 else
                 {
@@ -442,6 +507,9 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['davka_2_doposud_max'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['davka_2_doposud_min'].toFixed(2);
                     text_current_data.innerHTML = "Naočkovaní obyvatelé druhou dávkou";
+                    analysis_name_value = "davka_2_doposud";
+                    analysis_name_max_value = "davka_2_doposud_max";
+                    analysis_name_min_value = "davka_2_doposud_min";
                 }
                 break;
 
@@ -452,6 +520,9 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['davka_3_max_sto_tisic'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['davka_3_min_sto_tisic'].toFixed(2);
                     text_current_data.innerHTML = "Naočkovaní obyvatelé třetí dávkou tento den na 100 tisíc obyvatel";
+                    analysis_name_value = "davka_3_den_sto_tisic";
+                    analysis_name_max_value = "davka_3_max_sto_tisic";
+                    analysis_name_min_value = "davka_3_min_sto_tisic";
                 }
                 else
                 {
@@ -459,6 +530,9 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['davka_3_max'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['davka_3_min'].toFixed(2);
                     text_current_data.innerHTML = "Naočkovaní obyvatelé třetí dávkou tento den";
+                    analysis_name_value = "davka_3_den";
+                    analysis_name_max_value = "davka_3_max";
+                    analysis_name_min_value = "davka_3_min";
                 }
                 break;
 
@@ -469,6 +543,9 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['davka_3_doposud_max_sto_tisic'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['davka_3_doposud_min_sto_tisic'].toFixed(2);
                     text_current_data.innerHTML = "Naočkovaní obyvatelé třetí dávkou na 100 tisíc obyvatel";
+                    analysis_name_value = "davka_3_doposud_sto_tisic";
+                    analysis_name_max_value = "davka_3_doposud_max_sto_tisic";
+                    analysis_name_min_value = "davka_3_doposud_min_sto_tisic";
                 }
                 else
                 {
@@ -476,6 +553,9 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['davka_3_doposud_max'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['davka_3_doposud_min'].toFixed(2);
                     text_current_data.innerHTML = "Naočkovaní obyvatelé třetí dávkou";
+                    analysis_name_value = "davka_3_doposud";
+                    analysis_name_max_value = "davka_3_doposud_max";
+                    analysis_name_min_value = "davka_3_doposud_min";
                 }
                 break;
 
@@ -486,6 +566,9 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['davka_4_max_sto_tisic'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['davka_4_min_sto_tisic'].toFixed(2);
                     text_current_data.innerHTML = "Naočkovaní obyvatelé čtvrtou dávkou tento den na 100 tisíc obyvatel";
+                    analysis_name_value = "davka_4_den_sto_tisic";
+                    analysis_name_max_value = "davka_4_max_sto_tisic";
+                    analysis_name_min_value = "davka_4_min_sto_tisic";
                 }
                 else
                 {
@@ -493,6 +576,9 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['davka_4_max'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['davka_4_min'].toFixed(2);
                     text_current_data.innerHTML = "Naočkovaní obyvatelé čtvrtou dávkou tento den";
+                    analysis_name_value = "davka_4_den";
+                    analysis_name_max_value = "davka_4_max";
+                    analysis_name_min_value = "davka_4_min";
                 }
                 break;
 
@@ -503,6 +589,9 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['davka_4_doposud_max_sto_tisic'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['davka_4_doposud_min_sto_tisic'].toFixed(2);
                     text_current_data.innerHTML = "Naočkovaní obyvatelé čtvrtou dávkou na 100 tisíc obyvatel";
+                    analysis_name_value = "davka_4_doposud_sto_tisic";
+                    analysis_name_max_value = "davka_4_doposud_max_sto_tisic";
+                    analysis_name_min_value = "davka_4_doposud_min_sto_tisic";
                 }
                 else
                 {
@@ -510,10 +599,14 @@ function updatePage()
                     maximum_day = new_data[selected_date_text]['davka_4_doposud_max'].toFixed(2);
                     minimum_day = new_data[selected_date_text]['davka_4_doposud_min'].toFixed(2);
                     text_current_data.innerHTML = "Naočkovaní obyvatelé čtvrtou dávkou";
+                    analysis_name_value = "davka_4_doposud";
+                    analysis_name_max_value = "davka_4_doposud_max";
+                    analysis_name_min_value = "davka_4_doposud_min";
                 }
                 break;
         }
 
+        current_values.push(okres_value);
         totalValue += okres_value;
         if (data_minimum_type == "zero") minimum_day = 0;
 
@@ -559,6 +652,11 @@ function updatePage()
                 break;
         }
 
+        // Draw scale rectangle
+        document.getElementById("scale_rectangle").style.background = "linear-gradient(90deg, rgba(" + color2[0] + "," + color2[1] + "," + color2[2] + ",1) 0%, rgba(" + color1[0] + "," + color1[1] + "," + color1[2] + ",1) 100%)";
+        document.getElementById("scale_min").innerHTML = numberWithCommas(minimum_day);
+        document.getElementById("scale_max").innerHTML = numberWithCommas(maximum_day);
+
         // Calculate other stuff and set color
         var min_max_difference = maximum_day - minimum_day;
         if (min_max_difference == 0)
@@ -579,6 +677,7 @@ function updatePage()
 // Select type of analysis (infected, recovered...)
 function selectAnalysis(type) 
 {
+    analysis_changed = true;
     current_analysis = type;
     selectSliderType(slider_current_type);
     analyze_fields.forEach((element) => 
@@ -623,6 +722,7 @@ function selectAnalysis(type)
                     option2.innerHTML = "Nové případy";
                     select_2.appendChild(option1);
                     select_2.appendChild(option2);
+                    current_analysis_color = "#ff9800";
                     // document.getElementById("slider").style.accentColor = "#ff9800";
                     // document.getElementById("slider").style.backgroundColor = "#ffffff";
                     break;
@@ -660,6 +760,7 @@ function selectAnalysis(type)
                         select_2.appendChild(opt);
                     }
                     );
+                    current_analysis_color = "#4caf50";
                     // document.getElementById("slider").style.accentColor = "#4caf50";
                     // document.getElementById("slider").style.background = "#ffffff";
                     break;
@@ -730,6 +831,7 @@ function loadTimeFrameSlider()
     });
     valuesSlider.noUiSlider.set(['7', '28']);
     valuesSlider.noUiSlider.on('update', function (values, handle) {
+        analysis_changed = true;
         var selected_date = new Date();
         switch (slider_current_type)
         {
@@ -752,10 +854,13 @@ function loadTimeFrameSlider()
         snapValues[handle].innerHTML = "<b>" + selected_date_text + "</b>";
         slider_current_values[handle] = values[handle];
     });
+    document.getElementsByClassName("noUi-target")[0].style.background = "#ffffff";
 }
 
 function selectSliderType(value)
 {
+    analysis_selected = true;
+    analysis_changed = true;
     var valuesSlider = document.getElementById('values-slider');
     slider_current_type = value;
 
@@ -819,62 +924,54 @@ function selectSliderData(value)
         case "Nové případy":
             map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty nakažených - počet nově zjištěných případů";
             break;
-        case "Celkem všechny dávky / 100 tisíc":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných dávek očkování daný den na 100 tisíc obyvatel";
-            break;
-        case "Celkem všechny dávky":
+
+        case "Všechny dávky tento den":
             map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných dávek očkování daný den";
             break;
-        case "Celkem všechny dávky doposud":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných dávek očkování od začátku očkování";
+        case "Všechny dávky doposud":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných dávek očkování doposud";
             break;
-        case "Celkem 1. dávka / 100 tisíc":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 1. dávek očkování daný den na 100 tisíc obyvatel";
+
+        case "První dávka tento den":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - počet vydaných prvních dávek očkování daný den";
             break;
-        case "Celkem 1. dávka doposud / 100 tisíc":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 1. dávek očkování od začátku očkování na 100 tisíc obyvatel";
+        case "První dávka doposud":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných prvních dávek očkování doposud";
             break;
-        case "Celkem 1. dávka":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 1. dávek očkování daný den";
+
+        case "Druhá dávka tento den":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - počet vydaných druhých dávek očkování daný den";
             break;
-        case "Celkem 2. dávka / 100 tisíc":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 2. dávek očkování daný den na 100 tisíc obyvatel";
+        case "Druhá dávka doposud":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných druhých dávek očkování doposud";
             break;
-        case "Celkem 2. dávka doposud / 100 tisíc":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 2. dávek očkování od začátku očkování na 100 tisíc obyvatel";
+
+        case "Třetí dávka tento den":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - počet vydaných třetích dávek očkování daný den";
             break;
-        case "Celkem 2. dávka":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 2. dávek očkování daný den";
+        case "Třetí dávka doposud":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných třetích dávek očkování doposud";
             break;
-        case "Celkem 3. dávka / 100 tisíc":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 3. dávek očkování daný den na 100 tisíc obyvatel";
+        
+        case "Čtvrtá dávka tento den":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - počet vydaných čtvrtých dávek očkování daný den";
             break;
-        case "Celkem 3. dávka doposud / 100 tisíc":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 3. dávek očkování od začátku očkování na 100 tisíc obyvatel";
-            break;
-        case "Celkem 3. dávka":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 3. dávek očkování daný den";
-            break;
-        case "Celkem 4. dávka / 100 tisíc":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 4. dávek očkování daný den na 100 tisíc obyvatel";
-            break;
-        case "Celkem 4. dávka doposud / 100 tisíc":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 4. dávek očkování od začátku očkování na 100 tisíc obyvatel";
-            break;
-        case "Celkem 4. dávka":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných 4. dávek očkování daný den";
+        case "Čtvrtá dávka doposud":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných čtvrtých dávek očkování doposud";
             break;
     }
     updatePage();
+    initChart();
 }
 
 function confirmRangeAnalysis()
 {
-    if (current_analysis == null)
+    if (!analysis_selected)
     {
-        toast("Vyberte prosím data ke zkoumání");
+        toast("Vyberte prosím data k vizualizaci");
         return;
     }
+    analysis_changed = false;
     if (map_enabled == false)
     {
         iframe.style.pointerEvents = "auto";
@@ -925,6 +1022,7 @@ function confirmRangeAnalysis()
         success: function(result)
         {
             processGetDataFromSlider(result);
+            initChart();
         },
         error: function(error)
         {
@@ -967,6 +1065,11 @@ function loadingToast(message)
 
 function sliderDateChange(value)
 {
+    if (analysis_changed)
+    {
+        toast("Prosím potvrďte nové změny");
+        return;
+    }
     var curr = parseInt(slider.value);
     slider.value = curr + value;
     updatePage();
@@ -1002,6 +1105,7 @@ function changeRecalculation()
 {
     this.data_recalculation = !this.data_recalculation;
     updatePage();
+    initChart();
 }
 
 function showHideLeftUpperPanel() 
@@ -1015,4 +1119,99 @@ function showHideLeftUpperPanel()
         x.style.display = "none";
         x2.innerHTML = "<b>Zobrazit nastavení</b>";
       }
-  }
+}
+
+function showHideLeftBottomPanel1() 
+{
+    var x = document.getElementById("left_bottom_panel_1");
+    document.getElementById("left_bottom_panel_2").style.display = "none";
+    var x2 = document.getElementById("button_left_bottom_panel_1");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+        x2.innerHTML = "<b>Schovat informace o okrese</b>";
+      } else {
+        x.style.display = "none";
+        x2.innerHTML = "<b>Zobrazit informace o okrese</b>";
+      }
+}
+
+function showHideLeftBottomPanel2() 
+{
+    var x = document.getElementById("left_bottom_panel_2");
+    document.getElementById("left_bottom_panel_1").style.display = "none";
+    var x2 = document.getElementById("button_left_bottom_panel_2");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+        x2.innerHTML = "<b>Schovat graf</b>";
+      } else {
+        x.style.display = "none";
+        x2.innerHTML = "<b>Zobrazit graf</b>";
+      }
+}
+
+function initChart()
+{
+    var val_min = slider_current_values[0];
+    var val_max = slider_current_values[1];
+    var no_x_labels = (slider_current_values[1] - slider_current_values[0]) / 7;
+    if (okres_clicked == "") return;
+
+    var date_start = addDays(covid_start_string, val_min - 1);
+    var date_end = addDays(covid_start_string, val_max - 1);
+
+    var xArray = [];
+    var yArray = [];
+
+    for (var i = val_min; i <= val_max; i++)
+    {
+        if (i == val_min) xArray.push(getFormattedDateLocal(date_start));
+        else if (i == val_max) xArray.push(getFormattedDateLocal(date_end));
+        else xArray.push(getFormattedDateLocal(addDays(covid_start_string, i)));
+    }
+
+    for (var i = val_min; i < val_max; i++)
+    {
+        var d = getFormattedDate(addDays(covid_start_string, i));
+        var o = okres_clicked;
+        var v = analysis_name_value;
+        yArray.push( new_data[d][o][v] );
+    }
+
+    // var diff = today.getTime() - covid_start.getTime();
+
+    // var days_since = diff / (1000 * 3600 * 24);
+
+    // var xArray = [50,60,70,80,90,100,110,120,130,140,150];
+    // var yArray = [7,8,8,9,9,9,10,11,14,14,15];
+    
+    // Define Data
+    var data = [{
+      x: xArray,
+      y: yArray,
+      mode: "lines",
+      line: {
+        color: current_analysis_color,
+        width: 2
+      }
+    }];
+    
+    // Define Layout
+    var layout = { 
+      plot_bgcolor: "rgba(255, 255, 255, 0.6)",
+      paper_bgcolor: "rgba(255, 255, 255, 0.6)",
+      xaxis: {
+            visible: false
+      },
+      height: 300,
+      margin: {
+        l: 40,
+        r: 20,
+        b: 40,
+        t: 30,
+        pad: 4
+      },
+    };
+    
+    // Display using Plotly
+    Plotly.newPlot("district_chart", data, layout, {displayModeBar: true});
+}

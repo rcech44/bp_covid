@@ -23,6 +23,8 @@
     <script>
         new_data = {{ data_covid|safe }};
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script type="text/javascript" src="{% static 'okresy_data.js' %}" charset="utf-8"></script>
     <script type="text/javascript" src="{% static 'on_load.js' %}" charset="utf-8"></script>
     <link type="text/css" rel="stylesheet" href="{% static 'toast.css' %}">
@@ -31,6 +33,16 @@
     <script src="{% static 'nouislider.js' %}"></script>
     <style>
         html,body,h1,h2,h3,h4,h5 {font-family: 'Open Sans'}
+    </style>
+    <style>
+        .rectangle {
+          height: 15px;
+          width: 100%;
+          background-color: #555;
+          border-style: solid;
+          border-width: 1px;
+          border-color: rgb(63, 63, 63);
+        }
     </style>
 </head>
 <body id="outer-page-background" class="w3-light-gray">
@@ -74,7 +86,7 @@
                 <div id="left_upper_panel" class="w3-animate-top" style="margin-top:10px">
                     <div class="w3-center">
                         <hr>
-                        <label for="sel1">Zvolení hodnoty:  </label>
+                        <label for="sel1">Nastavení časového okna:  </label>
                         <select oninput="selectSliderType(this.value)" class="form-control" id="sel1" style="margin-top:0px">
                         <option>Den</option>
                         <option>Týden</option>
@@ -93,7 +105,7 @@
                         </tr>
                     </table>
                     <div style="margin-top:7px">
-                        <input type="checkbox" id="checkerCovidWave" checked="false" onclick="checkboxCovidWaveClick(this)">
+                        <input type="checkbox" id="checkerCovidWave" onclick="checkboxCovidWaveClick(this)">
                         <label for="checkerCovidWave"> Zobrazit covidové vlny</label>
                     </div>
                     <div class="w3-center">
@@ -101,6 +113,7 @@
                     </div>
                     <hr>
 
+                    <label style="text-align:center;width:100%" for="slider">Animace a zvolení dat  </label>
                     <table style="width:100%;margin-bottom:15px">
                     <tr>
                         <td style="width:10%"><button class="w3-button w3-block w3-light-gray w3-left-align" onclick="sliderDateChange(-1)"><b><</b></button></td>
@@ -161,51 +174,70 @@
             </div>
             </div>
         </div>
-        <div style="bottom:0; margin-left:20px; margin-bottom:10px;z-index: 1;background-color: rgba(255, 255, 255, 0);overflow: hidden;position: absolute;width:450px;height:auto">
+        <div style="bottom:0; right:0; margin-right:10px; margin-bottom: 30px;z-index: 1;background-color: rgba(255, 255, 255, 0);overflow: hidden;position: absolute;width:550px;height:auto">
             <div class="w3-card" style="background-color:rgba(255, 255, 255, 0.6); margin-right: 10px; margin-bottom:10px">
-                <table class="w3-table w3-striped">
+                <div id="left_bottom_panel_1" class="w3-animate-bottom" style="display:none;">
+                    <table class="w3-table w3-striped">
+                        <tr>
+                            <td width="5%"><i class="material-icons" style="font-size:20px">location_on</i></td>
+                            <td width="60%">Okres</td>
+                            <td width="35%"><b id="text_okres_nazev">Zvolte kliknutím</b></td>
+                        </tr>
+                        <tr>
+                            <td><i class="material-icons" style="font-size:20px">article</i></td>
+                            <td>LAU kód okresu</td>
+                            <td><b id="text_okres_kod"></b></td>
+                        </tr>
+                        <tr>
+                            <td><i class="material-icons" style="font-size:20px">coronavirus</i></td>
+                            <td id="text_current_data">Současný počet nakažených</td>
+                            <td><b id="text_okres_nakazeni"></b></td>
+                        </tr>
+                        <tr>
+                            <td><i class="material-icons" style="font-size:20px">people</i></td>
+                            <td>Počet obyvatel (1.1.2022)</td>
+                            <td><b id="text_okres_pocet_obyvatel"></b></td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="left_bottom_panel_2" class="w3-animate-bottom" style="background-color:#ffffff99;">
+                    <div id="district_chart" style="width:100%;max-width:700px;max-height: 400px;"></div>
+                </div>
+                <table style="width:100%">
                     <tr>
-                        <td width="5%"><i class="material-icons" style="font-size:20px">location_on</i></td>
-                        <td width="60%">Okres</td>
-                        <td width="35%"><b id="text_okres_nazev">Zvolte kliknutím</b></td>
-                    </tr>
-                    <tr>
-                        <td><i class="material-icons" style="font-size:20px">article</i></td>
-                        <td>LAU kód okresu</td>
-                        <td><b id="text_okres_kod"></b></td>
-                    </tr>
-                    <tr>
-                        <td><i class="material-icons" style="font-size:20px">coronavirus</i></td>
-                        <td id="text_current_data">Současný počet nakažených</td>
-                        <td><b id="text_okres_nakazeni"></b></td>
-                    </tr>
-                    <tr>
-                        <td><i class="material-icons" style="font-size:20px">people</i></td>
-                        <td>Počet obyvatel (1.1.2022)</td>
-                        <td><b id="text_okres_pocet_obyvatel"></b></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div style="bottom:0; right:0; margin-right:10px; margin-bottom:20px;z-index: 1;background-color: rgba(255, 255, 255, 0);overflow: hidden;position: absolute;width:fit-content;height:fit-content">
-            <div class="w3-card" style="background-color:rgba(255, 255, 255, 0.6); margin-right: 10px; margin-bottom:10px;margin-top: 20px;">
-                <table style="margin: 10px">
-                    <tr>
-                        <td id="map_date" style="text-align:right;font-size: x-large;"></td>
-                    </tr>
-                    <tr>
-                        <td id="map_info_1" style="text-align:right;height:30px">-</td>
-                    </tr>
-                    <tr>
-                        <td id="map_info_2"style="text-align:right;height:30px">-</td>
-                    </tr>
-                    <tr>
-                      <td id="map_info_3"style="text-align:right;height:30px">-</td>
+                        <td style="width:50%"><button id="button_left_bottom_panel_1" class="w3-button w3-padding-small w3-ripple w3-small w3-block w3-white w3-center" style="outline: none;height:25px" onclick="showHideLeftBottomPanel1()"><b>Zobrazit informace o okrese</b></button></td>
+                        <td style="width:50%"><button id="button_left_bottom_panel_2" class="w3-button w3-padding-small w3-ripple w3-small w3-block w3-white w3-center" style="outline: none;height:25px" onclick="showHideLeftBottomPanel2()"><b>Schovat graf</b></button></td>
                     </tr>
                 </table>
             </div>
         </div>
-        <iframe id="iframe" src="/../map" style="position:absolute; top:0; left:0; bottom:0; right:0; width:100%; height:calc(100vh - 53px); margin-top:50px;border:none; padding:0;" title="Iframe Example" onload="onIframeLoad()"></iframe>
+        <div style="top:0; right:0; margin-right:20px; margin-top:70px;z-index: 1;background-color: rgba(255, 255, 255, 0);overflow: hidden;position: absolute;width:fit-content;height:fit-content">
+            <div class="w3-card" style="background-color:rgba(255, 255, 255, 0.6); margin-bottom:10px;">
+                <table style="margin-right:40px;width:100%;">
+                    <tr>
+                        <td id="scale_min" style="font-weight: bold;text-align:center;width:20%">-</td>
+                        <td style="text-align:center;width:60%"><div id="scale_rectangle" class="rectangle"></div></td>
+                        <td id="scale_max" style="font-weight: bold; text-align:center;height:50px;width:20%">-</td>
+                    </tr>
+                </table>
+                <hr style="background-color:rgb(139, 139, 139);height:1px;margin-left: 10px;margin-right: 10px;margin-bottom: 5px;margin-top:5px">
+                <table style="margin-bottom: 10px; margin-left: 10px; margin-right: 10px;">
+                    <tr>
+                        <td id="map_info_1" style="text-align:right;height:30px">Zvolte data k vizualizaci (viz. tlačítka výše).</td>
+                    </tr>
+                    <tr>
+                        <td id="map_info_2"style="text-align:right;height:30px">Poté zvolte časové okno a potvrďte.</td>
+                    </tr>
+                    <tr>
+                      <td id="map_info_3"style="text-align:right;height:30px">Vyobrazená data si můžete přizpůsobit v panelu pod časovým oknem.</td>
+                    </tr>
+                    <tr>
+                        <td id="map_date" style="text-align:right;font-size: x-large;height:60px">Vizualizace COVID-19 dat</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <iframe id="iframe" src="/../map" style="position:absolute; top:0; left:0; bottom:0; right:0; width:100%; height:calc(100vh - 53px); margin-top:50px;border:none; padding:0;pointer-events: none;" title="Iframe Example" onload="onIframeLoad()"></iframe>
     </div>
 
 <!-- End page content -->
