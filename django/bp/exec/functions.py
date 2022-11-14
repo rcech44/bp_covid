@@ -334,18 +334,20 @@ def checkUpToDate():
             response = cur.fetchone()
             if response is not None:
                 if response[1] != datum_string_yesterday:
-                    date_yesterday = datetime.strptime(datum_string_now, "%Y-%m-%d")
+                    date_today = datetime.strptime(datum_string_now, "%Y-%m-%d")
                     date_database = datetime.strptime(response[1], "%Y-%m-%d")
-                    delta_days = (date_yesterday - date_database).days
+                    delta_days = (date_today - date_database).days - 1
 
                     # Update database
                     for i in range(delta_days):
                         update_date = (date_database + timedelta(days=i+1)).strftime("%Y-%m-%d")
+                        update_date_yesterday = (date_database + timedelta(days=i)).strftime("%Y-%m-%d")
                         current_url = url_ockovani.replace('XYZ', update_date)
                         req = urllib.request.Request(current_url)
                         req.add_header('accept', 'application/json')
                         response = urllib.request.urlopen(req)
                         ockovani = json.load(response)
+                        okresy_zpracovane = []
                         for ockovani_info in ockovani:
                             orp_kod = ockovani_info['orp_bydliste_kod']
                             poradi_davky = ockovani_info['poradi_davky']
@@ -357,26 +359,56 @@ def checkUpToDate():
                                 continue
                             okres_kod = response[0]
 
+                            if okres_kod not in okresy_zpracovane:
+                                okresy_zpracovane.append(okres_kod)
+
                             cur.execute('SELECT * FROM ockovani_datum_okres WHERE datum = ? AND okres = ?', [update_date, okres_kod])
                             response = cur.fetchone()
                             if response is None:
-                                cur.execute('INSERT INTO ockovani_datum_okres (datum, okres, davka_1_den, davka_1_doposud, davka_2_den, davka_2_doposud, davka_3_den, davka_3_doposud, davka_4_den, davka_4_doposud, davka_celkem_den, davka_celkem_doposud) VALUES (?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)', [update_date, okres_kod])
+                                cur.execute('SELECT * FROM ockovani_datum_okres WHERE okres = ? AND datum = ?', [okres_kod, update_date_yesterday])
+                                response = cur.fetchone()
+                                davka_1_doposud = response[4]
+                                davka_2_doposud = response[6]
+                                davka_3_doposud = response[8]
+                                davka_4_doposud = response[10]
+                                davka_celkem_doposud = response[12]
+                                cur.execute('INSERT INTO ockovani_datum_okres (datum, okres, davka_1_den, davka_1_doposud, davka_2_den, davka_2_doposud, davka_3_den, davka_3_doposud, davka_4_den, davka_4_doposud, davka_celkem_den, davka_celkem_doposud) VALUES (?, ?, 0, ?, 0, ?, 0, ?, 0, ?, 0, ?)', [update_date, okres_kod, davka_1_doposud, davka_2_doposud, davka_3_doposud, davka_4_doposud, davka_celkem_doposud])
                                 conn.commit()
 
                             if poradi_davky == 1:
                                 # davka_1_celkem += pocet_davek
                                 cur.execute('UPDATE ockovani_datum_okres SET davka_1_den = davka_1_den + ? WHERE datum = ? AND okres = ?', [pocet_davek, update_date, okres_kod])
+                                cur.execute('UPDATE ockovani_datum_okres SET davka_1_doposud = davka_1_doposud + ? WHERE datum = ? AND okres = ?', [pocet_davek, update_date, okres_kod])
                             if poradi_davky == 2:
                                 # davka_2_celkem += pocet_davek
                                 cur.execute('UPDATE ockovani_datum_okres SET davka_2_den = davka_2_den + ? WHERE datum = ? AND okres = ?', [pocet_davek, update_date, okres_kod])
+                                cur.execute('UPDATE ockovani_datum_okres SET davka_2_doposud = davka_2_doposud + ? WHERE datum = ? AND okres = ?', [pocet_davek, update_date, okres_kod])
                             if poradi_davky == 3:
                                 # davka_3_celkem += pocet_davek
                                 cur.execute('UPDATE ockovani_datum_okres SET davka_3_den = davka_3_den + ? WHERE datum = ? AND okres = ?', [pocet_davek, update_date, okres_kod])
+                                cur.execute('UPDATE ockovani_datum_okres SET davka_3_doposud = davka_3_doposud + ? WHERE datum = ? AND okres = ?', [pocet_davek, update_date, okres_kod])
                             if poradi_davky == 4:
                                 # davka_4_celkem += pocet_davek
                                 cur.execute('UPDATE ockovani_datum_okres SET davka_4_den = davka_4_den + ? WHERE datum = ? AND okres = ?', [pocet_davek, update_date, okres_kod])
+                                cur.execute('UPDATE ockovani_datum_okres SET davka_4_doposud = davka_4_doposud + ? WHERE datum = ? AND okres = ?', [pocet_davek, update_date, okres_kod])
+
+                            cur.execute('UPDATE ockovani_datum_okres SET davka_celkem_den = davka_celkem_den + ? WHERE datum = ? AND okres = ?', [pocet_davek, update_date, okres_kod])
+                            cur.execute('UPDATE ockovani_datum_okres SET davka_celkem_doposud = davka_celkem_doposud + ? WHERE datum = ? AND okres = ?', [pocet_davek, update_date, okres_kod])
 
                             conn.commit()
+                        
+                        for okr in pocet_obyvatel:
+                            if okr not in okresy_zpracovane:
+                                cur.execute('SELECT * FROM ockovani_datum_okres WHERE okres = ? AND datum = ?', [okr, update_date_yesterday])
+                                response = cur.fetchone()
+                                davka_1_doposud = response[4]
+                                davka_2_doposud = response[6]
+                                davka_3_doposud = response[8]
+                                davka_4_doposud = response[10]
+                                davka_celkem_doposud = response[12]
+                                cur.execute('INSERT INTO ockovani_datum_okres (datum, okres, davka_1_den, davka_1_doposud, davka_2_den, davka_2_doposud, davka_3_den, davka_3_doposud, davka_4_den, davka_4_doposud, davka_celkem_den, davka_celkem_doposud) VALUES (?, ?, 0, ?, 0, ?, 0, ?, 0, ?, 0, ?)', [update_date, okr, davka_1_doposud, davka_2_doposud, davka_3_doposud, davka_4_doposud, davka_celkem_doposud])
+                                conn.commit()
+                        
                         print(f"[DATABASE] Vaccination: Processed new {update_date}, total values: {celkem}")
 
 
