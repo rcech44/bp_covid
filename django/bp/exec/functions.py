@@ -355,9 +355,11 @@ def checkUpToDate():
                             cur.execute('SELECT cislo_okres FROM orp_okres_ciselnik WHERE cislo_orp = ?', [orp_kod])
                             celkem += pocet_davek
                             response = cur.fetchone()
-                            if response is None:
+                            if orp_kod == 1000:
+                                okres_kod = "CZ0100"
+                            elif response is None:
                                 continue
-                            okres_kod = response[0]
+                            else: okres_kod = response[0]
 
                             if okres_kod not in okresy_zpracovane:
                                 okresy_zpracovane.append(okres_kod)

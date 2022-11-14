@@ -112,7 +112,7 @@ function initPage()
     for (let i = 0; i < 77; i++)
     {
         children[i].setAttribute("fill-opacity", 0.7);
-        children[i].setAttribute("fill", "#000000");
+        children[i].setAttribute("fill", "#ffffff");
         children[i].setAttribute("stroke-width", 0.7);
         children[i].setAttribute("name", okresy_names[i][1]);
         children[i].setAttribute("okres_lau", okresy_names[i][0]);
@@ -149,23 +149,9 @@ function onClickMap(name, okres_lau, object)
     okres_nazev.innerHTML = name;
     okres_kod.innerHTML = okres_lau;
     okres_pocet_obyvatel.innerHTML = okresy_pocet_obyvatel[okres_lau].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    // switch(map_show_data)
-    // {
-    //     case "Současně nakažení":
-    //         var okres_value = new_data[selected_date_text][okres_lau]['aktivni_pripady_sto_tisic'].toFixed(2);
-    //         okres_nakazeni.innerHTML = parseInt(new_data[selected_date_text][okres_lau]['aktivni_pripady']);
-    //         okres_nakazeni_sto_tisic.innerHTML = okres_value;
-    //         text_current_data_sto_tisic.innerHTML = "Současný počet nakažených na 100 tisíc obyvatel";
-    //         text_current_data.innerHTML = "Současný počet nakažených";
-    //         break;
-    //     case "Nové případy":
-    //         var okres_value = new_data[selected_date_text][okres_lau]['nove_pripady_sto_tisic'].toFixed(2);
-    //         okres_nakazeni.innerHTML = parseInt(new_data[selected_date_text][okres_lau]['nove_pripady']);
-    //         okres_nakazeni_sto_tisic.innerHTML = okres_value;
-    //         text_current_data_sto_tisic.innerHTML = "Nový počet nakažených na 100 tisíc obyvatel";
-    //         text_current_data.innerHTML = "Počet nově nakažených";
-    //         break;
-    // }
+
+    // Update page
+    updatePage();
 }
 
 // sleep function
@@ -916,6 +902,7 @@ function selectSliderType(value)
 function selectSliderData(value)
 {
     map_show_data = value;
+    initChart();
     switch (value)
     {
         case "Současně nakažení":
@@ -1177,17 +1164,11 @@ function initChart()
         yArray.push( new_data[d][o][v] );
     }
 
-    // var diff = today.getTime() - covid_start.getTime();
-
-    // var days_since = diff / (1000 * 3600 * 24);
-
-    // var xArray = [50,60,70,80,90,100,110,120,130,140,150];
-    // var yArray = [7,8,8,9,9,9,10,11,14,14,15];
-    
     // Define Data
     var data = [{
       x: xArray,
       y: yArray,
+      fill: 'tozeroy',
       mode: "lines",
       line: {
         color: current_analysis_color,
@@ -1202,12 +1183,19 @@ function initChart()
       xaxis: {
             visible: false
       },
+      title: {
+        text: map_show_data,
+        font: {
+          size: 20
+        },
+        y: 0.85
+      },
       height: 300,
       margin: {
-        l: 40,
-        r: 20,
-        b: 40,
-        t: 30,
+        l: 45,
+        r: 30,
+        b: 30,
+        t: 80,
         pad: 4
       },
     };
