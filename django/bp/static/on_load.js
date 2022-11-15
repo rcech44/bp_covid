@@ -804,7 +804,7 @@ function selectSliderType(value) {
                 range:
                 {
                     min: days_since_covid - days_since,
-                    max: days_since_covid - 2
+                    max: days_since_covid - 1
                 }
             });
             break;
@@ -821,7 +821,7 @@ function selectSliderType(value) {
             valuesSlider.noUiSlider.updateOptions({
                 range:
                 {
-                    min: days_since_covid - days_since,
+                    min: ((days_since_covid - days_since) / 30),
                     max: (days_since_covid / 30) - 1
                 }
             });
