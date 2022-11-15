@@ -76,6 +76,14 @@
                     <div id="ockovani-analyze" color="w3-green" class="w3-card w3-green w3-center"
                         style="cursor: pointer;" onclick="selectAnalysis('ockovani-analyze')">Očkování</div>
                 </td>
+                <td style="width:10%;padding-top:12px;padding-right: 20px;text-align: right;">
+                    <div id="testy-analyze" color="w3-light-blue" class="w3-card w3-light-blue w3-center"
+                        style="cursor: pointer;" onclick="selectAnalysis('testy-analyze')">PCR testování</div>
+                </td>
+                <td style="width:10%;padding-top:12px;padding-right: 20px;text-align: right;">
+                    <div id="ockovani-analyze" color="w3-grey" class="w3-card w3-grey w3-center"
+                        style="cursor: pointer;" onclick="selectAnalysis('umrti-analyze')">Úmrtí</div>
+                </td>
                 <!-- <td style="width:10%;padding-top:12px;padding-right: 20px;text-align: right;">
                 <div id="umrti-analyze" color="w3-dark-grey" class="w3-card w3-dark-grey w3-center" style="cursor: pointer;" onclick="selectAnalysis('umrti-analyze')">Úmrtí</div>
             </td>
@@ -169,24 +177,15 @@
                             <table style="width:100%">
                                 <tr>
                                     <td colspan="3" style="width:100%">
-                                        <!-- <label for="sel2">Pozorovaná data:  </label> -->
                                         <select oninput="selectSliderData(this.value)" class="form-control" id="sel2">
-                                            <!-- <option>Současně nakažení</option>
-                            <option>Nové případy</option> -->
                                         </select>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="3">
-                                        Škála minima:
-                                        <input style="margin-left:10px;margin-top:20px" type="radio"
-                                            name="flexRadioDefault" id="flexRadioDefault1" checked="true"
-                                            onchange="checkboxGetMinimumType(&quot;zero&quot;)">
-                                        <label for="flexRadioDefault1">Nula</label>
-                                        <input type="radio" style="margin-left:10px;" name="flexRadioDefault"
-                                            id="flexRadioDefault2"
-                                            onchange="checkboxGetMinimumType(&quot;minimum&quot;)">
-                                        <label for="flexRadioDefault2">Minimální hodnota</label>
+                                        <input type="checkbox" id="checkerChangeMaxValue" style="margin-top:13px"
+                                            onclick="changeRecalculationMaxValue()">
+                                        <label for="checkerChangeMaxValue"> Škálovat podle max. hodnoty v období</label>
                                     </td>
                                 </tr>
                                 <tr>

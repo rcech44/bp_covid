@@ -997,10 +997,10 @@ function checkboxCovidWaveClick(el) {
     }
 }
 
-function checkboxGetMinimumType(val) {
-    this.data_minimum_type = val;
-    updatePage();
-}
+// function checkboxGetMinimumType(val) {
+//     this.data_minimum_type = val;
+//     updatePage();
+// }
 
 function changeRecalculation() {
     this.data_recalculation = !this.data_recalculation;

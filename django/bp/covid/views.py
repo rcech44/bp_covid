@@ -56,30 +56,14 @@ def main2(request):
 
     if (loaded_cache == False):
         new_data = thirty_day_map()
-        data = get_today_summary()
         loaded_cache = True
         cache_map = new_data
-        cache_summary = data
         print('Loading without cache')
     else:
         new_data = cache_map
-        data = cache_summary
         print('Loading cache')
 
-    data['yesterday_date_text'] = "Dne " + (datetime.now() - timedelta(days=1)).strftime("%d.%m.%Y") + ":"
-    data['yesterday_date_text_testy'] = "Dne " + (datetime.now() - timedelta(days=1)).strftime("%d.%m.%Y") + " poz.:"
-    return render(request, 'main2.html', {'nakazeni': data['nakazeni'],
-                                            'vyleceni': data['vyleceni'],
-                                            'umrti': data['umrti'],
-                                            'ovlivneno': data['pocet_pcr_testu'],
-                                            'rozdil_nakazeni': data['rozdil_nakazeni'],
-                                            'rozdil_vyleceni': data['rozdil_vyleceni'],
-                                            'rozdil_umrti': data['rozdil_umrti'],
-                                            'rozdil_ovlivneno': data['pocet_pcr_testu_pozitivni'],
-                                            'yesterday_date_text': data['yesterday_date_text'],
-                                            'yesterday_date_text_testy': data['yesterday_date_text_testy'],
-                                            'data_covid': new_data
-                                            })
+    return render(request, 'main2.html', {'data_covid': new_data})
 
 def map(request):
     return render(request, 'map.html', {})
