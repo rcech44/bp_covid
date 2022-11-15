@@ -49,6 +49,9 @@ var data_recalculation = true;
 var covid_start = new Date("03/01/2020");
 var covid_start_string = "03/01/2020";
 var vaccination_start = new Date("12/27/2020");
+var vaccination_start_string = "12/27/2020";
+var deaths_start = new Date("03/22/2020");
+var deaths_start_string = "03/22/2020";
 var current_values = []
 var analysis_name_value;
 var analysis_name_min_value;
@@ -272,6 +275,11 @@ function updatePage() {
             map_info_1.innerHTML = "<b>Nová očkování za tento den:</b> " + numberWithCommas(new_data[selected_date_text]['davka_celkem_den']);
             map_info_3.innerHTML = "<b>Celkový počet obyvatel naočkovaných alespoň první a druhou dávkou:</b> " + numberWithCommas(new_data[selected_date_text]['davka_2_doposud']);
             map_info_2.innerHTML = "<b>Celkový počet zaznamenaných očkování doposud:</b> " + numberWithCommas(new_data[selected_date_text]['davka_celkem_doposud']);
+            break;
+        case "umrti-analyze":
+            map_info_1.innerHTML = "<b>Počet zemřelých tento den:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_den']);
+            map_info_2.innerHTML = "<b>Celkový počet zemřelých k tomuto dni:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_doposud']);
+            map_info_3.innerHTML = "";
             break;
     }
 
@@ -539,6 +547,48 @@ function updatePage() {
                     analysis_name_min_value = "davka_4_doposud_min";
                 }
                 break;
+
+            case "Aktuální celkový počet zemřelých doposud":
+                if (data_recalculation) {
+                    okres_value = new_data[selected_date_text][okres_lau]['umrti_doposud_sto_tisic'].toFixed(2);
+                    maximum_day = new_data[selected_date_text]['max_umrti_doposud_sto_tisic'].toFixed(2);
+                    minimum_day = new_data[selected_date_text]['min_umrti_doposud_sto_tisic'].toFixed(2);
+                    text_current_data.innerHTML = "Celkový počet zemřelých k danému dni na 100 tisíc obyvatel";
+                    analysis_name_value = "umrti_doposud_sto_tisic";
+                    analysis_name_max_value = "max_umrti_doposud_sto_tisic";
+                    analysis_name_min_value = "min_umrti_doposud_sto_tisic";
+                }
+                else {
+                    okres_value = new_data[selected_date_text][okres_lau]['umrti_doposud'].toFixed(2);
+                    maximum_day = new_data[selected_date_text]['max_umrti_doposud'].toFixed(2);
+                    minimum_day = new_data[selected_date_text]['min_umrti_doposud'].toFixed(2);
+                    text_current_data.innerHTML = "Celkový počet zemřelých k danému dni";
+                    analysis_name_value = "umrti_doposud";
+                    analysis_name_max_value = "max_umrti_doposud";
+                    analysis_name_min_value = "min_umrti_doposud";
+                }
+                break;
+
+            case "Počet nově zemřelých daný den":
+                if (data_recalculation) {
+                    okres_value = new_data[selected_date_text][okres_lau]['umrti_den_sto_tisic'].toFixed(2);
+                    maximum_day = new_data[selected_date_text]['max_umrti_den_sto_tisic'].toFixed(2);
+                    minimum_day = new_data[selected_date_text]['min_umrti_den_sto_tisic'].toFixed(2);
+                    text_current_data.innerHTML = "Počet nově zemřelých daný den na 100 tisíc obyvatel";
+                    analysis_name_value = "umrti_den_sto_tisic";
+                    analysis_name_max_value = "max_umrti_den_sto_tisic";
+                    analysis_name_min_value = "min_umrti_den_sto_tisic";
+                }
+                else {
+                    okres_value = new_data[selected_date_text][okres_lau]['umrti_den'].toFixed(2);
+                    maximum_day = new_data[selected_date_text]['max_umrti_den'].toFixed(2);
+                    minimum_day = new_data[selected_date_text]['min_umrti_den'].toFixed(2);
+                    text_current_data.innerHTML = "Počet nově zemřelých daný den";
+                    analysis_name_value = "umrti_den";
+                    analysis_name_max_value = "max_umrti_den";
+                    analysis_name_min_value = "min_umrti_den";
+                }
+                break;
         }
 
         current_values.push(okres_value);
@@ -614,22 +664,10 @@ function selectAnalysis(type) {
         // Set colors and other elements according to selected type of analysis
         if (element == type) {
             var topbar = document.getElementById("topbar");
-            // var color = field.getAttribute('color');
-            // var background_color = field.getAttribute('background-color');
-            // var outer_iframe = document.getElementById("outer-iframe");
-            // var inner_iframe = document.getElementById("inner-iframe");
-            // var outer_iframe_current_color = outer_iframe.getAttribute('color');
-            // var inner_iframe_current_color = inner_iframe.getAttribute('color');
-            // outer_iframe.className = outer_iframe.className.replace(outer_iframe_current_color, color);
-            // inner_iframe.className = inner_iframe.className.replace(inner_iframe_current_color, color);
-            // outer_iframe.setAttribute("color", color);
-            // inner_iframe.setAttribute("color", color);
-
             select_2.innerHTML = "";
 
             switch (element) {
                 case 'nakazeni-analyze':
-                    // topbar.style.background = "linear-gradient(90deg, rgba(255,255,255,1) 60%, #ff9800 100%)";
                     document.getElementById("nakazeni-analyze").classList.add("w3-orange");
                     document.getElementById("nakazeni-analyze").style.opacity = 1;
                     document.getElementById("nakazeni-analyze").style.borderStyle = "solid";
@@ -639,6 +677,10 @@ function selectAnalysis(type) {
                     document.getElementById("ockovani-analyze").style.backgroundColor = "#FFFFFF";
                     document.getElementById("ockovani-analyze").style.opacity = 0.6;
                     document.getElementById("ockovani-analyze").style.borderStyle = "none";
+                    document.getElementById("umrti-analyze").classList.remove("w3-grey");
+                    document.getElementById("umrti-analyze").style.backgroundColor = "#FFFFFF";
+                    document.getElementById("umrti-analyze").style.opacity = 0.6;
+                    document.getElementById("umrti-analyze").style.borderStyle = "none";
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#ff9800";
                     map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty nakažených";
                     var option1 = document.createElement('option');
@@ -654,7 +696,6 @@ function selectAnalysis(type) {
                     // document.getElementById("slider").style.backgroundColor = "#ffffff";
                     break;
                 case 'ockovani-analyze':
-                    // topbar.style.background = "linear-gradient(90deg, rgba(255,255,255,1) 60%, #4caf50 100%)";
                     document.getElementById("nakazeni-analyze").classList.remove("w3-orange");
                     document.getElementById("nakazeni-analyze").style.backgroundColor = "#FFFFFF";
                     document.getElementById("nakazeni-analyze").style.opacity = 0.6;
@@ -664,6 +705,10 @@ function selectAnalysis(type) {
                     document.getElementById("ockovani-analyze").style.borderStyle = "solid";
                     document.getElementById("ockovani-analyze").style.borderWidth = "2px";
                     document.getElementById("ockovani-analyze").style.borderColor = "#357c38";
+                    document.getElementById("umrti-analyze").classList.remove("w3-grey");
+                    document.getElementById("umrti-analyze").style.backgroundColor = "#FFFFFF";
+                    document.getElementById("umrti-analyze").style.opacity = 0.6;
+                    document.getElementById("umrti-analyze").style.borderStyle = "none";
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#4caf50";
                     map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty naočkovaných";
 
@@ -691,25 +736,34 @@ function selectAnalysis(type) {
                     // document.getElementById("slider").style.background = "#ffffff";
                     break;
                 case 'umrti-analyze':
-                    topbar.style.background = "linear-gradient(90deg, rgba(255,255,255,1) 37%, #616161 100%)";
+                    document.getElementById("nakazeni-analyze").classList.remove("w3-orange");
+                    document.getElementById("nakazeni-analyze").style.backgroundColor = "#FFFFFF";
                     document.getElementById("nakazeni-analyze").style.opacity = 0.6;
+                    document.getElementById("nakazeni-analyze").style.borderStyle = "none";
+                    document.getElementById("ockovani-analyze").classList.remove("w3-green");
+                    document.getElementById("ockovani-analyze").style.backgroundColor = "#FFFFFF";
                     document.getElementById("ockovani-analyze").style.opacity = 0.6;
+                    document.getElementById("ockovani-analyze").style.borderStyle = "none";
+                    document.getElementById("umrti-analyze").classList.add("w3-grey");
                     document.getElementById("umrti-analyze").style.opacity = 1;
-                    document.getElementById("ovlivneno-analyze").style.opacity = 0.6;
-                    document.getElementsByClassName("noUi-connect")[0].style.background = "#616161";
-                    map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty úmrtí";
+                    document.getElementById("umrti-analyze").style.borderStyle = "solid";
+                    document.getElementById("umrti-analyze").style.borderWidth = "2px";
+                    document.getElementById("umrti-analyze").style.borderColor = "#515151";
+                    document.getElementsByClassName("noUi-connect")[0].style.background = "#9e9e9e";
+                    map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty úmrtí";
+                    var options = [
+                        "Aktuální celkový počet zemřelých doposud",
+                        "Počet nově zemřelých daný den"
+                    ];
+
+                    options.forEach((element) => {
+                        var opt = document.createElement('option');
+                        opt.value = opt.innerHTML = element;
+                        select_2.appendChild(opt);
+                    }
+                    );
+                    current_analysis_color = "#9e9e9e";
                     // document.getElementById("slider").style.accentColor = "#616161";
-                    // document.getElementById("slider").style.background = "#ffffff";
-                    break;
-                case 'ovlivneno-analyze':
-                    topbar.style.background = "linear-gradient(90deg, rgba(255,255,255,1) 37%, #00bcd4 100%)";
-                    document.getElementById("nakazeni-analyze").style.opacity = 0.6;
-                    document.getElementById("ockovani-analyze").style.opacity = 0.6;
-                    document.getElementById("umrti-analyze").style.opacity = 0.6;
-                    document.getElementById("ovlivneno-analyze").style.opacity = 1;
-                    document.getElementsByClassName("noUi-connect")[0].style.background = "#00bcd4";
-                    map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty testů";
-                    // document.getElementById("slider").style.accentColor = "#00bcd4";
                     // document.getElementById("slider").style.background = "#ffffff";
                     break;
             }
@@ -795,6 +849,9 @@ function selectSliderType(value) {
         case 'ockovani-analyze':
             var diff = today.getTime() - vaccination_start.getTime();
             break;
+        case 'umrti-analyze':
+            var diff = today.getTime() - deaths_start.getTime();
+            break;
     }
     var days_since = diff / (1000 * 3600 * 24);
 
@@ -804,7 +861,7 @@ function selectSliderType(value) {
                 range:
                 {
                     min: days_since_covid - days_since,
-                    max: days_since_covid - 1
+                    max: days_since_covid - 2
                 }
             });
             break;
@@ -813,7 +870,7 @@ function selectSliderType(value) {
                 range:
                 {
                     min: ((days_since_covid - days_since) / 7),
-                    max: (days_since_covid / 7) - 1
+                    max: (days_since_covid / 7) - 2
                 }
             });
             break;
@@ -822,7 +879,7 @@ function selectSliderType(value) {
                 range:
                 {
                     min: ((days_since_covid - days_since) / 30),
-                    max: (days_since_covid / 30) - 1
+                    max: (days_since_covid / 30) - 2
                 }
             });
             break;
@@ -878,6 +935,13 @@ function selectSliderData(value) {
         case "Čtvrtá dávka doposud":
             map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných čtvrtých dávek očkování doposud";
             break;
+
+        case "Aktuální celkový počet zemřelých doposud":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty úmrtí - celkový počet zemřelých doposud";
+            break;
+        case "Počet nově zemřelých daný den":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty úmrtí - počet nově zemřelých k danému dni";
+            break;
     }
     updatePage();
     initChart();
@@ -925,6 +989,9 @@ function confirmRangeAnalysis() {
             break;
         case "ockovani-analyze":
             url = "http://127.0.0.1:8000/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max) + "&type=vaccination";
+            break;
+        case "umrti-analyze":
+            url = "http://127.0.0.1:8000/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max) + "&type=deaths";
             break;
     }
 

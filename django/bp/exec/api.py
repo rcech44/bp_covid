@@ -278,5 +278,83 @@ def getData(range_from, range_to, type):
                 print(f"[API] Database error - {e}")
                 return f"Database error - {e}"
 
+        case 'deaths':
+            try:
+                with sqlite3.connect('sql/database.sqlite') as conn:
+                    cur = conn.cursor()
+                    celkem_doposud = 0
+                    celkem_min_den_rozsah = 999999
+                    celkem_max_den_rozsah = 0
+                    celkem_min_den_sto_tisic_rozsah = 999999
+                    celkem_max_den_sto_tisic_rozsah = 0
+                    celkem_min_doposud_rozsah = 999999
+                    celkem_max_doposud_rozsah = 0
+                    celkem_min_doposud_sto_tisic_rozsah = 999999
+                    celkem_max_doposud_sto_tisic_rozsah = 0
+                    for date in all_requested_dates:
+                        cur.execute('SELECT * FROM umrti_datum_okres WHERE datum = ?', [date])
+                        response = cur.fetchall()
+                        return_data[date] = {}
+                        return_data[date]['celkem_umrti'] = 0
+                        celkem_den = 0
+                        max_umrti = 0
+                        min_umrti = 9999999
+                        max_umrti_sto_tisic = 0
+                        min_umrti_sto_tisic = 9999999
+                        max_umrti_doposud = 0
+                        min_umrti_doposud = 9999999
+                        max_umrti_doposud_sto_tisic = 0
+                        min_umrti_doposud_sto_tisic = 9999999
+                        for okres in response:
+                            if okres[2] is not None:
+                                return_data[date][okres[2]] = {}
+                                celkem_den += okres[3]
+                                celkem_doposud += okres[3]
+                                return_data[date][okres[2]]['umrti_den'] = okres[3]
+                                return_data[date][okres[2]]['umrti_doposud'] = okres[4]
+                                return_data[date][okres[2]]['umrti_den_sto_tisic'] = okres[3] / (pocet_obyvatel[okres[2]] / 100000)
+                                return_data[date][okres[2]]['umrti_doposud_sto_tisic'] = okres[4] / (pocet_obyvatel[okres[2]] / 100000)
+                                
+                                if return_data[date][okres[2]]['umrti_den'] > max_umrti: max_umrti = return_data[date][okres[2]]['umrti_den']
+                                if return_data[date][okres[2]]['umrti_den'] < min_umrti: min_umrti = return_data[date][okres[2]]['umrti_den']
+                                if return_data[date][okres[2]]['umrti_den_sto_tisic'] > max_umrti_sto_tisic: max_umrti_sto_tisic = return_data[date][okres[2]]['umrti_den_sto_tisic']
+                                if return_data[date][okres[2]]['umrti_den_sto_tisic'] < min_umrti_sto_tisic: min_umrti_sto_tisic = return_data[date][okres[2]]['umrti_den_sto_tisic']
+                                if return_data[date][okres[2]]['umrti_doposud'] > max_umrti_doposud: max_umrti_doposud = return_data[date][okres[2]]['umrti_doposud']
+                                if return_data[date][okres[2]]['umrti_doposud'] < min_umrti_doposud: min_umrti_doposud = return_data[date][okres[2]]['umrti_doposud']
+                                if return_data[date][okres[2]]['umrti_doposud_sto_tisic'] > max_umrti_doposud_sto_tisic: max_umrti_doposud_sto_tisic = return_data[date][okres[2]]['umrti_doposud_sto_tisic']
+                                if return_data[date][okres[2]]['umrti_doposud_sto_tisic'] < min_umrti_doposud_sto_tisic: min_umrti_doposud_sto_tisic = return_data[date][okres[2]]['umrti_doposud_sto_tisic']
 
+                                if return_data[date][okres[2]]['umrti_den'] > celkem_max_den_rozsah: celkem_max_den_rozsah = return_data[date][okres[2]]['umrti_den']
+                                if return_data[date][okres[2]]['umrti_den'] < celkem_min_den_rozsah: celkem_min_den_rozsah = return_data[date][okres[2]]['umrti_den']
+                                if return_data[date][okres[2]]['umrti_den_sto_tisic'] > celkem_max_den_sto_tisic_rozsah: celkem_max_den_sto_tisic_rozsah = return_data[date][okres[2]]['umrti_den_sto_tisic']
+                                if return_data[date][okres[2]]['umrti_den_sto_tisic'] < celkem_min_den_sto_tisic_rozsah: celkem_min_den_sto_tisic_rozsah = return_data[date][okres[2]]['umrti_den_sto_tisic']
+                                if return_data[date][okres[2]]['umrti_doposud'] > celkem_max_doposud_rozsah: celkem_max_doposud_rozsah = return_data[date][okres[2]]['umrti_doposud']
+                                if return_data[date][okres[2]]['umrti_doposud'] < celkem_min_doposud_rozsah: celkem_min_doposud_rozsah = return_data[date][okres[2]]['umrti_doposud']
+                                if return_data[date][okres[2]]['umrti_doposud_sto_tisic'] > celkem_max_doposud_sto_tisic_rozsah: celkem_max_doposud_sto_tisic_rozsah = return_data[date][okres[2]]['umrti_doposud_sto_tisic']
+                                if return_data[date][okres[2]]['umrti_doposud_sto_tisic'] < celkem_min_doposud_sto_tisic_rozsah: celkem_min_doposud_sto_tisic_rozsah = return_data[date][okres[2]]['umrti_doposud_sto_tisic']
+
+                        return_data[date]['max_umrti_den'] = max_umrti
+                        return_data[date]['min_umrti_den'] = min_umrti
+                        return_data[date]['max_umrti_den_sto_tisic'] = max_umrti_sto_tisic
+                        return_data[date]['min_umrti_den_sto_tisic'] = min_umrti_sto_tisic
+                        return_data[date]['max_umrti_doposud'] = max_umrti_doposud
+                        return_data[date]['min_umrti_doposud'] = min_umrti_doposud
+                        return_data[date]['max_umrti_doposud_sto_tisic'] = max_umrti_doposud_sto_tisic
+                        return_data[date]['min_umrti_doposud_sto_tisic'] = min_umrti_doposud_sto_tisic
+                        return_data[date]['celkem_den'] = celkem_den
+                        return_data[date]['celkem_doposud'] = celkem_doposud
+                    
+                    return_data['celkem_doposud'] = celkem_doposud
+                    return_data['celkem_min_den'] = celkem_min_den_rozsah
+                    return_data['celkem_max_den'] = celkem_max_den_rozsah
+                    return_data['celkem_min_sto_tisic_den'] = celkem_min_den_sto_tisic_rozsah
+                    return_data['celkem_max_sto_tisic_den'] = celkem_max_den_sto_tisic_rozsah
+                    return_data['celkem_min_doposud'] = celkem_min_doposud_rozsah
+                    return_data['celkem_max_doposud'] = celkem_max_doposud_rozsah
+                    return_data['celkem_min_sto_tisic_doposud'] = celkem_min_doposud_sto_tisic_rozsah
+                    return_data['celkem_max_sto_tisic_doposud'] = celkem_max_doposud_sto_tisic_rozsah
+            
+            except sqlite3.Error as e:
+                print(f"[API] Database error - {e}")
+                return f"Database error - {e}"
     return return_data

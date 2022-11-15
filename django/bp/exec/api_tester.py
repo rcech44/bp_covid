@@ -103,6 +103,7 @@ try:
         response = cur.fetchall()
         start_date = (last_database_date + timedelta(days=1))
         today_date = datetime.now()
+        yesterday_date = datetime.now() - timedelta(days=1)
         current_date = start_date
         i = 0
 
@@ -110,8 +111,11 @@ try:
         for row in response:
             okresy[row[2]] = row[3]
 
-        while current_date.strftime('%Y-%m-%d') != today_date.strftime('%Y-%m-%d'):
-            current_date_text = (start_date + timedelta(days=i)).strftime('%Y-%m-%d')
+        while True:
+            current_date = (start_date + timedelta(days=i))
+            current_date_text = current_date.strftime('%Y-%m-%d')
+            if current_date_text == today_date.strftime('%Y-%m-%d'):
+                break
             i += 1
 
             # Get data from MZCR
