@@ -47,23 +47,7 @@ def main(request):
                                             })
 
 def main2(request):
-    global cache_map
-    global cache_summary
-    global loaded_cache
-
-    if checkUpToDate() is False:
-        loaded_cache = False
-
-    if (loaded_cache == False):
-        new_data = thirty_day_map()
-        loaded_cache = True
-        cache_map = new_data
-        print('Loading without cache')
-    else:
-        new_data = cache_map
-        print('Loading cache')
-
-    return render(request, 'main2.html', {'data_covid': new_data})
+    return render(request, 'main2.html', {'data_covid': {}})
 
 def map(request):
     return render(request, 'map.html', {})

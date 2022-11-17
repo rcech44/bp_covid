@@ -218,7 +218,8 @@ def thirty_day_map():
     return data
 
 def checkUpToDate():
-    print('[DATABASE-CHECKER] Checking if database is up-to-date')
+    print('[DATABASE-UPDATER] Checking if database is up-to-date')
+    updated = False
     delta = 0
     celkem = 0
     url_obce = 'https://onemocneni-aktualne.mzcr.cz/api/v3/obce?page=1&itemsPerPage=10000&datum%5Bafter%5D=XYZ&datum%5Bbefore%5D=XYZ&apiToken=c54d8c7d54a31d016d8f3c156b98682a'
@@ -244,7 +245,6 @@ def checkUpToDate():
                     date_database = datetime.strptime(response[0][1], "%Y-%m-%d")
                     delta_days = (date_yesterday - date_database).days
                     delta = delta_days
-                    print(delta_days)
 
                     # Update database
                     for i in range(delta_days):
@@ -282,7 +282,8 @@ def checkUpToDate():
                                     dny[okres]['nove_pripady_65_vek'],
                                 ])
                             conn.commit()
-                        print(f"Downloaded data from {update_date}")
+                        updated = True
+                        print(f"[DATABASE-UPDATER] Infections: Downloaded data from {update_date}")
 
             # **********************
             # UPDATE zakladni_prehled TABLE
@@ -412,7 +413,8 @@ def checkUpToDate():
                                 cur.execute('INSERT INTO ockovani_datum_okres (datum, okres, davka_1_den, davka_1_doposud, davka_2_den, davka_2_doposud, davka_3_den, davka_3_doposud, davka_4_den, davka_4_doposud, davka_celkem_den, davka_celkem_doposud) VALUES (?, ?, 0, ?, 0, ?, 0, ?, 0, ?, 0, ?)', [update_date, okr, davka_1_doposud, davka_2_doposud, davka_3_doposud, davka_4_doposud, davka_celkem_doposud])
                                 conn.commit()
                         
-                        print(f"[DATABASE] Vaccination: Processed new {update_date}, total values: {celkem}")
+                        updated = True
+                        print(f"[DATABASE-UPDATER] Vaccination: Processed new {update_date}, total values: {celkem}")
 
             # **********************
             # UPDATE umrti_datum_okres TABLE
@@ -461,17 +463,18 @@ def checkUpToDate():
                     cur.execute('UPDATE umrti_datum_okres SET umrti_doposud = umrti_doposud + 1 WHERE datum = ? AND okres = ?', [current_date_text, okres])
                     conn.commit()
 
-                print(f"[DATABASE] Processed deaths at {current_date_text}")
+                updated = True
+                print(f"[DATABASE-UPDATER] Processed deaths at {current_date_text}")
 
     except sqlite3.Error as e:
         print(e)
         # print(os.getcwd())
 
-    if delta != 0:
-        print(f"[DATABASE-CHECKER] Database updated")
+    if updated == True:
+        print(f"[DATABASE-UPDATER] Database updated")
         return False
     else:
-        print('[DATABASE-CHECKER] Database is up-to-date')
+        print('[DATABASE-UPDATER] Database is up-to-date')
         return True
 
 # checkUpToDate()
