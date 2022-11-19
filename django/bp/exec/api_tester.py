@@ -90,26 +90,84 @@ import urllib.request
 #     print(e)
 
 # UMRTI DOWNLOADER 1
-url = 'https://onemocneni-aktualne.mzcr.cz/api/v3/umrti?page=1&itemsPerPage=10000&datum%5Bbefore%5D=XYZ&datum%5Bafter%5D=XYZ&apiToken=c54d8c7d54a31d016d8f3c156b98682a'
+# url = 'https://onemocneni-aktualne.mzcr.cz/api/v3/umrti?page=1&itemsPerPage=10000&datum%5Bbefore%5D=XYZ&datum%5Bafter%5D=XYZ&apiToken=c54d8c7d54a31d016d8f3c156b98682a'
+# okresy = {"CZ0100": 0, "CZ0201": 0, "CZ0202": 0,"CZ0203": 0,"CZ0204": 0,"CZ0205": 0,"CZ0206": 0,"CZ0207": 0,"CZ0208": 0,"CZ0209": 0,"CZ020A": 0, "CZ020B": 0,"CZ020C": 0,"CZ0311": 0,"CZ0312": 0,"CZ0313": 0,"CZ0314": 0,"CZ0315": 0,"CZ0316": 0,"CZ0317": 0,"CZ0321": 0,"CZ0322": 0,"CZ0323": 0,"CZ0324": 0,"CZ0325": 0,"CZ0326": 0,"CZ0327": 0,"CZ0411": 0,"CZ0412": 0,"CZ0413": 0,"CZ0421": 0,"CZ0422": 0,"CZ0423": 0,"CZ0424": 0,"CZ0425": 0,"CZ0426": 0,"CZ0427": 0,"CZ0511": 0,"CZ0512": 0,"CZ0513": 0,"CZ0514": 0,"CZ0521": 0,"CZ0522": 0,"CZ0523": 0,"CZ0524": 0,"CZ0525": 0,"CZ0531": 0,"CZ0532": 0,"CZ0533": 0,"CZ0534": 0,"CZ0631": 0,"CZ0632": 0,"CZ0633": 0,"CZ0634": 0,"CZ0635": 0,"CZ0641": 0,"CZ0642": 0,"CZ0643": 0,"CZ0644": 0,"CZ0645": 0,"CZ0646": 0,"CZ0647": 0,"CZ0711": 0,"CZ0712": 0,"CZ0713": 0,"CZ0714": 0,"CZ0715": 0,"CZ0721": 0,"CZ0722": 0,"CZ0723": 0,"CZ0724": 0,"CZ0801": 0,"CZ0802": 0,"CZ0803": 0,"CZ0804": 0,"CZ0805": 0,"CZ0806": 0}
+# try:
+#     with sqlite3.connect('../sql/database.sqlite') as conn:
+#         cur = conn.cursor()
+#         cur.execute('SELECT id, datum FROM umrti_datum_okres ORDER BY id DESC LIMIT 1')
+#         response = cur.fetchone()
+#         last_database_date = datetime.strptime(response[1], '%Y-%m-%d')
+#         last_database_date_str = response[1]
+#         cur.execute('SELECT id, datum, okres, umrti_doposud FROM umrti_datum_okres WHERE datum = ? ORDER BY id DESC', [last_database_date_str])
+#         response = cur.fetchall()
+#         start_date = (last_database_date + timedelta(days=1))
+#         today_date = datetime.now()
+#         yesterday_date = datetime.now() - timedelta(days=1)
+#         current_date = start_date
+#         i = 0
+
+#         # Fill previous sums
+#         for row in response:
+#             okresy[row[2]] = row[3]
+
+#         while True:
+#             current_date = (start_date + timedelta(days=i))
+#             current_date_text = current_date.strftime('%Y-%m-%d')
+#             if current_date_text == today_date.strftime('%Y-%m-%d'):
+#                 break
+#             i += 1
+
+#             # Get data from MZCR
+#             url_edit = url.replace('XYZ', current_date_text)
+#             req = urllib.request.Request(url_edit)
+#             req.add_header('accept', 'application/json')
+#             response = urllib.request.urlopen(req)
+#             json_okresy = json.load(response)
+
+#             # Add blank record to database for each record
+#             for okres in okresy:
+#                 cur.execute('INSERT INTO umrti_datum_okres (datum, okres, umrti_den, umrti_doposud) VALUES (?, ?, 0, ?)', [current_date_text, okres, okresy[okres]])
+#                 conn.commit()
+
+#             for record in json_okresy:
+#                 okres = record['okres_lau_kod']
+#                 okresy[okres] += 1
+#                 cur.execute('UPDATE umrti_datum_okres SET umrti_den = umrti_den + 1 WHERE datum = ? AND okres = ?', [current_date_text, okres])
+#                 cur.execute('UPDATE umrti_datum_okres SET umrti_doposud = umrti_doposud + 1 WHERE datum = ? AND okres = ?', [current_date_text, okres])
+#                 conn.commit()
+
+#             print(f"[DATABASE] Processed deaths at {current_date_text}")
+        
+
+
+# except sqlite3.Error as e:
+#     print(e)
+#     exit(0)
+
+
+# TESTOVANI DOWNLOADER 1
+url = 'https://onemocneni-aktualne.mzcr.cz/api/v3/kraj-okres-testy?page=1&itemsPerPage=100&datum%5Bbefore%5D=XYZ&datum%5Bafter%5D=XYZ&apiToken=c54d8c7d54a31d016d8f3c156b98682a'
 okresy = {"CZ0100": 0, "CZ0201": 0, "CZ0202": 0,"CZ0203": 0,"CZ0204": 0,"CZ0205": 0,"CZ0206": 0,"CZ0207": 0,"CZ0208": 0,"CZ0209": 0,"CZ020A": 0, "CZ020B": 0,"CZ020C": 0,"CZ0311": 0,"CZ0312": 0,"CZ0313": 0,"CZ0314": 0,"CZ0315": 0,"CZ0316": 0,"CZ0317": 0,"CZ0321": 0,"CZ0322": 0,"CZ0323": 0,"CZ0324": 0,"CZ0325": 0,"CZ0326": 0,"CZ0327": 0,"CZ0411": 0,"CZ0412": 0,"CZ0413": 0,"CZ0421": 0,"CZ0422": 0,"CZ0423": 0,"CZ0424": 0,"CZ0425": 0,"CZ0426": 0,"CZ0427": 0,"CZ0511": 0,"CZ0512": 0,"CZ0513": 0,"CZ0514": 0,"CZ0521": 0,"CZ0522": 0,"CZ0523": 0,"CZ0524": 0,"CZ0525": 0,"CZ0531": 0,"CZ0532": 0,"CZ0533": 0,"CZ0534": 0,"CZ0631": 0,"CZ0632": 0,"CZ0633": 0,"CZ0634": 0,"CZ0635": 0,"CZ0641": 0,"CZ0642": 0,"CZ0643": 0,"CZ0644": 0,"CZ0645": 0,"CZ0646": 0,"CZ0647": 0,"CZ0711": 0,"CZ0712": 0,"CZ0713": 0,"CZ0714": 0,"CZ0715": 0,"CZ0721": 0,"CZ0722": 0,"CZ0723": 0,"CZ0724": 0,"CZ0801": 0,"CZ0802": 0,"CZ0803": 0,"CZ0804": 0,"CZ0805": 0,"CZ0806": 0}
 try:
     with sqlite3.connect('../sql/database.sqlite') as conn:
         cur = conn.cursor()
-        cur.execute('SELECT id, datum FROM umrti_datum_okres ORDER BY id DESC LIMIT 1')
-        response = cur.fetchone()
-        last_database_date = datetime.strptime(response[1], '%Y-%m-%d')
-        last_database_date_str = response[1]
-        cur.execute('SELECT id, datum, okres, umrti_doposud FROM umrti_datum_okres WHERE datum = ? ORDER BY id DESC', [last_database_date_str])
-        response = cur.fetchall()
-        start_date = (last_database_date + timedelta(days=1))
+        # cur.execute('SELECT id, datum FROM testovani_datum_okres ORDER BY id DESC LIMIT 1')
+        # response = cur.fetchone()
+        # last_database_date = datetime.strptime(response[1], '%Y-%m-%d')
+        # last_database_date_str = response[1]
+        # cur.execute('SELECT id, datum, okres, umrti_doposud FROM umrti_datum_okres WHERE datum = ? ORDER BY id DESC', [last_database_date_str])
+        # response = cur.fetchall()
+        # start_date = (last_database_date + timedelta(days=1))
+        start_date = datetime.strptime('2020-08-01', '%Y-%m-%d')
         today_date = datetime.now()
-        yesterday_date = datetime.now() - timedelta(days=1)
+        # yesterday_date = datetime.now() - timedelta(days=1)
         current_date = start_date
         i = 0
 
         # Fill previous sums
-        for row in response:
-            okresy[row[2]] = row[3]
+        # for row in response:
+        #     okresy[row[2]] = row[3]
 
         while True:
             current_date = (start_date + timedelta(days=i))
@@ -125,26 +183,18 @@ try:
             response = urllib.request.urlopen(req)
             json_okresy = json.load(response)
 
-            # Add blank record to database for each record
-            for okres in okresy:
-                cur.execute('INSERT INTO umrti_datum_okres (datum, okres, umrti_den, umrti_doposud) VALUES (?, ?, 0, ?)', [current_date_text, okres, okresy[okres]])
+            # Add record to database for each record returned
+            for okres in json_okresy:
+                cur.execute('INSERT INTO testovani_datum_okres (datum, okres, prirustek, celkem, prirustek_korekce, celkem_korekce) VALUES (?, ?, ?, ?, ?, ?)', [current_date_text, okres['okres_lau_kod'], okres['prirustkovy_pocet_testu_okres'], okres['kumulativni_pocet_testu_okres'], okres['prirustkovy_pocet_prvnich_testu_okres'], okres['kumulativni_pocet_prvnich_testu_okres'] ])
                 conn.commit()
 
-            for record in json_okresy:
-                okres = record['okres_lau_kod']
-                okresy[okres] += 1
-                cur.execute('UPDATE umrti_datum_okres SET umrti_den = umrti_den + 1 WHERE datum = ? AND okres = ?', [current_date_text, okres])
-                cur.execute('UPDATE umrti_datum_okres SET umrti_doposud = umrti_doposud + 1 WHERE datum = ? AND okres = ?', [current_date_text, okres])
-                conn.commit()
-
-            print(f"[DATABASE] Processed deaths at {current_date_text}")
+            print(f"[DATABASE] Processed tests at {current_date_text}")
         
 
 
 except sqlite3.Error as e:
     print(e)
     exit(0)
-
 
 
 # OCKOVANI DOWNLOADER 2
