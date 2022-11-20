@@ -154,7 +154,7 @@ try:
         cur = conn.cursor()
         cur.execute('SELECT id, datum FROM testovani_datum_okres ORDER BY id DESC LIMIT 1')
         response = cur.fetchone()
-        start_date = datetime.strptime(response[1], '%Y-%m-%d')
+        start_date = datetime.strptime(response[1], '%Y-%m-%d') + timedelta(days=1)
         today_date = datetime.now()
         current_date = start_date
         i = 0
@@ -180,7 +180,6 @@ try:
 
             print(f"[DATABASE] Processed tests at {current_date_text}")
         
-
 
 except sqlite3.Error as e:
     print(e)

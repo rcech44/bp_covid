@@ -357,4 +357,159 @@ def getData(range_from, range_to, type):
             except sqlite3.Error as e:
                 print(f"[API] Database error - {e}")
                 return f"Database error - {e}"
+
+        case 'testing':
+            try:
+                with sqlite3.connect('sql/database.sqlite') as conn:
+                    cur = conn.cursor()
+                    celkem_doposud = 0
+
+                    rozsah_max_prirustek = 0
+                    rozsah_min_prirustek = 9999999
+                    rozsah_max_prirustek_sto_tisic = 0
+                    rozsah_min_prirustek_sto_tisic = 9999999
+
+                    rozsah_max_celkem = 0
+                    rozsah_min_celkem = 9999999
+                    rozsah_max_celkem_sto_tisic = 0
+                    rozsah_min_celkem_sto_tisic = 9999999
+
+                    rozsah_max_prirustek_korekce = 0
+                    rozsah_min_prirustek_korekce = 9999999
+                    rozsah_max_prirustek_korekce_sto_tisic = 0
+                    rozsah_min_prirustek_korekce_sto_tisic = 9999999
+
+                    rozsah_max_celkem_korekce = 0
+                    rozsah_min_celkem_korekce = 9999999
+                    rozsah_max_celkem_korekce_sto_tisic = 0
+                    rozsah_min_celkem_korekce_sto_tisic = 9999999
+
+                    for date in all_requested_dates:
+                        cur.execute('SELECT * FROM testovani_datum_okres WHERE datum = ?', [date])
+                        response = cur.fetchall()
+                        return_data[date] = {}
+                        return_data[date]['celkem_testovani'] = 0
+                        celkem_den = 0
+
+                        max_den = 0
+                        min_den = 9999999
+                        max_den_sto_tisic = 0
+                        min_den_sto_tisic = 9999999
+
+                        celkem_max_den = 0
+                        celkem_min_den = 9999999
+                        celkem_max_den_sto_tisic = 0
+                        celkem_min_den_sto_tisic = 9999999
+
+                        max_korekce_den = 0
+                        min_korekce_den = 9999999
+                        max_korekce_den_sto_tisic = 0
+                        min_korekce_den_sto_tisic = 9999999
+
+                        celkem_max_korekce_den = 0
+                        celkem_min_korekce_den = 9999999
+                        celkem_max_korekce_den_sto_tisic = 0
+                        celkem_min_korekce_den_sto_tisic = 9999999
+
+                        for okres in response:
+                            if okres[2] is not None:
+                                celkem_den += okres[3]
+                                celkem_doposud += okres[3]
+                                return_data[date][okres[2]] = {}
+                                return_data[date][okres[2]]['prirustek'] = okres[3]
+                                return_data[date][okres[2]]['celkem'] = okres[4]
+                                return_data[date][okres[2]]['prirustek_sto_tisic'] = okres[3] / (pocet_obyvatel[okres[2]] / 100000)
+                                return_data[date][okres[2]]['celkem_sto_tisic'] = okres[4] / (pocet_obyvatel[okres[2]] / 100000)
+                                return_data[date][okres[2]]['prirustek_korekce'] = okres[5]
+                                return_data[date][okres[2]]['celkem_korekce'] = okres[6]
+                                return_data[date][okres[2]]['prirustek_korekce_sto_tisic'] = okres[5] / (pocet_obyvatel[okres[2]] / 100000)
+                                return_data[date][okres[2]]['celkem_korekce_sto_tisic'] = okres[6] / (pocet_obyvatel[okres[2]] / 100000)
+                                
+                                if okres[3] > max_den: max_den = okres[3]
+                                if okres[3] < min_den: min_den = okres[3]
+                                if return_data[date][okres[2]]['prirustek_sto_tisic'] > max_den_sto_tisic: max_den_sto_tisic = return_data[date][okres[2]]['prirustek_sto_tisic']
+                                if return_data[date][okres[2]]['prirustek_sto_tisic'] < min_den_sto_tisic: min_den_sto_tisic = return_data[date][okres[2]]['prirustek_sto_tisic']
+
+                                if okres[4] > celkem_max_den: celkem_max_den = okres[4]
+                                if okres[4] < celkem_min_den: celkem_min_den = okres[4]
+                                if return_data[date][okres[2]]['celkem_sto_tisic'] > celkem_max_den_sto_tisic: celkem_max_den_sto_tisic = return_data[date][okres[2]]['celkem_sto_tisic']
+                                if return_data[date][okres[2]]['celkem_sto_tisic'] < celkem_min_den_sto_tisic: celkem_min_den_sto_tisic = return_data[date][okres[2]]['celkem_sto_tisic']
+
+                                if okres[5] > max_korekce_den: max_korekce_den = okres[5]
+                                if okres[5] < min_korekce_den: min_korekce_den = okres[5]
+                                if return_data[date][okres[2]]['prirustek_korekce_sto_tisic'] > max_korekce_den_sto_tisic: max_korekce_den_sto_tisic = return_data[date][okres[2]]['prirustek_korekce_sto_tisic']
+                                if return_data[date][okres[2]]['prirustek_korekce_sto_tisic'] < min_korekce_den_sto_tisic: min_korekce_den_sto_tisic = return_data[date][okres[2]]['prirustek_korekce_sto_tisic']
+
+                                if okres[6] > celkem_max_korekce_den: celkem_max_korekce_den = okres[6]
+                                if okres[6] < celkem_min_korekce_den: celkem_min_korekce_den = okres[6]
+                                if return_data[date][okres[2]]['celkem_korekce_sto_tisic'] > celkem_max_korekce_den_sto_tisic: celkem_max_korekce_den_sto_tisic = return_data[date][okres[2]]['celkem_korekce_sto_tisic']
+                                if return_data[date][okres[2]]['celkem_korekce_sto_tisic'] < celkem_min_korekce_den_sto_tisic: celkem_min_korekce_den_sto_tisic = return_data[date][okres[2]]['celkem_korekce_sto_tisic']
+
+
+                        return_data[date]['max_den'] = max_den
+                        return_data[date]['min_den'] = min_den
+                        return_data[date]['max_den_sto_tisic'] = max_den_sto_tisic
+                        return_data[date]['min_den_sto_tisic'] = min_den_sto_tisic
+
+                        return_data[date]['celkem_max_den'] = celkem_max_den
+                        return_data[date]['celkem_min_den'] = celkem_min_den
+                        return_data[date]['celkem_max_den_sto_tisic'] = celkem_max_den_sto_tisic
+                        return_data[date]['celkem_min_den_sto_tisic'] = celkem_min_den_sto_tisic
+
+                        return_data[date]['max_korekce_den'] = max_korekce_den
+                        return_data[date]['min_korekce_den'] = min_korekce_den
+                        return_data[date]['max_korekce_den_sto_tisic'] = max_korekce_den_sto_tisic
+                        return_data[date]['min_korekce_den_sto_tisic'] = min_korekce_den_sto_tisic
+
+                        return_data[date]['celkem_max_korekce_den'] = celkem_max_korekce_den
+                        return_data[date]['celkem_min_korekce_den'] = celkem_min_korekce_den
+                        return_data[date]['celkem_max_korekce_den_sto_tisic'] = celkem_max_korekce_den_sto_tisic
+                        return_data[date]['celkem_min_korekce_den_sto_tisic'] = celkem_min_korekce_den_sto_tisic
+
+                        if max_den > rozsah_max_prirustek: rozsah_max_prirustek = max_den
+                        if min_den < rozsah_min_prirustek: rozsah_min_prirustek = min_den
+                        if max_den_sto_tisic > rozsah_max_prirustek_sto_tisic: rozsah_max_prirustek_sto_tisic = max_den_sto_tisic
+                        if min_den_sto_tisic < rozsah_min_prirustek_sto_tisic: rozsah_min_prirustek_sto_tisic = min_den_sto_tisic
+
+                        if celkem_max_den > rozsah_max_celkem: rozsah_max_celkem = celkem_max_den
+                        if celkem_min_den < rozsah_min_celkem: rozsah_min_celkem = celkem_min_den
+                        if celkem_max_den_sto_tisic > rozsah_max_celkem_sto_tisic: rozsah_max_celkem_sto_tisic = celkem_max_den_sto_tisic
+                        if celkem_min_den_sto_tisic < rozsah_min_celkem_sto_tisic: rozsah_min_celkem_sto_tisic = celkem_min_den_sto_tisic
+
+                        if max_korekce_den > rozsah_max_prirustek_korekce: rozsah_max_prirustek_korekce = max_korekce_den
+                        if min_korekce_den < rozsah_min_prirustek_korekce: rozsah_min_prirustek_korekce = min_korekce_den
+                        if max_korekce_den_sto_tisic > rozsah_max_prirustek_korekce_sto_tisic: rozsah_max_prirustek_korekce_sto_tisic = max_korekce_den_sto_tisic
+                        if min_korekce_den_sto_tisic < rozsah_min_prirustek_korekce_sto_tisic: rozsah_min_prirustek_korekce_sto_tisic = min_korekce_den_sto_tisic
+
+                        if celkem_max_korekce_den > rozsah_max_celkem_korekce: rozsah_max_celkem_korekce = celkem_max_korekce_den
+                        if celkem_min_korekce_den < rozsah_min_celkem_korekce: rozsah_min_celkem_korekce = celkem_min_korekce_den
+                        if celkem_max_korekce_den_sto_tisic > rozsah_max_celkem_korekce_sto_tisic: rozsah_max_celkem_korekce_sto_tisic = celkem_max_korekce_den_sto_tisic
+                        if celkem_min_korekce_den_sto_tisic < rozsah_min_celkem_korekce_sto_tisic: rozsah_min_celkem_korekce_sto_tisic = celkem_min_korekce_den_sto_tisic
+                    
+                    return_data['celkem_doposud'] = celkem_doposud
+
+                    return_data['rozsah_max_prirustek'] = rozsah_max_prirustek
+                    return_data['rozsah_min_prirustek'] = rozsah_min_prirustek
+                    return_data['rozsah_max_prirustek_sto_tisic'] = rozsah_max_prirustek_sto_tisic
+                    return_data['rozsah_min_prirustek_sto_tisic'] = rozsah_min_prirustek_sto_tisic
+
+                    return_data['rozsah_max_celkem'] = rozsah_max_celkem
+                    return_data['rozsah_min_celkem'] = rozsah_min_celkem
+                    return_data['rozsah_max_celkem_sto_tisic'] = rozsah_max_celkem_sto_tisic
+                    return_data['rozsah_min_celkem_sto_tisic'] = rozsah_min_celkem_sto_tisic
+
+                    return_data['rozsah_max_prirustek_korekce'] = rozsah_max_prirustek_korekce
+                    return_data['rozsah_min_prirustek_korekce'] = rozsah_min_prirustek_korekce
+                    return_data['rozsah_max_prirustek_korekce_sto_tisic'] = rozsah_max_prirustek_korekce_sto_tisic
+                    return_data['rozsah_min_prirustek_korekce_sto_tisic'] = rozsah_min_prirustek_korekce_sto_tisic
+
+                    return_data['rozsah_max_celkem_korekce'] = rozsah_max_celkem_korekce
+                    return_data['rozsah_min_celkem_korekce'] = rozsah_min_celkem_korekce
+                    return_data['rozsah_max_celkem_korekce_sto_tisic'] = rozsah_max_celkem_korekce_sto_tisic
+                    return_data['rozsah_min_celkem_korekce_sto_tisic'] = rozsah_min_celkem_korekce_sto_tisic
+            
+            except sqlite3.Error as e:
+                print(f"[API] Database error - {e}")
+                return f"Database error - {e}"
+
     return return_data
