@@ -389,7 +389,8 @@ def getData(range_from, range_to, type):
                         response = cur.fetchall()
                         return_data[date] = {}
                         return_data[date]['celkem_testovani'] = 0
-                        celkem_den = 0
+                        celkem_den_prirustek = 0
+                        celkem_den_celkem = 0
 
                         max_den = 0
                         min_den = 9999999
@@ -413,39 +414,50 @@ def getData(range_from, range_to, type):
 
                         for okres in response:
                             if okres[2] is not None:
-                                celkem_den += okres[3]
-                                celkem_doposud += okres[3]
+                                prirustek = 0
+                                celkem = 0
+                                prirustek_korekce = 0
+                                celkem_korekce = 0
+                                if okres[3] is not None: prirustek = okres[3]
+                                if okres[4] is not None: celkem = okres[4]
+                                if okres[5] is not None: prirustek_korekce = okres[5]
+                                if okres[6] is not None: celkem_korekce = okres[6]
+
+                                celkem_den_prirustek += prirustek
+                                celkem_den_celkem += okres[4]
+                                celkem_doposud += prirustek
                                 return_data[date][okres[2]] = {}
-                                return_data[date][okres[2]]['prirustek'] = okres[3]
-                                return_data[date][okres[2]]['celkem'] = okres[4]
-                                return_data[date][okres[2]]['prirustek_sto_tisic'] = okres[3] / (pocet_obyvatel[okres[2]] / 100000)
-                                return_data[date][okres[2]]['celkem_sto_tisic'] = okres[4] / (pocet_obyvatel[okres[2]] / 100000)
-                                return_data[date][okres[2]]['prirustek_korekce'] = okres[5]
-                                return_data[date][okres[2]]['celkem_korekce'] = okres[6]
-                                return_data[date][okres[2]]['prirustek_korekce_sto_tisic'] = okres[5] / (pocet_obyvatel[okres[2]] / 100000)
-                                return_data[date][okres[2]]['celkem_korekce_sto_tisic'] = okres[6] / (pocet_obyvatel[okres[2]] / 100000)
+                                return_data[date][okres[2]]['prirustek'] = prirustek
+                                return_data[date][okres[2]]['celkem'] = celkem
+                                return_data[date][okres[2]]['prirustek_sto_tisic'] = prirustek / (pocet_obyvatel[okres[2]] / 100000)
+                                return_data[date][okres[2]]['celkem_sto_tisic'] = celkem / (pocet_obyvatel[okres[2]] / 100000)
+                                return_data[date][okres[2]]['prirustek_korekce'] = prirustek_korekce
+                                return_data[date][okres[2]]['celkem_korekce'] = celkem_korekce
+                                return_data[date][okres[2]]['prirustek_korekce_sto_tisic'] = prirustek_korekce / (pocet_obyvatel[okres[2]] / 100000)
+                                return_data[date][okres[2]]['celkem_korekce_sto_tisic'] = celkem_korekce / (pocet_obyvatel[okres[2]] / 100000)
                                 
-                                if okres[3] > max_den: max_den = okres[3]
-                                if okres[3] < min_den: min_den = okres[3]
+                                if prirustek > max_den: max_den = prirustek
+                                if prirustek < min_den: min_den = prirustek
                                 if return_data[date][okres[2]]['prirustek_sto_tisic'] > max_den_sto_tisic: max_den_sto_tisic = return_data[date][okres[2]]['prirustek_sto_tisic']
                                 if return_data[date][okres[2]]['prirustek_sto_tisic'] < min_den_sto_tisic: min_den_sto_tisic = return_data[date][okres[2]]['prirustek_sto_tisic']
 
-                                if okres[4] > celkem_max_den: celkem_max_den = okres[4]
-                                if okres[4] < celkem_min_den: celkem_min_den = okres[4]
+                                if celkem > celkem_max_den: celkem_max_den = celkem
+                                if celkem < celkem_min_den: celkem_min_den = celkem
                                 if return_data[date][okres[2]]['celkem_sto_tisic'] > celkem_max_den_sto_tisic: celkem_max_den_sto_tisic = return_data[date][okres[2]]['celkem_sto_tisic']
                                 if return_data[date][okres[2]]['celkem_sto_tisic'] < celkem_min_den_sto_tisic: celkem_min_den_sto_tisic = return_data[date][okres[2]]['celkem_sto_tisic']
 
-                                if okres[5] > max_korekce_den: max_korekce_den = okres[5]
-                                if okres[5] < min_korekce_den: min_korekce_den = okres[5]
+                                if prirustek_korekce > max_korekce_den: max_korekce_den = prirustek_korekce
+                                if prirustek_korekce < min_korekce_den: min_korekce_den = prirustek_korekce
                                 if return_data[date][okres[2]]['prirustek_korekce_sto_tisic'] > max_korekce_den_sto_tisic: max_korekce_den_sto_tisic = return_data[date][okres[2]]['prirustek_korekce_sto_tisic']
                                 if return_data[date][okres[2]]['prirustek_korekce_sto_tisic'] < min_korekce_den_sto_tisic: min_korekce_den_sto_tisic = return_data[date][okres[2]]['prirustek_korekce_sto_tisic']
 
-                                if okres[6] > celkem_max_korekce_den: celkem_max_korekce_den = okres[6]
-                                if okres[6] < celkem_min_korekce_den: celkem_min_korekce_den = okres[6]
+                                if celkem_korekce > celkem_max_korekce_den: celkem_max_korekce_den = celkem_korekce
+                                if celkem_korekce < celkem_min_korekce_den: celkem_min_korekce_den = celkem_korekce
                                 if return_data[date][okres[2]]['celkem_korekce_sto_tisic'] > celkem_max_korekce_den_sto_tisic: celkem_max_korekce_den_sto_tisic = return_data[date][okres[2]]['celkem_korekce_sto_tisic']
                                 if return_data[date][okres[2]]['celkem_korekce_sto_tisic'] < celkem_min_korekce_den_sto_tisic: celkem_min_korekce_den_sto_tisic = return_data[date][okres[2]]['celkem_korekce_sto_tisic']
 
-
+                        return_data[date]['celkem_prirustek_den'] = celkem_den_prirustek
+                        return_data[date]['celkem_celkem_den'] = celkem_den_celkem
                         return_data[date]['max_den'] = max_den
                         return_data[date]['min_den'] = min_den
                         return_data[date]['max_den_sto_tisic'] = max_den_sto_tisic

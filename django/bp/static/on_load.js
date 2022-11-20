@@ -20,7 +20,7 @@ var covid_data_days_min = {};
 var covid_summary = {};
 var okres_clicked = "";
 var okres_clicked_map_object = -1;
-var analyze_fields = ["nakazeni-analyze", "ockovani-analyze", "umrti-analyze", "ovlivneno-analyze"];
+var analyze_fields = ["nakazeni-analyze", "ockovani-analyze", "umrti-analyze", "testovani-analyze"];
 var current_analysis = "nakazeni-analyze";
 var analysis_selected = false;
 var analysis_changed = true;
@@ -52,6 +52,8 @@ var vaccination_start = new Date("12/27/2020");
 var vaccination_start_string = "12/27/2020";
 var deaths_start = new Date("03/22/2020");
 var deaths_start_string = "03/22/2020";
+var testing_start = new Date("08/01/2020");
+var testing_start_string = "08/01/2020";
 var current_values = []
 var analysis_name_value;
 var analysis_name_min_value;
@@ -279,6 +281,11 @@ function updatePage() {
         case "umrti-analyze":
             map_info_1.innerHTML = "<b>Počet zemřelých tento den:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_den']);
             map_info_2.innerHTML = "<b>Celkový počet zemřelých k tomuto dni:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_doposud']);
+            map_info_3.innerHTML = "";
+            break;
+        case "testovani-analyze":
+            map_info_1.innerHTML = "<b>Počet otestovaných tento den:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_prirustek_den']);
+            map_info_2.innerHTML = "<b>Celkový počet otestovaných k tomuto dni:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_celkem_den']);
             map_info_3.innerHTML = "";
             break;
     }
@@ -589,6 +596,54 @@ function updatePage() {
                     analysis_name_min_value = "min_umrti_den";
                 }
                 break;
+
+
+
+
+
+
+
+            case "Aktuální celkový počet otestovaných doposud":
+                if (data_recalculation) {
+                    okres_value = new_data[selected_date_text][okres_lau]['celkem_sto_tisic'].toFixed(2);
+                    maximum_day = new_data[selected_date_text]['celkem_max_den_sto_tisic'].toFixed(2);
+                    minimum_day = new_data[selected_date_text]['celkem_min_den_sto_tisic'].toFixed(2);
+                    text_current_data.innerHTML = "Celkový počet otestovaných k danému dni na 100 tisíc obyvatel";
+                    analysis_name_value = "celkem_sto_tisic";
+                    analysis_name_max_value = "celkem_max_den_sto_tisic";
+                    analysis_name_min_value = "celkem_min_den_sto_tisic";
+                }
+                else {
+                    okres_value = new_data[selected_date_text][okres_lau]['celkem'].toFixed(2);
+                    maximum_day = new_data[selected_date_text]['celkem_max_den'].toFixed(2);
+                    minimum_day = new_data[selected_date_text]['celkem_min_den'].toFixed(2);
+                    text_current_data.innerHTML = "Celkový počet otestovaných k danému dni";
+                    analysis_name_value = "celkem";
+                    analysis_name_max_value = "celkem_max_den";
+                    analysis_name_min_value = "celkem_min_den";
+                }
+                break;
+
+            case "Počet nově otestovaných daný den":
+                if (data_recalculation) {
+                    okres_value = new_data[selected_date_text][okres_lau]['prirustek_sto_tisic'].toFixed(2);
+                    maximum_day = new_data[selected_date_text]['max_den_sto_tisic'].toFixed(2);
+                    minimum_day = new_data[selected_date_text]['min_den_sto_tisic'].toFixed(2);
+                    text_current_data.innerHTML = "Počet nově otestovaných daný den na 100 tisíc obyvatel";
+                    analysis_name_value = "prirustek_sto_tisic";
+                    analysis_name_max_value = "max_den_sto_tisic";
+                    analysis_name_min_value = "min_den_sto_tisic";
+                }
+                else {
+                    okres_value = new_data[selected_date_text][okres_lau]['prirustek'].toFixed(2);
+                    maximum_day = new_data[selected_date_text]['max_den'].toFixed(2);
+                    minimum_day = new_data[selected_date_text]['min_den'].toFixed(2);
+                    text_current_data.innerHTML = "Počet nově otestovaných daný den";
+                    analysis_name_value = "prirustek";
+                    analysis_name_max_value = "max_den";
+                    analysis_name_min_value = "min_den";
+                }
+                break;
         }
 
         current_values.push(okres_value);
@@ -624,7 +679,7 @@ function updatePage() {
                 color1 = [30, 30, 30];
                 color2 = [255, 255, 255];
                 break;
-            case "ovlivneno-analyze":
+            case "testovani-analyze":
                 color1 = [0, 0, 200];
                 color2 = [255, 255, 255];
                 break;
@@ -681,6 +736,10 @@ function selectAnalysis(type) {
                     document.getElementById("umrti-analyze").style.backgroundColor = "#FFFFFF";
                     document.getElementById("umrti-analyze").style.opacity = 0.6;
                     document.getElementById("umrti-analyze").style.borderStyle = "none";
+                    document.getElementById("testovani-analyze").classList.remove("w3-deep-purple");
+                    document.getElementById("testovani-analyze").style.backgroundColor = "#FFFFFF";
+                    document.getElementById("testovani-analyze").style.opacity = 0.6;
+                    document.getElementById("testovani-analyze").style.borderStyle = "none";
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#ff9800";
                     map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty nakažených";
                     var option1 = document.createElement('option');
@@ -709,6 +768,10 @@ function selectAnalysis(type) {
                     document.getElementById("umrti-analyze").style.backgroundColor = "#FFFFFF";
                     document.getElementById("umrti-analyze").style.opacity = 0.6;
                     document.getElementById("umrti-analyze").style.borderStyle = "none";
+                    document.getElementById("testovani-analyze").classList.remove("w3-deep-purple");
+                    document.getElementById("testovani-analyze").style.backgroundColor = "#FFFFFF";
+                    document.getElementById("testovani-analyze").style.opacity = 0.6;
+                    document.getElementById("testovani-analyze").style.borderStyle = "none";
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#4caf50";
                     map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty naočkovaných";
 
@@ -749,6 +812,10 @@ function selectAnalysis(type) {
                     document.getElementById("umrti-analyze").style.borderStyle = "solid";
                     document.getElementById("umrti-analyze").style.borderWidth = "2px";
                     document.getElementById("umrti-analyze").style.borderColor = "#515151";
+                    document.getElementById("testovani-analyze").classList.remove("w3-deep-purple");
+                    document.getElementById("testovani-analyze").style.backgroundColor = "#FFFFFF";
+                    document.getElementById("testovani-analyze").style.opacity = 0.6;
+                    document.getElementById("testovani-analyze").style.borderStyle = "none";
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#9e9e9e";
                     map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty úmrtí";
                     var options = [
@@ -763,6 +830,42 @@ function selectAnalysis(type) {
                     }
                     );
                     current_analysis_color = "#9e9e9e";
+                    // document.getElementById("slider").style.accentColor = "#616161";
+                    // document.getElementById("slider").style.background = "#ffffff";
+                    break;
+                case 'testovani-analyze':
+                    document.getElementById("nakazeni-analyze").classList.remove("w3-orange");
+                    document.getElementById("nakazeni-analyze").style.backgroundColor = "#FFFFFF";
+                    document.getElementById("nakazeni-analyze").style.opacity = 0.6;
+                    document.getElementById("nakazeni-analyze").style.borderStyle = "none";
+                    document.getElementById("ockovani-analyze").classList.remove("w3-green");
+                    document.getElementById("ockovani-analyze").style.backgroundColor = "#FFFFFF";
+                    document.getElementById("ockovani-analyze").style.opacity = 0.6;
+                    document.getElementById("ockovani-analyze").style.borderStyle = "none";
+                    document.getElementById("umrti-analyze").classList.remove("w3-grey");
+                    document.getElementById("umrti-analyze").style.backgroundColor = "#FFFFFF";
+                    document.getElementById("umrti-analyze").style.opacity = 0.6;
+                    document.getElementById("umrti-analyze").style.borderStyle = "none";
+                    document.getElementById("testovani-analyze").classList.add("w3-deep-purple");
+                    document.getElementById("testovani-analyze").style.opacity = 1;
+                    document.getElementById("testovani-analyze").style.borderStyle = "solid";
+                    document.getElementById("testovani-analyze").style.borderWidth = "2px";
+                    document.getElementById("testovani-analyze").style.borderColor = "#4a2983";
+
+                    document.getElementsByClassName("noUi-connect")[0].style.background = "#673ab7";
+                    map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty otestovaných (PCR)";
+                    var options = [
+                        "Aktuální celkový počet otestovaných doposud",
+                        "Počet nově otestovaných daný den"
+                    ];
+
+                    options.forEach((element) => {
+                        var opt = document.createElement('option');
+                        opt.value = opt.innerHTML = element;
+                        select_2.appendChild(opt);
+                    }
+                    );
+                    current_analysis_color = "#673ab7";
                     // document.getElementById("slider").style.accentColor = "#616161";
                     // document.getElementById("slider").style.background = "#ffffff";
                     break;
@@ -851,6 +954,9 @@ function selectSliderType(value) {
             break;
         case 'umrti-analyze':
             var diff = today.getTime() - deaths_start.getTime();
+            break;
+        case 'testovani-analyze':
+            var diff = today.getTime() - testing_start.getTime();
             break;
     }
     var days_since = diff / (1000 * 3600 * 24);
@@ -942,6 +1048,13 @@ function selectSliderData(value) {
         case "Počet nově zemřelých daný den":
             map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty úmrtí - počet nově zemřelých k danému dni";
             break;
+
+        case "Aktuální celkový počet otestovaných doposud":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty úmrtí - celkový počet otestovaných doposud";
+            break;
+        case "Počet nově otestovaných daný den":
+            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty úmrtí - počet nově otestovaných k danému dni";
+            break;
     }
     updatePage();
     initChart();
@@ -992,6 +1105,9 @@ function confirmRangeAnalysis() {
             break;
         case "umrti-analyze":
             url = "http://127.0.0.1:8000/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max) + "&type=deaths";
+            break;
+        case "testovani-analyze":
+            url = "http://127.0.0.1:8000/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max) + "&type=testing";
             break;
     }
 
