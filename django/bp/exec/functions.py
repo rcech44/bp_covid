@@ -466,6 +466,10 @@ def checkUpToDate():
                 updated = True
                 print(f"[DATABASE-UPDATER] Processed deaths at {current_date_text}")
 
+            # **********************
+            # UPDATE testovani_datum_okres TABLE
+            # **********************
+
     except sqlite3.Error as e:
         print(e)
         # print(os.getcwd())

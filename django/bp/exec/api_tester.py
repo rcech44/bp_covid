@@ -152,22 +152,12 @@ okresy = {"CZ0100": 0, "CZ0201": 0, "CZ0202": 0,"CZ0203": 0,"CZ0204": 0,"CZ0205"
 try:
     with sqlite3.connect('../sql/database.sqlite') as conn:
         cur = conn.cursor()
-        # cur.execute('SELECT id, datum FROM testovani_datum_okres ORDER BY id DESC LIMIT 1')
-        # response = cur.fetchone()
-        # last_database_date = datetime.strptime(response[1], '%Y-%m-%d')
-        # last_database_date_str = response[1]
-        # cur.execute('SELECT id, datum, okres, umrti_doposud FROM umrti_datum_okres WHERE datum = ? ORDER BY id DESC', [last_database_date_str])
-        # response = cur.fetchall()
-        # start_date = (last_database_date + timedelta(days=1))
-        start_date = datetime.strptime('2020-08-01', '%Y-%m-%d')
+        cur.execute('SELECT id, datum FROM testovani_datum_okres ORDER BY id DESC LIMIT 1')
+        response = cur.fetchone()
+        start_date = datetime.strptime(response[1], '%Y-%m-%d')
         today_date = datetime.now()
-        # yesterday_date = datetime.now() - timedelta(days=1)
         current_date = start_date
         i = 0
-
-        # Fill previous sums
-        # for row in response:
-        #     okresy[row[2]] = row[3]
 
         while True:
             current_date = (start_date + timedelta(days=i))
