@@ -186,7 +186,7 @@ function changeAnimationSpeed(value) {
 // https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
 function numberWithCommas(x) {
     if (x != null)
-        return parseInt(x).toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return Math.round(parseFloat(x)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     else
         return 0;
 }
@@ -267,6 +267,10 @@ function updatePage() {
     var selected_date_text = getFormattedDate(selected_date);
     var selected_date_text_local = getFormattedDateLocal(selected_date);
 
+    // Update some values and texts on page
+    output.innerHTML = selected_date.toLocaleDateString("cs-CZ");
+    map_date.innerHTML = selected_date_text_local;
+
     switch (current_analysis) {
         case "nakazeni-analyze":
             map_info_1.innerHTML = "<b>Nové případy za tento den:</b> " + numberWithCommas(new_data[selected_date_text]['nove_celkovy_pocet']);
@@ -277,22 +281,21 @@ function updatePage() {
             map_info_1.innerHTML = "<b>Nová očkování za tento den:</b> " + numberWithCommas(new_data[selected_date_text]['davka_celkem_den']);
             map_info_3.innerHTML = "<b>Celkový počet obyvatel naočkovaných alespoň první a druhou dávkou:</b> " + numberWithCommas(new_data[selected_date_text]['davka_2_doposud']);
             map_info_2.innerHTML = "<b>Celkový počet zaznamenaných očkování doposud:</b> " + numberWithCommas(new_data[selected_date_text]['davka_celkem_doposud']);
+            if (selected_date < vaccination_start) map_date.innerHTML = selected_date_text_local + " (data nejsou v tento den dostupná)";
             break;
         case "umrti-analyze":
             map_info_1.innerHTML = "<b>Počet zemřelých tento den:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_den']);
             map_info_2.innerHTML = "<b>Celkový počet zemřelých k tomuto dni:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_doposud']);
             map_info_3.innerHTML = "";
+            if (selected_date < deaths_start) map_date.innerHTML = selected_date_text_local + " (data nejsou v tento den dostupná)";
             break;
         case "testovani-analyze":
             map_info_1.innerHTML = "<b>Počet otestovaných tento den:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_prirustek_den']);
             map_info_2.innerHTML = "<b>Celkový počet otestovaných k tomuto dni:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_celkem_den']);
             map_info_3.innerHTML = "";
+            if (selected_date < testing_start) map_date.innerHTML = selected_date_text_local + " (data nejsou v tento den dostupná)";
             break;
     }
-
-    // Update some values and texts on page
-    output.innerHTML = selected_date.toLocaleDateString("cs-CZ");
-    map_date.innerHTML = selected_date_text_local;
 
     // Map district updating - go through all districts
     var parent = iframe.contentWindow.document.querySelector("g");
@@ -597,12 +600,6 @@ function updatePage() {
                 }
                 break;
 
-
-
-
-
-
-
             case "Aktuální celkový počet otestovaných doposud":
                 if (data_recalculation) {
                     okres_value = new_data[selected_date_text][okres_lau]['celkem_sto_tisic'].toFixed(2);
@@ -712,7 +709,7 @@ function updatePage() {
 
 // Select type of analysis (infected, recovered...)
 function selectAnalysis(type) {
-    analysis_changed = true;
+
     current_analysis = type;
     selectSliderType(slider_current_type);
     analyze_fields.forEach((element) => {
@@ -751,6 +748,8 @@ function selectAnalysis(type) {
                     select_2.appendChild(option1);
                     select_2.appendChild(option2);
                     current_analysis_color = "#ff9800";
+                    document.getElementById("analysis-text-name").innerHTML = "<b>Dataset:</b> Nakažení";
+                    document.getElementById("analysis-text-datefrom").innerHTML = "<b>Data dostupná od:</b> 1.3.2020";
                     // document.getElementById("slider").style.accentColor = "#ff9800";
                     // document.getElementById("slider").style.backgroundColor = "#ffffff";
                     break;
@@ -795,6 +794,8 @@ function selectAnalysis(type) {
                     }
                     );
                     current_analysis_color = "#4caf50";
+                    document.getElementById("analysis-text-name").innerHTML = "<b>Dataset:</b> Očkování";
+                    document.getElementById("analysis-text-datefrom").innerHTML = "<b>Data dostupná od:</b> 27.12.2020";
                     // document.getElementById("slider").style.accentColor = "#4caf50";
                     // document.getElementById("slider").style.background = "#ffffff";
                     break;
@@ -830,6 +831,8 @@ function selectAnalysis(type) {
                     }
                     );
                     current_analysis_color = "#9e9e9e";
+                    document.getElementById("analysis-text-name").innerHTML = "<b>Dataset:</b> Úmrtí";
+                    document.getElementById("analysis-text-datefrom").innerHTML = "<b>Data dostupná od:</b> 22.3.2020";
                     // document.getElementById("slider").style.accentColor = "#616161";
                     // document.getElementById("slider").style.background = "#ffffff";
                     break;
@@ -866,6 +869,8 @@ function selectAnalysis(type) {
                     }
                     );
                     current_analysis_color = "#673ab7";
+                    document.getElementById("analysis-text-name").innerHTML = "<b>Dataset:</b> PCR testování";
+                    document.getElementById("analysis-text-datefrom").innerHTML = "<b>Data dostupná od:</b> 1.8.2020";
                     // document.getElementById("slider").style.accentColor = "#616161";
                     // document.getElementById("slider").style.background = "#ffffff";
                     break;
@@ -939,7 +944,7 @@ function loadTimeFrameSlider() {
 
 function selectSliderType(value) {
     analysis_selected = true;
-    analysis_changed = true;
+    // analysis_changed = true;
     var valuesSlider = document.getElementById('values-slider');
     slider_current_type = value;
 
@@ -950,13 +955,13 @@ function selectSliderType(value) {
             var diff = today.getTime() - covid_start.getTime();
             break;
         case 'ockovani-analyze':
-            var diff = today.getTime() - vaccination_start.getTime();
+            var diff = today.getTime() - covid_start.getTime();
             break;
         case 'umrti-analyze':
-            var diff = today.getTime() - deaths_start.getTime();
+            var diff = today.getTime() - covid_start.getTime();
             break;
         case 'testovani-analyze':
-            var diff = today.getTime() - testing_start.getTime();
+            var diff = today.getTime() - covid_start.getTime();
             break;
     }
     var days_since = diff / (1000 * 3600 * 24);
@@ -993,7 +998,7 @@ function selectSliderType(value) {
             break;
     }
 
-    valuesSlider
+    // valuesSlider
 }
 
 function selectSliderData(value) {
@@ -1008,52 +1013,52 @@ function selectSliderData(value) {
             break;
 
         case "Všechny dávky tento den":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných dávek očkování daný den";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty očkovaných - celkový počet vydaných dávek očkování daný den";
             break;
         case "Všechny dávky doposud":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných dávek očkování doposud";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty očkovaných - celkový počet vydaných dávek očkování doposud";
             break;
 
         case "První dávka tento den":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - počet vydaných prvních dávek očkování daný den";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty očkovaných - počet vydaných prvních dávek očkování daný den";
             break;
         case "První dávka doposud":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných prvních dávek očkování doposud";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty očkovaných - celkový počet vydaných prvních dávek očkování doposud";
             break;
 
         case "Druhá dávka tento den":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - počet vydaných druhých dávek očkování daný den";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty očkovaných - počet vydaných druhých dávek očkování daný den";
             break;
         case "Druhá dávka doposud":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných druhých dávek očkování doposud";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty očkovaných - celkový počet vydaných druhých dávek očkování doposud";
             break;
 
         case "Třetí dávka tento den":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - počet vydaných třetích dávek očkování daný den";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty očkovaných - počet vydaných třetích dávek očkování daný den";
             break;
         case "Třetí dávka doposud":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných třetích dávek očkování doposud";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty očkovaných - celkový počet vydaných třetích dávek očkování doposud";
             break;
 
         case "Čtvrtá dávka tento den":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - počet vydaných čtvrtých dávek očkování daný den";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty očkovaných - počet vydaných čtvrtých dávek očkování daný den";
             break;
         case "Čtvrtá dávka doposud":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty očkovaných - celkový počet vydaných čtvrtých dávek očkování doposud";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty očkovaných - celkový počet vydaných čtvrtých dávek očkování doposud";
             break;
 
         case "Aktuální celkový počet zemřelých doposud":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty úmrtí - celkový počet zemřelých doposud";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty úmrtí - celkový počet zemřelých doposud";
             break;
         case "Počet nově zemřelých daný den":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty úmrtí - počet nově zemřelých k danému dni";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty úmrtí - počet nově zemřelých k danému dni";
             break;
 
         case "Aktuální celkový počet otestovaných doposud":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty úmrtí - celkový počet otestovaných doposud";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty úmrtí - celkový počet otestovaných doposud";
             break;
         case "Počet nově otestovaných daný den":
-            map_title.innerHTML = "<b>Mapa okresů ČR</b> | Počty úmrtí - počet nově otestovaných k danému dni";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty úmrtí - počet nově otestovaných k danému dni";
             break;
     }
     updatePage();

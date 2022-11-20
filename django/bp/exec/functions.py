@@ -236,7 +236,7 @@ def checkUpToDate():
             # UPDATE covid_datum_okres TABLE
             # **********************
             cur = conn.cursor()
-            cur.execute('SELECT * FROM covid_datum_okres ORDER BY id DESC LIMIT 1')
+            cur.execute('SELECT * FROM covid_datum_okres ORDER BY datum DESC LIMIT 1')
             response = cur.fetchall()
             if response is not None:
                 if response[0][1] != datum_string_yesterday:
@@ -289,7 +289,7 @@ def checkUpToDate():
             # UPDATE zakladni_prehled TABLE
             # **********************
             cur = conn.cursor()
-            cur.execute('SELECT * FROM zakladni_prehled ORDER BY id DESC LIMIT 1')
+            cur.execute('SELECT * FROM zakladni_prehled ORDER BY datum DESC LIMIT 1')
             response = cur.fetchall()
             if response is not None:
                 if response[0][1] != datum_string_now:
@@ -421,7 +421,7 @@ def checkUpToDate():
             # **********************
             url_umrti = 'https://onemocneni-aktualne.mzcr.cz/api/v3/umrti?page=1&itemsPerPage=10000&datum%5Bbefore%5D=XYZ&datum%5Bafter%5D=XYZ&apiToken=c54d8c7d54a31d016d8f3c156b98682a'
             cur = conn.cursor()
-            cur.execute('SELECT id, datum FROM umrti_datum_okres ORDER BY id DESC LIMIT 1')
+            cur.execute('SELECT id, datum FROM umrti_datum_okres ORDER BY datum DESC LIMIT 1')
             response = cur.fetchone()
             last_database_date = datetime.strptime(response[1], '%Y-%m-%d')
             last_database_date_str = response[1]
