@@ -11,7 +11,7 @@ cache_map = {}
 cache_summary = {}
 loaded_cache = False
 
-def main(request):
+def old_version(request):
     global cache_map
     global cache_summary
     global loaded_cache
@@ -46,9 +46,9 @@ def main(request):
                                             'data_covid': new_data
                                             })
 
-def main2(request):
+def main(request):
     checkUpToDate()
-    return render(request, 'main2.html', {'data_covid': {}})
+    return render(request, 'main.html', {'data_covid': {}})
 
 def map(request):
     return render(request, 'map.html', {})
