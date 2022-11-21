@@ -22,6 +22,7 @@ var okres_clicked = "";
 var okres_clicked_map_object = -1;
 var analyze_fields = ["nakazeni-analyze", "ockovani-analyze", "umrti-analyze", "testovani-analyze"];
 var current_analysis = "nakazeni-analyze";
+var current_pip_analysis = "nakazeni-analyze";
 var analysis_selected = false;
 var analysis_changed = true;
 var slider_values;
@@ -41,6 +42,7 @@ var map_show_data = "Současně nakažení";
 var text_current_data_sto_tisic;
 var text_current_data;
 var iframe;
+var iframe_pip;
 var map_enabled = false;
 var select_2;
 var snackbar;
@@ -65,6 +67,11 @@ function onIframeLoad() {
     loadPageComponents();
     loadTimeFrameSlider();
     initPage();
+}
+
+function onIframePIPLoad()
+{
+    initPIP();
 }
 
 // DOM elements setter
@@ -92,6 +99,7 @@ function loadPageComponents() {
     output = document.getElementById("slider_text");
     slider_text_value = document.getElementById("slider-value");
     iframe = document.getElementById("iframe");
+    iframe_pip = document.getElementById("iframe_pip");
     select_2 = document.getElementById("sel2");
     snackbar = document.getElementById("snackbar");
 }
@@ -99,11 +107,42 @@ function loadPageComponents() {
 function initPage() {
     slider.oninput = updatePage;
     iframe = document.getElementById("iframe");
+    iframe_pip = document.getElementById("iframe_pip");
     const elements = iframe.contentWindow.document.getElementsByClassName("leaflet-control-layers-toggle");
     while (elements.length > 0) {
         elements[0].parentNode.removeChild(elements[0]);
     }
     var parent = iframe.contentWindow.document.querySelector("g");
+    for (let i = 0; i < 77; i++) {
+        var child = parent.firstElementChild;
+        parent.removeChild(child);
+    }
+    var children = parent.children;
+    for (let i = 0; i < 77; i++) {
+        children[i].setAttribute("fill-opacity", 0.7);
+        children[i].setAttribute("fill", "#ffffff");
+        children[i].setAttribute("stroke-width", 0.7);
+        children[i].setAttribute("name", okresy_names[i][1]);
+        children[i].setAttribute("okres_lau", okresy_names[i][0]);
+        children[i].addEventListener('click', function () {
+            onClickMap(this.getAttribute('name'), this.getAttribute('okres_lau'), this);
+            okres_clicked_map_object = i;
+        });
+    }
+
+    // updatePage();
+}
+
+function initPIP()
+{
+    iframe_pip = document.getElementById("iframe_pip");
+    const elements = iframe_pip.contentWindow.document.getElementsByClassName("leaflet-control-layers-toggle");
+    while (elements.length > 0) {
+        elements[0].parentNode.removeChild(elements[0]);
+    }
+
+    // Picture-in-picture
+    var parent = iframe_pip.contentWindow.document.querySelector("g");
     for (let i = 0; i < 77; i++) {
         var child = parent.firstElementChild;
         parent.removeChild(child);
@@ -643,6 +682,7 @@ function updatePage() {
                 break;
         }
 
+
         current_values.push(okres_value);
         totalValue += okres_value;
         if (data_minimum_type == "zero") minimum_day = 0;
@@ -691,10 +731,15 @@ function updatePage() {
         document.getElementById("scale_min").innerHTML = numberWithCommas(minimum_day);
         document.getElementById("scale_max").innerHTML = numberWithCommas(maximum_day);
 
+        // PIP
+        var parent_pip = iframe_pip.contentWindow.document.querySelector("g");
+        var children_pip = parent_pip.children;
+
         // Calculate other stuff and set color
         var min_max_difference = maximum_day - minimum_day;
         if (min_max_difference == 0) {
             children[i].setAttribute("fill", "#FFFFFF");
+            children_pip[i].setAttribute("fill", "#FFFFFF");
             continue;
         }
         var w1 = (okres_value - minimum_day) / min_max_difference;
@@ -704,6 +749,7 @@ function updatePage() {
         Math.round(color1[2] * w1 + color2[2] * w2)];
         var color_string = "#" + componentToHex(rgb[0]) + componentToHex(rgb[1]) + componentToHex(rgb[2]);
         children[i].setAttribute("fill", color_string);
+        children_pip[i].setAttribute("fill", color_string);
     }
 }
 
@@ -940,6 +986,81 @@ function loadTimeFrameSlider() {
         slider_current_values[handle] = values[handle];
     });
     document.getElementsByClassName("noUi-target")[0].style.background = "#ffffff";
+}
+
+function selectSliderPIPType(value)
+{
+    var select_4 = document.getElementById("sel4");
+    select_4.innerHTML = "";
+
+    switch (value)
+    {
+        case 'Nakažení':
+            current_pip_analysis = 'nakazeni-analyze';
+
+            var option1 = document.createElement('option');
+            option1.value = "Současně nakažení";
+            option1.innerHTML = "Současně nakažení";
+            var option2 = document.createElement('option');
+            option2.value = "Nové případy";
+            option2.innerHTML = "Nové případy";
+            select_4.appendChild(option1);
+            select_4.appendChild(option2);
+            break;
+        case 'Očkování':
+            current_pip_analysis = 'ockovani-analyze';
+
+            var options = [
+                "Všechny dávky tento den",
+                "Všechny dávky doposud",
+                "První dávka tento den",
+                "První dávka doposud",
+                "Druhá dávka tento den",
+                "Druhá dávka doposud",
+                "Třetí dávka tento den",
+                "Třetí dávka doposud",
+                "Čtvrtá dávka tento den",
+                "Čtvrtá dávka doposud"
+            ];
+
+            options.forEach((element) => {
+                var opt = document.createElement('option');
+                opt.value = opt.innerHTML = element;
+                select_4.appendChild(opt);
+            }
+            );
+            break;
+        case 'Úmrtí':
+            current_pip_analysis = 'umrti-analyze';
+            var options = [
+                "Aktuální celkový počet zemřelých doposud",
+                "Počet nově zemřelých daný den"
+            ];
+
+            options.forEach((element) => {
+                var opt = document.createElement('option');
+                opt.value = opt.innerHTML = element;
+                select_4.appendChild(opt);
+            }
+            );
+
+            break;
+        case 'PCR testování':
+            current_pip_analysis = 'testovani-analyze';
+
+            var options = [
+                "Aktuální celkový počet otestovaných doposud",
+                "Počet nově otestovaných daný den"
+            ];
+
+            options.forEach((element) => {
+                var opt = document.createElement('option');
+                opt.value = opt.innerHTML = element;
+                select_4.appendChild(opt);
+            }
+            );
+            break;
+    }
 }
 
 function selectSliderType(value) {
@@ -1194,6 +1315,21 @@ function changeRecalculation() {
     this.data_recalculation = !this.data_recalculation;
     updatePage();
     initChart();
+}
+
+function showHideRightUpperPanel() {
+    var x = document.getElementById("right_upper_panel");
+    var x3 = document.getElementById("div_right_upper_part");
+    var x2 = document.getElementById("button_right_upper_panel");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+        x3.style.width = "400px";
+        x2.innerHTML = "<b>Schovat obraz v obraze</b>";
+    } else {
+        x.style.display = "none";
+        x3.style.width = "200px";
+        x2.innerHTML = "<b>Zobrazit obraz v obraze</b>";
+    }
 }
 
 function showHideLeftUpperPanel() {

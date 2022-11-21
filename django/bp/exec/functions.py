@@ -283,7 +283,7 @@ def checkUpToDate():
                                 ])
                             conn.commit()
                         updated = True
-                        print(f"[DATABASE-UPDATER] Infections: Downloaded data from {update_date}")
+                        print(f"[DATABASE-UPDATER] Processed infections from {update_date}")
 
             # **********************
             # UPDATE zakladni_prehled TABLE
@@ -414,7 +414,7 @@ def checkUpToDate():
                                 conn.commit()
                         
                         updated = True
-                        print(f"[DATABASE-UPDATER] Vaccination: Processed new {update_date}, total values: {celkem}")
+                        print(f"[DATABASE-UPDATER] Processed vaccinations from {update_date}")
 
             # **********************
             # UPDATE umrti_datum_okres TABLE
@@ -464,11 +464,43 @@ def checkUpToDate():
                     conn.commit()
 
                 updated = True
-                print(f"[DATABASE-UPDATER] Processed deaths at {current_date_text}")
+                print(f"[DATABASE-UPDATER] Processed deaths from {current_date_text}")
 
             # **********************
             # UPDATE testovani_datum_okres TABLE
             # **********************
+            url_testovani = 'https://onemocneni-aktualne.mzcr.cz/api/v3/kraj-okres-testy?page=1&itemsPerPage=100&datum%5Bbefore%5D=XYZ&datum%5Bafter%5D=XYZ&apiToken=c54d8c7d54a31d016d8f3c156b98682a'
+            cur = conn.cursor()
+            cur.execute('SELECT id, datum FROM testovani_datum_okres ORDER BY datum DESC LIMIT 1')
+            response = cur.fetchone()
+            last_database_date = datetime.strptime(response[1], '%Y-%m-%d')
+            last_database_date_str = response[1]
+            start_date = (last_database_date + timedelta(days=1))
+            today_date = datetime.now()
+            current_date = start_date
+            i = 0
+
+            while True:
+                current_date = (start_date + timedelta(days=i))
+                current_date_text = current_date.strftime('%Y-%m-%d')
+                if current_date_text == today_date.strftime('%Y-%m-%d'):
+                    break
+                i += 1
+
+                # Get data from MZCR
+                url_edit = url_testovani.replace('XYZ', current_date_text)
+                req = urllib.request.Request(url_edit)
+                req.add_header('accept', 'application/json')
+                response = urllib.request.urlopen(req)
+                json_okresy = json.load(response)
+
+                # Add blank record to database for each record
+                for okres in json_okresy:
+                    cur.execute('INSERT INTO testovani_datum_okres (datum, okres, prirustek, celkem, prirustek_korekce, celkem_korekce) VALUES (?, ?, ?, ?, ?, ?)', [current_date_text, okres['okres_lau_kod'], okres['prirustkovy_pocet_testu_okres'], okres['kumulativni_pocet_testu_okres'], okres['prirustkovy_pocet_prvnich_testu_okres'], okres['kumulativni_pocet_prvnich_testu_okres'] ])
+                    conn.commit()
+
+                updated = True
+                print(f"[DATABASE-UPDATER] Processed tests from {current_date_text}")
 
     except sqlite3.Error as e:
         print(e)

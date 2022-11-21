@@ -47,10 +47,14 @@ def main(request):
                                             })
 
 def main2(request):
+    checkUpToDate()
     return render(request, 'main2.html', {'data_covid': {}})
 
 def map(request):
     return render(request, 'map.html', {})
+
+def map_pip(request):
+    return render(request, 'map_pip.html', {})
 
 def statistics(request):
     graph = thirty_day_summary_graph()
