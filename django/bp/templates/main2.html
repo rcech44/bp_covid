@@ -67,19 +67,19 @@
     <div id="topbar" class="w3-bar w3-top w3-white w3-large w3-card" style="z-index:4;width:100%;height: 53px;">
         <table style="width:100%">
             <tr>
-                <td id="map_title" style="width:50%;padding-top:12px;padding-left: 20px;"><b>Vizualizace COVID-19 dat v
+                <td id="map_title" style="width:50%;padding-top:12px;padding-left: 20px;"><b>Vizualizace COVID-19 v
                         České republice</b></td>
                 <td style="width:10%;padding-top:12px;padding-right: 20px;text-align: right;">
                     <div id="nakazeni-analyze" color="w3-orange" class="w3-card w3-orange w3-center"
-                        style="cursor: pointer;" onclick="selectAnalysis('nakazeni-analyze')">Nakažení</div>
-                </td>
-                <td style="width:10%;padding-top:12px;padding-right: 20px;text-align: right;">
-                    <div id="ockovani-analyze" color="w3-green" class="w3-card w3-green w3-center"
-                        style="cursor: pointer;" onclick="selectAnalysis('ockovani-analyze')">Očkování</div>
+                        style="cursor: pointer;" onclick="selectAnalysis('nakazeni-analyze')">Infekce</div>
                 </td>
                 <td style="width:10%;padding-top:12px;padding-right: 20px;text-align: right;">
                     <div id="umrti-analyze" color="w3-grey" class="w3-card w3-grey w3-center"
                         style="cursor: pointer;" onclick="selectAnalysis('umrti-analyze')">Úmrtí</div>
+                </td>
+                <td style="width:10%;padding-top:12px;padding-right: 20px;text-align: right;">
+                    <div id="ockovani-analyze" color="w3-green" class="w3-card w3-green w3-center"
+                        style="cursor: pointer;" onclick="selectAnalysis('ockovani-analyze')">Očkování</div>
                 </td>
                 <td style="width:10%;padding-top:12px;padding-right: 20px;text-align: right;">
                     <div id="testovani-analyze" color="w3-deep-purple" class="w3-card w3-deep-purple w3-center"
@@ -106,7 +106,7 @@
     <div class="w3-light-gray" id="page-background">
 
         <div style="width:100%; height:100%;">
-            <div id="div_right_upper_part" style="margin-right:10px; right:0; margin-top:70px;margin-bottom:10px;z-index: 1;background-color: rgba(255, 255, 255, 0);overflow: hidden;position: absolute;width:400px;height:fit-content">
+            <div id="div_right_upper_part" style="margin-right:10px; right:0; margin-top:70px;margin-bottom:10px;z-index: 1;background-color: rgba(255, 255, 255, 0);overflow: hidden;position: absolute;width:200px;height:fit-content">
                 <div class="w3-card" style="background-color:rgba(255, 255, 255, 1); margin-right: 10px; margin-bottom:10px">
                     <div class="w3-container" style="padding-top:16px;padding-bottom:16px;">
                         <button id="button_right_upper_panel"
@@ -114,7 +114,8 @@
                             style="outline: none;height:25px" onclick="showHideRightUpperPanel()">
                             <b>Zobrazit obraz v obraze</b>
                         </button>
-                        <div id="right_upper_panel" class="w3-animate-top" style="margin-top:10px;display:block;height:320px;margin-bottom:7px;">
+                        <div id="right_upper_panel" class="w3-animate-top" style="margin-top:10px;display:none;height:320px;margin-bottom:7px;">
+                            <hr>
                             <div>
                             <table style="width:100%">
                                 <tr>
@@ -159,7 +160,7 @@
                     <div class="w3-container" style="padding-top:16px;padding-bottom:16px;">
                         <button id="button_left_upper_panel"
                             class="w3-button w3-padding-small w3-ripple w3-small w3-block w3-white w3-center"
-                            style="outline: none;height:25px" onclick="showHideLeftUpperPanel()"><b>Schovat
+                            style="outline: none;height:25px" onclick="showHideLeftUpperPanel()"><b>Skrýt
                                 nastavení</b></button>
                         <div>
                             <table style="width:100%;margin-top:10px" class="w3-small">
@@ -314,7 +315,7 @@
                                         informace o okrese</b></button></td>
                             <td style="width:50%"><button id="button_left_bottom_panel_2"
                                     class="w3-button w3-padding-small w3-ripple w3-small w3-block w3-white w3-center"
-                                    style="outline: none;height:25px" onclick="showHideLeftBottomPanel2()"><b>Schovat
+                                    style="outline: none;height:25px" onclick="showHideLeftBottomPanel2()"><b>Skrýt
                                         graf</b></button></td>
                         </tr>
                     </table>

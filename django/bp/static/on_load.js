@@ -49,6 +49,7 @@ var select_2;
 var snackbar;
 var data_minimum_type = "zero";
 var data_recalculation = true;
+var data_max_recalculation = false;
 var covid_start = new Date("03/01/2020");
 var covid_start_string = "03/01/2020";
 var vaccination_start = new Date("12/27/2020");
@@ -361,6 +362,11 @@ function updatePage() {
         min_value_name = data_analysis_types[map_show_data]['min_value_100'];
         min_value_name_PIP = data_analysis_types[map_show_data_PIP]['min_value_100'];
         text = data_analysis_types[map_show_data]['text_100'];
+        if (data_max_recalculation)
+        {
+            max_value_name = data_analysis_types[map_show_data]['max_range_100'];
+            max_value_name_PIP = data_analysis_types[map_show_data_PIP]['max_range_100'];
+        }
     }
     else
     {
@@ -371,6 +377,11 @@ function updatePage() {
         min_value_name = data_analysis_types[map_show_data]['min_value'];
         min_value_name_PIP = data_analysis_types[map_show_data_PIP]['min_value'];
         text = data_analysis_types[map_show_data]['text'];
+        if (data_max_recalculation)
+        {
+            max_value_name = data_analysis_types[map_show_data]['max_range'];
+            max_value_name_PIP = data_analysis_types[map_show_data_PIP]['max_range'];
+        }
     }
 
     for (let i = 0; i < 77; i++) {
@@ -380,10 +391,18 @@ function updatePage() {
         // Get needed values that are required for later computations and set some texts on page according to selected data
         okres_value = new_data[selected_date_text][okres_lau][value_name].toFixed(2);
         okres_value_PIP = new_data[selected_date_text][okres_lau][value_name_PIP].toFixed(2);
-        maximum_day = new_data[selected_date_text][max_value_name].toFixed(2);
-        maximum_day_PIP = new_data[selected_date_text][max_value_name_PIP].toFixed(2);
-        minimum_day = new_data[selected_date_text][min_value_name].toFixed(2);
-        minimum_day_PIP = new_data[selected_date_text][min_value_name_PIP].toFixed(2);
+        if (data_max_recalculation)
+        {
+            maximum_day = new_data[max_value_name].toFixed(2);
+            maximum_day_PIP = new_data[max_value_name_PIP].toFixed(2);
+        }
+        else
+        {
+            maximum_day = new_data[selected_date_text][max_value_name].toFixed(2);
+            maximum_day_PIP = new_data[selected_date_text][max_value_name_PIP].toFixed(2);
+        }
+        minimum_day = 0;
+        minimum_day_PIP = 0;
         text_current_data.innerHTML = text;
 
         analysis_name_value = value_name;
@@ -527,7 +546,7 @@ function selectAnalysis(type) {
                     document.getElementById("testovani-analyze").style.opacity = 0.6;
                     document.getElementById("testovani-analyze").style.borderStyle = "none";
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#ff9800";
-                    map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty nakažených";
+                    map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty nakažených";
                     var option1 = document.createElement('option');
                     option1.value = "Současně nakažení";
                     option1.innerHTML = "Současně nakažení";
@@ -561,7 +580,7 @@ function selectAnalysis(type) {
                     document.getElementById("testovani-analyze").style.opacity = 0.6;
                     document.getElementById("testovani-analyze").style.borderStyle = "none";
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#4caf50";
-                    map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty naočkovaných";
+                    map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty naočkovaných";
 
                     var options = [
                         "Všechny dávky tento den",
@@ -607,7 +626,7 @@ function selectAnalysis(type) {
                     document.getElementById("testovani-analyze").style.opacity = 0.6;
                     document.getElementById("testovani-analyze").style.borderStyle = "none";
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#9e9e9e";
-                    map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty úmrtí";
+                    map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty úmrtí";
                     var options = [
                         "Aktuální celkový počet zemřelých doposud",
                         "Počet nově zemřelých daný den"
@@ -645,7 +664,7 @@ function selectAnalysis(type) {
                     document.getElementById("testovani-analyze").style.borderColor = "#4a2983";
 
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#673ab7";
-                    map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty otestovaných (PCR)";
+                    map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty otestovaných (PCR)";
                     var options = [
                         "Aktuální celkový počet otestovaných doposud",
                         "Počet nově otestovaných daný den"
@@ -883,59 +902,59 @@ function selectSliderData(value) {
     initChart();
     switch (value) {
         case "Současně nakažení":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty nakažených - současný počet případů";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty nakažených - současný počet případů";
             break;
         case "Nové případy":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty nakažených - počet nově zjištěných případů";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty nakažených - počet nově zjištěných případů";
             break;
 
         case "Všechny dávky tento den":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty očkovaných - celkový počet vydaných dávek očkování daný den";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty očkovaných - celkový počet vydaných dávek očkování daný den";
             break;
         case "Všechny dávky doposud":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty očkovaných - celkový počet vydaných dávek očkování doposud";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty očkovaných - celkový počet vydaných dávek očkování doposud";
             break;
 
         case "První dávka tento den":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty očkovaných - počet vydaných prvních dávek očkování daný den";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty očkovaných - počet vydaných prvních dávek očkování daný den";
             break;
         case "První dávka doposud":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty očkovaných - celkový počet vydaných prvních dávek očkování doposud";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty očkovaných - celkový počet vydaných prvních dávek očkování doposud";
             break;
 
         case "Druhá dávka tento den":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty očkovaných - počet vydaných druhých dávek očkování daný den";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty očkovaných - počet vydaných druhých dávek očkování daný den";
             break;
         case "Druhá dávka doposud":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty očkovaných - celkový počet vydaných druhých dávek očkování doposud";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty očkovaných - celkový počet vydaných druhých dávek očkování doposud";
             break;
 
         case "Třetí dávka tento den":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty očkovaných - počet vydaných třetích dávek očkování daný den";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty očkovaných - počet vydaných třetích dávek očkování daný den";
             break;
         case "Třetí dávka doposud":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty očkovaných - celkový počet vydaných třetích dávek očkování doposud";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty očkovaných - celkový počet vydaných třetích dávek očkování doposud";
             break;
 
         case "Čtvrtá dávka tento den":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty očkovaných - počet vydaných čtvrtých dávek očkování daný den";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty očkovaných - počet vydaných čtvrtých dávek očkování daný den";
             break;
         case "Čtvrtá dávka doposud":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty očkovaných - celkový počet vydaných čtvrtých dávek očkování doposud";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty očkovaných - celkový počet vydaných čtvrtých dávek očkování doposud";
             break;
 
         case "Aktuální celkový počet zemřelých doposud":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty úmrtí - celkový počet zemřelých doposud";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty úmrtí - celkový počet zemřelých doposud";
             break;
         case "Počet nově zemřelých daný den":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty úmrtí - počet nově zemřelých k danému dni";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty úmrtí - počet nově zemřelých k danému dni";
             break;
 
         case "Aktuální celkový počet otestovaných doposud":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty úmrtí - celkový počet otestovaných doposud";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty úmrtí - celkový počet otestovaných doposud";
             break;
         case "Počet nově otestovaných daný den":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 dat v České republice</b> | Počty úmrtí - počet nově otestovaných k danému dni";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty úmrtí - počet nově otestovaných k danému dni";
             break;
     }
     updatePage();
@@ -1073,6 +1092,13 @@ function changeRecalculation() {
     initChart();
 }
 
+function changeRecalculationMaxValue()
+{
+    this.data_max_recalculation = !this.data_max_recalculation;
+    updatePage();
+    initChart();
+}
+
 function showHideRightUpperPanel() {
     var x = document.getElementById("right_upper_panel");
     var x3 = document.getElementById("div_right_upper_part");
@@ -1080,7 +1106,7 @@ function showHideRightUpperPanel() {
     if (x.style.display === "none") {
         x.style.display = "block";
         x3.style.width = "400px";
-        x2.innerHTML = "<b>Schovat obraz v obraze</b>";
+        x2.innerHTML = "<b>Skrýt obraz v obraze</b>";
     } else {
         x.style.display = "none";
         x3.style.width = "200px";
@@ -1093,7 +1119,7 @@ function showHideLeftUpperPanel() {
     var x2 = document.getElementById("button_left_upper_panel");
     if (x.style.display === "none") {
         x.style.display = "block";
-        x2.innerHTML = "<b>Schovat nastavení</b>";
+        x2.innerHTML = "<b>Skrýt nastavení</b>";
     } else {
         x.style.display = "none";
         x2.innerHTML = "<b>Zobrazit nastavení</b>";
@@ -1106,7 +1132,7 @@ function showHideLeftBottomPanel1() {
     var x2 = document.getElementById("button_left_bottom_panel_1");
     if (x.style.display === "none") {
         x.style.display = "block";
-        x2.innerHTML = "<b>Schovat informace o okrese</b>";
+        x2.innerHTML = "<b>Skrýt informace o okrese</b>";
     } else {
         x.style.display = "none";
         x2.innerHTML = "<b>Zobrazit informace o okrese</b>";
@@ -1119,7 +1145,7 @@ function showHideLeftBottomPanel2() {
     var x2 = document.getElementById("button_left_bottom_panel_2");
     if (x.style.display === "none") {
         x.style.display = "block";
-        x2.innerHTML = "<b>Schovat graf</b>";
+        x2.innerHTML = "<b>Skrýt graf</b>";
     } else {
         x.style.display = "none";
         x2.innerHTML = "<b>Zobrazit graf</b>";
