@@ -35,6 +35,10 @@ def getData(range_from, range_to, type):
 
             # 27 because that is the first value in COVID database
             celkem_pripady = 20
+            max_nove_pripady = 0
+            max_nove_pripady_sto_tisic = 0
+            max_aktivni_pripady = 0
+            max_aktivni_pripady_sto_tisic = 0
             for date in all_requested_dates:
                 cur.execute('SELECT * FROM covid_datum_okres WHERE datum = ?', [date])
                 response = cur.fetchall()
@@ -70,6 +74,11 @@ def getData(range_from, range_to, type):
                         if return_data[date][okres[2]]['aktivni_pripady'] < aktivni_min: aktivni_min = return_data[date][okres[2]]['aktivni_pripady']
                         if return_data[date][okres[2]]['aktivni_pripady_sto_tisic'] > aktivni_max_sto_tisic: aktivni_max_sto_tisic = return_data[date][okres[2]]['aktivni_pripady_sto_tisic']
                         if return_data[date][okres[2]]['aktivni_pripady_sto_tisic'] < aktivni_min_sto_tisic: aktivni_min_sto_tisic = return_data[date][okres[2]]['aktivni_pripady_sto_tisic']
+
+                        if return_data[date][okres[2]]['nove_pripady'] > max_nove_pripady: max_nove_pripady = return_data[date][okres[2]]['nove_pripady']
+                        if return_data[date][okres[2]]['nove_pripady_sto_tisic'] > max_nove_pripady_sto_tisic: max_nove_pripady_sto_tisic = return_data[date][okres[2]]['nove_pripady_sto_tisic']
+                        if return_data[date][okres[2]]['aktivni_pripady'] > max_aktivni_pripady: max_aktivni_pripady = return_data[date][okres[2]]['aktivni_pripady']
+                        if return_data[date][okres[2]]['aktivni_pripady_sto_tisic'] > max_aktivni_pripady_sto_tisic: max_aktivni_pripady_sto_tisic = return_data[date][okres[2]]['aktivni_pripady_sto_tisic']
                 return_data[date]['max_aktivni'] = aktivni_max
                 return_data[date]['min_aktivni'] = aktivni_min
                 return_data[date]['max_nove'] = nove_max
@@ -82,6 +91,10 @@ def getData(range_from, range_to, type):
                 return_data[date]['aktivni_celkovy_pocet'] = aktivni_pocet
                 celkem_pripady += nove_pocet
                 return_data[date]['celkem_pripady'] = celkem_pripady
+                return_data['max_nove_pripady'] = max_nove_pripady
+                return_data['max_nove_pripady_sto_tisic'] = max_nove_pripady_sto_tisic
+                return_data['max_aktivni_pripady'] = max_aktivni_pripady
+                return_data['max_aktivni_pripady_sto_tisic'] = max_aktivni_pripady_sto_tisic
     
     except sqlite3.Error as e:
         print(f"[API] Database error - {e}")
@@ -93,6 +106,32 @@ def getData(range_from, range_to, type):
             davka_2_doposud = 0
             absolute_celkem = 0
             okres_absolute_celkem = 0
+
+            max_celkem_den = 0
+            max_celkem_doposud = 0
+            max_celkem_den_sto_tisic = 0
+            max_celkem_doposud_sto_tisic = 0
+
+            max_celkem_davka_1_den = 0
+            max_celkem_davka_1_doposud = 0
+            max_celkem_davka_1_den_sto_tisic = 0
+            max_celkem_davka_1_doposud_sto_tisic = 0
+
+            max_celkem_davka_2_den = 0
+            max_celkem_davka_2_doposud = 0
+            max_celkem_davka_2_den_sto_tisic = 0
+            max_celkem_davka_2_doposud_sto_tisic = 0
+
+            max_celkem_davka_3_den = 0
+            max_celkem_davka_3_doposud = 0
+            max_celkem_davka_3_den_sto_tisic = 0
+            max_celkem_davka_3_doposud_sto_tisic = 0
+
+            max_celkem_davka_4_den = 0
+            max_celkem_davka_4_doposud = 0
+            max_celkem_davka_4_den_sto_tisic = 0
+            max_celkem_davka_4_doposud_sto_tisic = 0
+
             for date in all_requested_dates:
                 cur.execute('SELECT * FROM ockovani_datum_okres WHERE datum = ?', [date])
                 response = cur.fetchall()
@@ -221,6 +260,30 @@ def getData(range_from, range_to, type):
 
                         if return_data[date][okres[2]]['davka_celkem_doposud'] > okres_absolute_celkem: okres_absolute_celkem = return_data[date][okres[2]]['davka_celkem_doposud']
 
+                        if return_data[date][okres[2]]['davka_1_den'] > max_celkem_davka_1_den: max_celkem_davka_1_den = return_data[date][okres[2]]['davka_1_den']
+                        if return_data[date][okres[2]]['davka_2_den'] > max_celkem_davka_2_den: max_celkem_davka_2_den = return_data[date][okres[2]]['davka_2_den']
+                        if return_data[date][okres[2]]['davka_3_den'] > max_celkem_davka_3_den: max_celkem_davka_3_den = return_data[date][okres[2]]['davka_3_den']
+                        if return_data[date][okres[2]]['davka_4_den'] > max_celkem_davka_4_den: max_celkem_davka_4_den = return_data[date][okres[2]]['davka_4_den']
+                        if return_data[date][okres[2]]['davka_celkem_den'] > max_celkem_den: max_celkem_den = return_data[date][okres[2]]['davka_celkem_den']
+
+                        if return_data[date][okres[2]]['davka_1_doposud'] > max_celkem_davka_1_doposud: max_celkem_davka_1_doposud = return_data[date][okres[2]]['davka_1_doposud']
+                        if return_data[date][okres[2]]['davka_2_doposud'] > max_celkem_davka_2_doposud: max_celkem_davka_2_doposud = return_data[date][okres[2]]['davka_2_doposud']
+                        if return_data[date][okres[2]]['davka_3_doposud'] > max_celkem_davka_3_doposud: max_celkem_davka_3_doposud = return_data[date][okres[2]]['davka_3_doposud']
+                        if return_data[date][okres[2]]['davka_4_doposud'] > max_celkem_davka_4_doposud: max_celkem_davka_4_doposud = return_data[date][okres[2]]['davka_4_doposud']
+                        if return_data[date][okres[2]]['davka_celkem_doposud'] > max_celkem_doposud: max_celkem_doposud = return_data[date][okres[2]]['davka_celkem_doposud']
+
+                        if return_data[date][okres[2]]['davka_1_den_sto_tisic'] > max_celkem_davka_1_den_sto_tisic: max_celkem_davka_1_den_sto_tisic = return_data[date][okres[2]]['davka_1_den_sto_tisic']
+                        if return_data[date][okres[2]]['davka_2_den_sto_tisic'] > max_celkem_davka_2_den_sto_tisic: max_celkem_davka_2_den_sto_tisic = return_data[date][okres[2]]['davka_2_den_sto_tisic']
+                        if return_data[date][okres[2]]['davka_3_den_sto_tisic'] > max_celkem_davka_3_den_sto_tisic: max_celkem_davka_3_den_sto_tisic = return_data[date][okres[2]]['davka_3_den_sto_tisic']
+                        if return_data[date][okres[2]]['davka_4_den_sto_tisic'] > max_celkem_davka_4_den_sto_tisic: max_celkem_davka_4_den_sto_tisic = return_data[date][okres[2]]['davka_4_den_sto_tisic']
+                        if return_data[date][okres[2]]['davka_celkem_den_sto_tisic'] > max_celkem_den_sto_tisic: max_celkem_den_sto_tisic = return_data[date][okres[2]]['davka_celkem_den_sto_tisic']
+
+                        if return_data[date][okres[2]]['davka_1_doposud_sto_tisic'] > max_celkem_davka_1_doposud_sto_tisic: max_celkem_davka_1_doposud_sto_tisic = return_data[date][okres[2]]['davka_1_doposud_sto_tisic']
+                        if return_data[date][okres[2]]['davka_2_doposud_sto_tisic'] > max_celkem_davka_2_doposud_sto_tisic: max_celkem_davka_2_doposud_sto_tisic = return_data[date][okres[2]]['davka_2_doposud_sto_tisic']
+                        if return_data[date][okres[2]]['davka_3_doposud_sto_tisic'] > max_celkem_davka_3_doposud_sto_tisic: max_celkem_davka_3_doposud_sto_tisic = return_data[date][okres[2]]['davka_3_doposud_sto_tisic']
+                        if return_data[date][okres[2]]['davka_4_doposud_sto_tisic'] > max_celkem_davka_4_doposud_sto_tisic: max_celkem_davka_4_doposud_sto_tisic = return_data[date][okres[2]]['davka_4_doposud_sto_tisic']
+                        if return_data[date][okres[2]]['davka_celkem_doposud_sto_tisic'] > max_celkem_doposud_sto_tisic: max_celkem_doposud_sto_tisic = return_data[date][okres[2]]['davka_celkem_doposud_sto_tisic']
+
                 return_data[date]['davka_1_max'] = davka_1_max
                 return_data[date]['davka_1_min'] = davka_1_min
                 return_data[date]['davka_2_max'] = davka_2_max
@@ -271,6 +334,31 @@ def getData(range_from, range_to, type):
             
             return_data['absolute_celkem'] = absolute_celkem
             return_data['okres_absolute_max'] = okres_absolute_celkem
+
+            return_data['max_celkem_den'] = max_celkem_den
+            return_data['max_celkem_doposud'] = max_celkem_doposud
+            return_data['max_celkem_den_sto_tisic'] = max_celkem_den_sto_tisic
+            return_data['max_celkem_doposud_sto_tisic'] = max_celkem_doposud_sto_tisic
+
+            return_data['max_celkem_davka_1_den'] = max_celkem_davka_1_den
+            return_data['max_celkem_davka_1_doposud'] = max_celkem_davka_1_doposud
+            return_data['max_celkem_davka_1_den_sto_tisic'] = max_celkem_davka_1_den_sto_tisic
+            return_data['max_celkem_davka_1_doposud_sto_tisic'] = max_celkem_davka_1_doposud_sto_tisic
+
+            return_data['max_celkem_davka_2_den'] = max_celkem_davka_2_den
+            return_data['max_celkem_davka_2_doposud'] = max_celkem_davka_2_doposud
+            return_data['max_celkem_davka_2_den_sto_tisic'] = max_celkem_davka_2_den_sto_tisic
+            return_data['max_celkem_davka_2_doposud_sto_tisic'] = max_celkem_davka_2_doposud_sto_tisic
+
+            return_data['max_celkem_davka_3_den'] = max_celkem_davka_3_den
+            return_data['max_celkem_davka_3_doposud'] = max_celkem_davka_3_doposud
+            return_data['max_celkem_davka_3_den_sto_tisic'] = max_celkem_davka_3_den_sto_tisic
+            return_data['max_celkem_davka_3_doposud_sto_tisic'] = max_celkem_davka_3_doposud_sto_tisic
+
+            return_data['max_celkem_davka_4_den'] = max_celkem_davka_4_den
+            return_data['max_celkem_davka_4_doposud'] = max_celkem_davka_4_doposud
+            return_data['max_celkem_davka_4_den_sto_tisic'] = max_celkem_davka_4_den_sto_tisic
+            return_data['max_celkem_davka_4_doposud_sto_tisic'] = max_celkem_davka_4_doposud_sto_tisic
     
     except sqlite3.Error as e:
         print(f"[API] Database error - {e}")
@@ -520,5 +608,4 @@ def getData(range_from, range_to, type):
         print(f"[API] Database error - {e}")
         return f"Database error - {e}"
 
-    print(sys.getsizeof(return_data))
     return return_data

@@ -6,10 +6,12 @@ data_analysis_types = {
         value: "aktivni_pripady",
         max_value: "max_aktivni",
         min_value: "min_aktivni",
+        max_range: 'max_aktivni_pripady',
         text: "Současný počet nakažených",
         value_100: "aktivni_pripady_sto_tisic",
         max_value_100: "max_aktivni_sto_tisic",
         min_value_100: "min_aktivni_sto_tisic",
+        max_range_100: 'max_aktivni_pripady_sto_tisic',
         text_100: "Současný počet nakažených na 100 tisíc obyvatel"
     },
     "Nové případy":
@@ -17,10 +19,12 @@ data_analysis_types = {
         value: "nove_pripady",
         max_value: "max_nove",
         min_value: "min_nove",
+        max_range: 'max_nove_pripady',
         text: "Počet nově nakažených",
         value_100: "nove_pripady_sto_tisic",
         max_value_100: "max_nove_sto_tisic",
         min_value_100: "min_nove_sto_tisic",
+        max_range_100: 'max_nove_pripady_sto_tisic',
         text_100: "Počet nově nakažených na 100 tisíc obyvatel"
     },
     "Všechny dávky tento den":
@@ -32,7 +36,9 @@ data_analysis_types = {
         value_100: "davka_celkem_den_sto_tisic",
         max_value_100: "davka_celkem_den_max_sto_tisic",
         min_value_100: "davka_celkem_den_min_sto_tisic",
-        text_100: "Naočkovaní obyvatelé na 100 tisíc obyvatel"
+        text_100: "Naočkovaní obyvatelé na 100 tisíc obyvatel",
+        max_range: 'max_celkem_den',
+        max_range_100: 'max_celkem_den_sto_tisic'
     },
     "Všechny dávky doposud":
     {
@@ -43,260 +49,164 @@ data_analysis_types = {
         value_100: "davka_celkem_doposud_sto_tisic",
         max_value_100: "davka_celkem_doposud_max_sto_tisic",
         min_value_100: "davka_celkem_doposud_min_sto_tisic",
-        text_100: "Naočkovaní obyvatelé na 100 tisíc obyvatel"
+        text_100: "Naočkovaní obyvatelé na 100 tisíc obyvatel",
+        max_range: 'max_celkem_doposud',
+        max_range_100: 'max_celkem_doposud_sto_tisic'
+    },
+    "První dávka tento den":
+    {
+        value: "davka_1_den",
+        max_value: "davka_1_max",
+        min_value: "davka_1_min",
+        text: "Naočkovaní obyvatelé první dávkou tento den",
+        value_100: "davka_1_den_sto_tisic",
+        max_value_100: "davka_1_max_sto_tisic",
+        min_value_100: "davka_1_min_sto_tisic",
+        text_100: "Naočkovaní obyvatelé první dávkou tento den na 100 tisíc obyvatel",
+        max_range: 'max_celkem_davka_1_den',
+        max_range_100: 'max_celkem_davka_1_den_sto_tisic'
+    },
+    "První dávka doposud":
+    {
+        value: "davka_1_doposud",
+        max_value: "davka_1_doposud_max",
+        min_value: "davka_1_doposud_min",
+        text: "Naočkovaní obyvatelé první dávkou",
+        value_100: "davka_1_doposud_sto_tisic",
+        max_value_100: "davka_1_doposud_max_sto_tisic",
+        min_value_100: "davka_1_doposud_min_sto_tisic",
+        text_100: "Naočkovaní obyvatelé první dávkou na 100 tisíc obyvatel",
+        max_range: 'max_celkem_davka_1_doposud',
+        max_range_100: 'max_celkem_davka_1_doposud_sto_tisic'
+    },
+    "Druhá dávka tento den":
+    {
+        value: "davka_2_den",
+        max_value: "davka_2_max",
+        min_value: "davka_2_min",
+        text: "Naočkovaní obyvatelé druhou dávkou tento den",
+        value_100: "davka_2_den_sto_tisic",
+        max_value_100: "davka_2_max_sto_tisic",
+        min_value_100: "davka_2_min_sto_tisic",
+        text_100: "Naočkovaní obyvatelé druhou dávkou tento den na 100 tisíc obyvatel",
+        max_range: 'max_celkem_davka_2_den',
+        max_range_100: 'max_celkem_davka_2_den_sto_tisic'
+    },
+    "Druhá dávka doposud":
+    {
+        value: "davka_2_doposud",
+        max_value: "davka_2_doposud_max",
+        min_value: "davka_2_doposud_min",
+        text: "Naočkovaní obyvatelé druhou dávkou",
+        value_100: "davka_2_doposud_sto_tisic",
+        max_value_100: "davka_2_doposud_max_sto_tisic",
+        min_value_100: "davka_2_doposud_min_sto_tisic",
+        text_100: "Naočkovaní obyvatelé druhou dávkou na 100 tisíc obyvatel",
+        max_range: 'max_celkem_davka_2_doposud',
+        max_range_100: 'max_celkem_davka_2_doposud_sto_tisic'
+    },
+    "Třetí dávka tento den":
+    {
+        value: "davka_3_den",
+        max_value: "davka_3_max",
+        min_value: "davka_3_min",
+        text: "Naočkovaní obyvatelé třetí dávkou tento den",
+        value_100: "davka_3_den_sto_tisic",
+        max_value_100: "davka_3_max_sto_tisic",
+        min_value_100: "davka_3_min_sto_tisic",
+        text_100: "Naočkovaní obyvatelé třetí dávkou tento den na 100 tisíc obyvatel",
+        max_range: 'max_celkem_davka_3_den',
+        max_range_100: 'max_celkem_davka_3_den_sto_tisic'
+    },
+    "Třetí dávka doposud":
+    {
+        value: "davka_3_doposud",
+        max_value: "davka_3_doposud_max",
+        min_value: "davka_3_doposud_min",
+        text: "Naočkovaní obyvatelé třetí dávkou",
+        value_100: "davka_3_doposud_sto_tisic",
+        max_value_100: "davka_3_doposud_max_sto_tisic",
+        min_value_100: "davka_3_doposud_min_sto_tisic",
+        text_100: "Naočkovaní obyvatelé třetí dávkou na 100 tisíc obyvatel",
+        max_range: 'max_celkem_davka_3_doposud',
+        max_range_100: 'max_celkem_davka_3_doposud_sto_tisic'
+    },
+    "Čtvrtá dávka tento den":
+    {
+        value: "davka_4_den",
+        max_value: "davka_4_max",
+        min_value: "davka_4_min",
+        text: "Naočkovaní obyvatelé čtvrtou dávkou tento den",
+        value_100: "davka_4_den_sto_tisic",
+        max_value_100: "davka_4_max_sto_tisic",
+        min_value_100: "davka_4_min_sto_tisic",
+        text_100: "Naočkovaní obyvatelé čtvrtou dávkou tento den na 100 tisíc obyvatel",
+        max_range: 'max_celkem_davka_4_den',
+        max_range_100: 'max_celkem_davka_4_den_sto_tisic'
+    },
+    "Čtvrtá dávka doposud":
+    {
+        value: "davka_4_doposud",
+        max_value: "davka_4_doposud_max",
+        min_value: "davka_4_doposud_min",
+        text: "Naočkovaní obyvatelé čtvrtou dávkou",
+        value_100: "davka_4_doposud_sto_tisic",
+        max_value_100: "davka_4_doposud_max_sto_tisic",
+        min_value_100: "davka_4_doposud_min_sto_tisic",
+        text_100: "Naočkovaní obyvatelé čtvrtou dávkou na 100 tisíc obyvatel",
+        max_range: 'max_celkem_davka_4_doposud',
+        max_range_100: 'max_celkem_davka_4_doposud_sto_tisic'
+    },
+    "Aktuální celkový počet zemřelých doposud":
+    {
+        value: "umrti_doposud",
+        max_value: "max_umrti_doposud",
+        min_value: "min_umrti_doposud",
+        text: "Celkový počet zemřelých k danému dni",
+        value_100: "umrti_doposud_sto_tisic",
+        max_value_100: "max_umrti_doposud_sto_tisic",
+        min_value_100: "min_umrti_doposud_sto_tisic",
+        text_100: "Celkový počet zemřelých k danému dni na 100 tisíc obyvatel",
+        max_range: 'celkem_max_doposud',
+        max_range_100: 'celkem_max_sto_tisic_doposud'
+    },
+    "Počet nově zemřelých daný den":
+    {
+        value: "umrti_den",
+        max_value: "max_umrti_den",
+        min_value: "min_umrti_den",
+        text: "Počet nově zemřelých daný den",
+        value_100: "umrti_den_sto_tisic",
+        max_value_100: "max_umrti_den_sto_tisic",
+        min_value_100: "min_umrti_den_sto_tisic",
+        text_100: "Počet nově zemřelých daný den na 100 tisíc obyvatel",
+        max_range: 'celkem_max_den',
+        max_range_100: 'celkem_max_sto_tisic_den'
+    },
+    "Aktuální celkový počet otestovaných doposud":
+    {
+        value: "celkem",
+        max_value: "celkem_max_den",
+        min_value: "celkem_min_den",
+        text: "Celkový počet otestovaných k danému dni",
+        value_100: "celkem_sto_tisic",
+        max_value_100: "celkem_max_den_sto_tisic",
+        min_value_100: "celkem_min_den_sto_tisic",
+        text_100: "Celkový počet otestovaných k danému dni na 100 tisíc obyvatel",
+        max_range: 'rozsah_max_celkem',
+        max_range_100: 'rozsah_max_celkem_sto_tisic'
+    },
+    "Počet nově otestovaných daný den":
+    {
+        value: "prirustek",
+        max_value: "max_den",
+        min_value: "min_den",
+        text: "Počet nově otestovaných daný den",
+        value_100: "prirustek_sto_tisic",
+        max_value_100: "max_den_sto_tisic",
+        min_value_100: "min_den_sto_tisic",
+        text_100: "Počet nově otestovaných daný den na 100 tisíc obyvatel",
+        max_range: 'rozsah_max_prirustek',
+        max_range_100: 'rozsah_max_prirustek_sto_tisic'
     }
-}
-
-switch (map_show_data) {
-    case "První dávka tento den":
-        if (data_recalculation) {
-            okres_value = new_data[selected_date_text][okres_lau]['davka_1_den_sto_tisic'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['davka_1_max_sto_tisic'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['davka_1_min_sto_tisic'].toFixed(2);
-            text_current_data.innerHTML = "Naočkovaní obyvatelé první dávkou tento den na 100 tisíc obyvatel";
-            analysis_name_value = "davka_1_den_sto_tisic";
-            analysis_name_max_value = "davka_1_max_sto_tisic";
-            analysis_name_min_value = "davka_1_min_sto_tisic";
-        }
-        else {
-            okres_value = new_data[selected_date_text][okres_lau]['davka_1_den'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['davka_1_max'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['davka_1_min'].toFixed(2);
-            text_current_data.innerHTML = "Naočkovaní obyvatelé první dávkou tento den";
-            analysis_name_value = "davka_1_den";
-            analysis_name_max_value = "davka_1_max";
-            analysis_name_min_value = "davka_1_min";
-        }
-        break;
-
-    case "První dávka doposud":
-        if (data_recalculation) {
-            okres_value = new_data[selected_date_text][okres_lau]['davka_1_doposud_sto_tisic'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['davka_1_doposud_max_sto_tisic'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['davka_1_doposud_min_sto_tisic'].toFixed(2);
-            text_current_data.innerHTML = "Naočkovaní obyvatelé první dávkou na 100 tisíc obyvatel";
-            analysis_name_value = "davka_1_doposud_sto_tisic";
-            analysis_name_max_value = "davka_1_doposud_max_sto_tisic";
-            analysis_name_min_value = "davka_1_doposud_min_sto_tisic";
-        }
-        else {
-            okres_value = new_data[selected_date_text][okres_lau]['davka_1_doposud'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['davka_1_doposud_max'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['davka_1_doposud_min'].toFixed(2);
-            text_current_data.innerHTML = "Naočkovaní obyvatelé první dávkou";
-            analysis_name_value = "davka_1_doposud";
-            analysis_name_max_value = "davka_1_doposud_max";
-            analysis_name_min_value = "davka_1_doposud_min";
-        }
-        break;
-
-    case "Druhá dávka tento den":
-        if (data_recalculation) {
-            okres_value = new_data[selected_date_text][okres_lau]['davka_2_den_sto_tisic'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['davka_2_max_sto_tisic'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['davka_2_min_sto_tisic'].toFixed(2);
-            text_current_data.innerHTML = "Naočkovaní obyvatelé druhou dávkou tento den na 100 tisíc obyvatel";
-            analysis_name_value = "davka_2_den_sto_tisic";
-            analysis_name_max_value = "davka_2_max_sto_tisic";
-            analysis_name_min_value = "davka_2_min_sto_tisic";
-        }
-        else {
-            okres_value = new_data[selected_date_text][okres_lau]['davka_2_den'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['davka_2_max'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['davka_2_min'].toFixed(2);
-            text_current_data.innerHTML = "Naočkovaní obyvatelé druhou dávkou tento den";
-            analysis_name_value = "davka_2_den";
-            analysis_name_max_value = "davka_2_max";
-            analysis_name_min_value = "davka_2_min";
-        }
-        break;
-
-    case "Druhá dávka doposud":
-        if (data_recalculation) {
-            okres_value = new_data[selected_date_text][okres_lau]['davka_2_doposud_sto_tisic'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['davka_2_doposud_max_sto_tisic'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['davka_2_doposud_min_sto_tisic'].toFixed(2);
-            text_current_data.innerHTML = "Naočkovaní obyvatelé druhou dávkou na 100 tisíc obyvatel";
-            analysis_name_value = "davka_2_doposud_sto_tisic";
-            analysis_name_max_value = "davka_2_doposud_max_sto_tisic";
-            analysis_name_min_value = "davka_2_doposud_min_sto_tisic";
-        }
-        else {
-            okres_value = new_data[selected_date_text][okres_lau]['davka_2_doposud'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['davka_2_doposud_max'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['davka_2_doposud_min'].toFixed(2);
-            text_current_data.innerHTML = "Naočkovaní obyvatelé druhou dávkou";
-            analysis_name_value = "davka_2_doposud";
-            analysis_name_max_value = "davka_2_doposud_max";
-            analysis_name_min_value = "davka_2_doposud_min";
-        }
-        break;
-
-    case "Třetí dávka tento den":
-        if (data_recalculation) {
-            okres_value = new_data[selected_date_text][okres_lau]['davka_3_den_sto_tisic'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['davka_3_max_sto_tisic'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['davka_3_min_sto_tisic'].toFixed(2);
-            text_current_data.innerHTML = "Naočkovaní obyvatelé třetí dávkou tento den na 100 tisíc obyvatel";
-            analysis_name_value = "davka_3_den_sto_tisic";
-            analysis_name_max_value = "davka_3_max_sto_tisic";
-            analysis_name_min_value = "davka_3_min_sto_tisic";
-        }
-        else {
-            okres_value = new_data[selected_date_text][okres_lau]['davka_3_den'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['davka_3_max'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['davka_3_min'].toFixed(2);
-            text_current_data.innerHTML = "Naočkovaní obyvatelé třetí dávkou tento den";
-            analysis_name_value = "davka_3_den";
-            analysis_name_max_value = "davka_3_max";
-            analysis_name_min_value = "davka_3_min";
-        }
-        break;
-
-    case "Třetí dávka doposud":
-        if (data_recalculation) {
-            okres_value = new_data[selected_date_text][okres_lau]['davka_3_doposud_sto_tisic'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['davka_3_doposud_max_sto_tisic'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['davka_3_doposud_min_sto_tisic'].toFixed(2);
-            text_current_data.innerHTML = "Naočkovaní obyvatelé třetí dávkou na 100 tisíc obyvatel";
-            analysis_name_value = "davka_3_doposud_sto_tisic";
-            analysis_name_max_value = "davka_3_doposud_max_sto_tisic";
-            analysis_name_min_value = "davka_3_doposud_min_sto_tisic";
-        }
-        else {
-            okres_value = new_data[selected_date_text][okres_lau]['davka_3_doposud'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['davka_3_doposud_max'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['davka_3_doposud_min'].toFixed(2);
-            text_current_data.innerHTML = "Naočkovaní obyvatelé třetí dávkou";
-            analysis_name_value = "davka_3_doposud";
-            analysis_name_max_value = "davka_3_doposud_max";
-            analysis_name_min_value = "davka_3_doposud_min";
-        }
-        break;
-
-    case "Čtvrtá dávka tento den":
-        if (data_recalculation) {
-            okres_value = new_data[selected_date_text][okres_lau]['davka_4_den_sto_tisic'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['davka_4_max_sto_tisic'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['davka_4_min_sto_tisic'].toFixed(2);
-            text_current_data.innerHTML = "Naočkovaní obyvatelé čtvrtou dávkou tento den na 100 tisíc obyvatel";
-            analysis_name_value = "davka_4_den_sto_tisic";
-            analysis_name_max_value = "davka_4_max_sto_tisic";
-            analysis_name_min_value = "davka_4_min_sto_tisic";
-        }
-        else {
-            okres_value = new_data[selected_date_text][okres_lau]['davka_4_den'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['davka_4_max'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['davka_4_min'].toFixed(2);
-            text_current_data.innerHTML = "Naočkovaní obyvatelé čtvrtou dávkou tento den";
-            analysis_name_value = "davka_4_den";
-            analysis_name_max_value = "davka_4_max";
-            analysis_name_min_value = "davka_4_min";
-        }
-        break;
-
-    case "Čtvrtá dávka doposud":
-        if (data_recalculation) {
-            okres_value = new_data[selected_date_text][okres_lau]['davka_4_doposud_sto_tisic'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['davka_4_doposud_max_sto_tisic'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['davka_4_doposud_min_sto_tisic'].toFixed(2);
-            text_current_data.innerHTML = "Naočkovaní obyvatelé čtvrtou dávkou na 100 tisíc obyvatel";
-            analysis_name_value = "davka_4_doposud_sto_tisic";
-            analysis_name_max_value = "davka_4_doposud_max_sto_tisic";
-            analysis_name_min_value = "davka_4_doposud_min_sto_tisic";
-        }
-        else {
-            okres_value = new_data[selected_date_text][okres_lau]['davka_4_doposud'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['davka_4_doposud_max'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['davka_4_doposud_min'].toFixed(2);
-            text_current_data.innerHTML = "Naočkovaní obyvatelé čtvrtou dávkou";
-            analysis_name_value = "davka_4_doposud";
-            analysis_name_max_value = "davka_4_doposud_max";
-            analysis_name_min_value = "davka_4_doposud_min";
-        }
-        break;
-
-    case "Aktuální celkový počet zemřelých doposud":
-        if (data_recalculation) {
-            okres_value = new_data[selected_date_text][okres_lau]['umrti_doposud_sto_tisic'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['max_umrti_doposud_sto_tisic'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['min_umrti_doposud_sto_tisic'].toFixed(2);
-            text_current_data.innerHTML = "Celkový počet zemřelých k danému dni na 100 tisíc obyvatel";
-            analysis_name_value = "umrti_doposud_sto_tisic";
-            analysis_name_max_value = "max_umrti_doposud_sto_tisic";
-            analysis_name_min_value = "min_umrti_doposud_sto_tisic";
-        }
-        else {
-            okres_value = new_data[selected_date_text][okres_lau]['umrti_doposud'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['max_umrti_doposud'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['min_umrti_doposud'].toFixed(2);
-            text_current_data.innerHTML = "Celkový počet zemřelých k danému dni";
-            analysis_name_value = "umrti_doposud";
-            analysis_name_max_value = "max_umrti_doposud";
-            analysis_name_min_value = "min_umrti_doposud";
-        }
-        break;
-
-    case "Počet nově zemřelých daný den":
-        if (data_recalculation) {
-            okres_value = new_data[selected_date_text][okres_lau]['umrti_den_sto_tisic'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['max_umrti_den_sto_tisic'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['min_umrti_den_sto_tisic'].toFixed(2);
-            text_current_data.innerHTML = "Počet nově zemřelých daný den na 100 tisíc obyvatel";
-            analysis_name_value = "umrti_den_sto_tisic";
-            analysis_name_max_value = "max_umrti_den_sto_tisic";
-            analysis_name_min_value = "min_umrti_den_sto_tisic";
-        }
-        else {
-            okres_value = new_data[selected_date_text][okres_lau]['umrti_den'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['max_umrti_den'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['min_umrti_den'].toFixed(2);
-            text_current_data.innerHTML = "Počet nově zemřelých daný den";
-            analysis_name_value = "umrti_den";
-            analysis_name_max_value = "max_umrti_den";
-            analysis_name_min_value = "min_umrti_den";
-        }
-        break;
-
-    case "Aktuální celkový počet otestovaných doposud":
-        if (data_recalculation) {
-            okres_value = new_data[selected_date_text][okres_lau]['celkem_sto_tisic'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['celkem_max_den_sto_tisic'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['celkem_min_den_sto_tisic'].toFixed(2);
-            text_current_data.innerHTML = "Celkový počet otestovaných k danému dni na 100 tisíc obyvatel";
-            analysis_name_value = "celkem_sto_tisic";
-            analysis_name_max_value = "celkem_max_den_sto_tisic";
-            analysis_name_min_value = "celkem_min_den_sto_tisic";
-        }
-        else {
-            okres_value = new_data[selected_date_text][okres_lau]['celkem'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['celkem_max_den'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['celkem_min_den'].toFixed(2);
-            text_current_data.innerHTML = "Celkový počet otestovaných k danému dni";
-            analysis_name_value = "celkem";
-            analysis_name_max_value = "celkem_max_den";
-            analysis_name_min_value = "celkem_min_den";
-        }
-        break;
-
-    case "Počet nově otestovaných daný den":
-        if (data_recalculation) {
-            okres_value = new_data[selected_date_text][okres_lau]['prirustek_sto_tisic'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['max_den_sto_tisic'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['min_den_sto_tisic'].toFixed(2);
-            text_current_data.innerHTML = "Počet nově otestovaných daný den na 100 tisíc obyvatel";
-            analysis_name_value = "prirustek_sto_tisic";
-            analysis_name_max_value = "max_den_sto_tisic";
-            analysis_name_min_value = "min_den_sto_tisic";
-        }
-        else {
-            okres_value = new_data[selected_date_text][okres_lau]['prirustek'].toFixed(2);
-            maximum_day = new_data[selected_date_text]['max_den'].toFixed(2);
-            minimum_day = new_data[selected_date_text]['min_den'].toFixed(2);
-            text_current_data.innerHTML = "Počet nově otestovaných daný den";
-            analysis_name_value = "prirustek";
-            analysis_name_max_value = "max_den";
-            analysis_name_min_value = "min_den";
-        }
-        break;
 }

@@ -39,6 +39,7 @@ var slider_text_value;
 var ongoing_animation = true;
 var animation_speed = 5;
 var map_show_data = "Současně nakažení";
+var map_show_data_PIP = "Současně nakažení";
 var text_current_data_sto_tisic;
 var text_current_data;
 var iframe;
@@ -163,7 +164,8 @@ function initPIP()
 }
 
 // click function - AJAX request
-function onClickMap(name, okres_lau, object) {
+function onClickMap(name, okres_lau, object) 
+{
     // Save district
     okres_clicked = okres_lau;
 
@@ -282,9 +284,19 @@ function updatePage() {
     // Init needed variables
     var totalValue = 0;
     var okres_value;
+    var okres_value_PIP;
     var maximum_day;
+    var maximum_day_PIP;
     var minimum_day;
+    var minimum_day_PIP;
     var selected_date = new Date();
+    var value_name;
+    var max_value_name;
+    var min_value_name;
+    var text;
+    var value_name_PIP;
+    var max_value_name_PIP;
+    var min_value_name_PIP;
 
     // Get all variables connected with date
     switch (slider_current_type) {
@@ -339,349 +351,44 @@ function updatePage() {
     // Map district updating - go through all districts
     var parent = iframe.contentWindow.document.querySelector("g");
     var children = parent.children;
+
+    if (data_recalculation)
+    {
+        value_name = data_analysis_types[map_show_data]['value_100'];
+        value_name_PIP = data_analysis_types[map_show_data_PIP]['value_100'];
+        max_value_name = data_analysis_types[map_show_data]['max_value_100'];
+        max_value_name_PIP = data_analysis_types[map_show_data_PIP]['max_value_100'];
+        min_value_name = data_analysis_types[map_show_data]['min_value_100'];
+        min_value_name_PIP = data_analysis_types[map_show_data_PIP]['min_value_100'];
+        text = data_analysis_types[map_show_data]['text_100'];
+    }
+    else
+    {
+        value_name = data_analysis_types[map_show_data]['value'];
+        value_name_PIP = data_analysis_types[map_show_data_PIP]['value'];
+        max_value_name = data_analysis_types[map_show_data]['max_value'];
+        max_value_name_PIP = data_analysis_types[map_show_data_PIP]['max_value'];
+        min_value_name = data_analysis_types[map_show_data]['min_value'];
+        min_value_name_PIP = data_analysis_types[map_show_data_PIP]['min_value'];
+        text = data_analysis_types[map_show_data]['text'];
+    }
+
     for (let i = 0; i < 77; i++) {
         // Get district LAU code
         var okres_lau = children[i].getAttribute('okres_lau');
 
         // Get needed values that are required for later computations and set some texts on page according to selected data
-        switch (map_show_data) {
-            case "Současně nakažení":
-                if (data_recalculation) {
-                    okres_value = new_data[selected_date_text][okres_lau]['aktivni_pripady_sto_tisic'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['max_aktivni_sto_tisic'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['min_aktivni_sto_tisic'].toFixed(2);
-                    text_current_data.innerHTML = "Současný počet nakažených na 100 tisíc obyvatel";
-                    analysis_name_value = "aktivni_pripady_sto_tisic";
-                    analysis_name_min_value = "min_aktivni_sto_tisic";
-                    analysis_name_max_value = "max_aktivni_sto_tisic";
-                }
-                else {
-                    okres_value = new_data[selected_date_text][okres_lau]['aktivni_pripady'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['max_aktivni'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['min_aktivni'].toFixed(2);
-                    text_current_data.innerHTML = "Současný počet nakažených";
-                    analysis_name_value = "aktivni_pripady";
-                    analysis_name_max_value = "max_aktivni";
-                    analysis_name_min_value = "min_aktivni";
-                }
-                break;
+        okres_value = new_data[selected_date_text][okres_lau][value_name].toFixed(2);
+        okres_value_PIP = new_data[selected_date_text][okres_lau][value_name_PIP].toFixed(2);
+        maximum_day = new_data[selected_date_text][max_value_name].toFixed(2);
+        maximum_day_PIP = new_data[selected_date_text][max_value_name_PIP].toFixed(2);
+        minimum_day = new_data[selected_date_text][min_value_name].toFixed(2);
+        minimum_day_PIP = new_data[selected_date_text][min_value_name_PIP].toFixed(2);
+        text_current_data.innerHTML = text;
 
-            case "Nové případy":
-                if (data_recalculation) {
-                    okres_value = new_data[selected_date_text][okres_lau]['nove_pripady_sto_tisic'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['max_nove_sto_tisic'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['min_nove_sto_tisic'].toFixed(2);
-                    text_current_data.innerHTML = "Počet nově nakažených na 100 tisíc obyvatel";
-                    analysis_name_value = "nove_pripady_sto_tisic";
-                    analysis_name_max_value = "max_nove_sto_tisic";
-                    analysis_name_min_value = "min_nove_sto_tisic";
-                }
-                else {
-                    okres_value = new_data[selected_date_text][okres_lau]['nove_pripady'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['max_nove'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['min_nove'].toFixed(2);
-                    text_current_data.innerHTML = "Počet nově nakažených";
-                    analysis_name_value = "nove_pripady";
-                    analysis_name_max_value = "max_nove";
-                    analysis_name_min_value = "min_nove";
-                }
-                break;
-
-            case "Všechny dávky tento den":
-                if (data_recalculation) {
-                    okres_value = new_data[selected_date_text][okres_lau]['davka_celkem_den_sto_tisic'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['davka_celkem_den_max_sto_tisic'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['davka_celkem_den_min_sto_tisic'].toFixed(2);
-                    text_current_data.innerHTML = "Naočkovaní obyvatelé na 100 tisíc obyvatel";
-                    analysis_name_value = "davka_celkem_den_sto_tisic";
-                    analysis_name_max_value = "davka_celkem_den_max_sto_tisic";
-                    analysis_name_min_value = "davka_celkem_den_min_sto_tisic";
-                }
-                else {
-                    okres_value = new_data[selected_date_text][okres_lau]['davka_celkem_den'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['davka_celkem_den_max'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['davka_celkem_den_min'].toFixed(2);
-                    text_current_data.innerHTML = "Naočkovaní obyvatelé";
-                    analysis_name_value = "davka_celkem_den";
-                    analysis_name_max_value = "davka_celkem_den_max";
-                    analysis_name_min_value = "davka_celkem_den_min";
-                }
-                break;
-
-            case "Všechny dávky doposud":
-                if (data_recalculation) {
-                    okres_value = new_data[selected_date_text][okres_lau]['davka_celkem_doposud_sto_tisic'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['davka_celkem_doposud_max_sto_tisic'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['davka_celkem_doposud_min_sto_tisic'].toFixed(2);
-                    text_current_data.innerHTML = "Naočkovaní obyvatelé na 100 tisíc obyvatel";
-                    analysis_name_value = "davka_celkem_doposud_sto_tisic";
-                    analysis_name_max_value = "davka_celkem_doposud_max_sto_tisic";
-                    analysis_name_min_value = "davka_celkem_doposud_min_sto_tisic";
-                }
-                else {
-                    okres_value = new_data[selected_date_text][okres_lau]['davka_celkem_doposud'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['davka_celkem_doposud_max'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['davka_celkem_doposud_min'].toFixed(2);
-                    text_current_data.innerHTML = "Naočkovaní obyvatelé";
-                    analysis_name_value = "davka_celkem_doposud";
-                    analysis_name_max_value = "davka_celkem_doposud_max";
-                    analysis_name_min_value = "davka_celkem_doposud_min";
-                }
-                break;
-
-            case "První dávka tento den":
-                if (data_recalculation) {
-                    okres_value = new_data[selected_date_text][okres_lau]['davka_1_den_sto_tisic'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['davka_1_max_sto_tisic'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['davka_1_min_sto_tisic'].toFixed(2);
-                    text_current_data.innerHTML = "Naočkovaní obyvatelé první dávkou tento den na 100 tisíc obyvatel";
-                    analysis_name_value = "davka_1_den_sto_tisic";
-                    analysis_name_max_value = "davka_1_max_sto_tisic";
-                    analysis_name_min_value = "davka_1_min_sto_tisic";
-                }
-                else {
-                    okres_value = new_data[selected_date_text][okres_lau]['davka_1_den'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['davka_1_max'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['davka_1_min'].toFixed(2);
-                    text_current_data.innerHTML = "Naočkovaní obyvatelé první dávkou tento den";
-                    analysis_name_value = "davka_1_den";
-                    analysis_name_max_value = "davka_1_max";
-                    analysis_name_min_value = "davka_1_min";
-                }
-                break;
-
-            case "První dávka doposud":
-                if (data_recalculation) {
-                    okres_value = new_data[selected_date_text][okres_lau]['davka_1_doposud_sto_tisic'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['davka_1_doposud_max_sto_tisic'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['davka_1_doposud_min_sto_tisic'].toFixed(2);
-                    text_current_data.innerHTML = "Naočkovaní obyvatelé první dávkou na 100 tisíc obyvatel";
-                    analysis_name_value = "davka_1_doposud_sto_tisic";
-                    analysis_name_max_value = "davka_1_doposud_max_sto_tisic";
-                    analysis_name_min_value = "davka_1_doposud_min_sto_tisic";
-                }
-                else {
-                    okres_value = new_data[selected_date_text][okres_lau]['davka_1_doposud'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['davka_1_doposud_max'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['davka_1_doposud_min'].toFixed(2);
-                    text_current_data.innerHTML = "Naočkovaní obyvatelé první dávkou";
-                    analysis_name_value = "davka_1_doposud";
-                    analysis_name_max_value = "davka_1_doposud_max";
-                    analysis_name_min_value = "davka_1_doposud_min";
-                }
-                break;
-
-            case "Druhá dávka tento den":
-                if (data_recalculation) {
-                    okres_value = new_data[selected_date_text][okres_lau]['davka_2_den_sto_tisic'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['davka_2_max_sto_tisic'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['davka_2_min_sto_tisic'].toFixed(2);
-                    text_current_data.innerHTML = "Naočkovaní obyvatelé druhou dávkou tento den na 100 tisíc obyvatel";
-                    analysis_name_value = "davka_2_den_sto_tisic";
-                    analysis_name_max_value = "davka_2_max_sto_tisic";
-                    analysis_name_min_value = "davka_2_min_sto_tisic";
-                }
-                else {
-                    okres_value = new_data[selected_date_text][okres_lau]['davka_2_den'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['davka_2_max'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['davka_2_min'].toFixed(2);
-                    text_current_data.innerHTML = "Naočkovaní obyvatelé druhou dávkou tento den";
-                    analysis_name_value = "davka_2_den";
-                    analysis_name_max_value = "davka_2_max";
-                    analysis_name_min_value = "davka_2_min";
-                }
-                break;
-
-            case "Druhá dávka doposud":
-                if (data_recalculation) {
-                    okres_value = new_data[selected_date_text][okres_lau]['davka_2_doposud_sto_tisic'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['davka_2_doposud_max_sto_tisic'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['davka_2_doposud_min_sto_tisic'].toFixed(2);
-                    text_current_data.innerHTML = "Naočkovaní obyvatelé druhou dávkou na 100 tisíc obyvatel";
-                    analysis_name_value = "davka_2_doposud_sto_tisic";
-                    analysis_name_max_value = "davka_2_doposud_max_sto_tisic";
-                    analysis_name_min_value = "davka_2_doposud_min_sto_tisic";
-                }
-                else {
-                    okres_value = new_data[selected_date_text][okres_lau]['davka_2_doposud'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['davka_2_doposud_max'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['davka_2_doposud_min'].toFixed(2);
-                    text_current_data.innerHTML = "Naočkovaní obyvatelé druhou dávkou";
-                    analysis_name_value = "davka_2_doposud";
-                    analysis_name_max_value = "davka_2_doposud_max";
-                    analysis_name_min_value = "davka_2_doposud_min";
-                }
-                break;
-
-            case "Třetí dávka tento den":
-                if (data_recalculation) {
-                    okres_value = new_data[selected_date_text][okres_lau]['davka_3_den_sto_tisic'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['davka_3_max_sto_tisic'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['davka_3_min_sto_tisic'].toFixed(2);
-                    text_current_data.innerHTML = "Naočkovaní obyvatelé třetí dávkou tento den na 100 tisíc obyvatel";
-                    analysis_name_value = "davka_3_den_sto_tisic";
-                    analysis_name_max_value = "davka_3_max_sto_tisic";
-                    analysis_name_min_value = "davka_3_min_sto_tisic";
-                }
-                else {
-                    okres_value = new_data[selected_date_text][okres_lau]['davka_3_den'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['davka_3_max'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['davka_3_min'].toFixed(2);
-                    text_current_data.innerHTML = "Naočkovaní obyvatelé třetí dávkou tento den";
-                    analysis_name_value = "davka_3_den";
-                    analysis_name_max_value = "davka_3_max";
-                    analysis_name_min_value = "davka_3_min";
-                }
-                break;
-
-            case "Třetí dávka doposud":
-                if (data_recalculation) {
-                    okres_value = new_data[selected_date_text][okres_lau]['davka_3_doposud_sto_tisic'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['davka_3_doposud_max_sto_tisic'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['davka_3_doposud_min_sto_tisic'].toFixed(2);
-                    text_current_data.innerHTML = "Naočkovaní obyvatelé třetí dávkou na 100 tisíc obyvatel";
-                    analysis_name_value = "davka_3_doposud_sto_tisic";
-                    analysis_name_max_value = "davka_3_doposud_max_sto_tisic";
-                    analysis_name_min_value = "davka_3_doposud_min_sto_tisic";
-                }
-                else {
-                    okres_value = new_data[selected_date_text][okres_lau]['davka_3_doposud'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['davka_3_doposud_max'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['davka_3_doposud_min'].toFixed(2);
-                    text_current_data.innerHTML = "Naočkovaní obyvatelé třetí dávkou";
-                    analysis_name_value = "davka_3_doposud";
-                    analysis_name_max_value = "davka_3_doposud_max";
-                    analysis_name_min_value = "davka_3_doposud_min";
-                }
-                break;
-
-            case "Čtvrtá dávka tento den":
-                if (data_recalculation) {
-                    okres_value = new_data[selected_date_text][okres_lau]['davka_4_den_sto_tisic'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['davka_4_max_sto_tisic'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['davka_4_min_sto_tisic'].toFixed(2);
-                    text_current_data.innerHTML = "Naočkovaní obyvatelé čtvrtou dávkou tento den na 100 tisíc obyvatel";
-                    analysis_name_value = "davka_4_den_sto_tisic";
-                    analysis_name_max_value = "davka_4_max_sto_tisic";
-                    analysis_name_min_value = "davka_4_min_sto_tisic";
-                }
-                else {
-                    okres_value = new_data[selected_date_text][okres_lau]['davka_4_den'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['davka_4_max'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['davka_4_min'].toFixed(2);
-                    text_current_data.innerHTML = "Naočkovaní obyvatelé čtvrtou dávkou tento den";
-                    analysis_name_value = "davka_4_den";
-                    analysis_name_max_value = "davka_4_max";
-                    analysis_name_min_value = "davka_4_min";
-                }
-                break;
-
-            case "Čtvrtá dávka doposud":
-                if (data_recalculation) {
-                    okres_value = new_data[selected_date_text][okres_lau]['davka_4_doposud_sto_tisic'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['davka_4_doposud_max_sto_tisic'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['davka_4_doposud_min_sto_tisic'].toFixed(2);
-                    text_current_data.innerHTML = "Naočkovaní obyvatelé čtvrtou dávkou na 100 tisíc obyvatel";
-                    analysis_name_value = "davka_4_doposud_sto_tisic";
-                    analysis_name_max_value = "davka_4_doposud_max_sto_tisic";
-                    analysis_name_min_value = "davka_4_doposud_min_sto_tisic";
-                }
-                else {
-                    okres_value = new_data[selected_date_text][okres_lau]['davka_4_doposud'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['davka_4_doposud_max'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['davka_4_doposud_min'].toFixed(2);
-                    text_current_data.innerHTML = "Naočkovaní obyvatelé čtvrtou dávkou";
-                    analysis_name_value = "davka_4_doposud";
-                    analysis_name_max_value = "davka_4_doposud_max";
-                    analysis_name_min_value = "davka_4_doposud_min";
-                }
-                break;
-
-            case "Aktuální celkový počet zemřelých doposud":
-                if (data_recalculation) {
-                    okres_value = new_data[selected_date_text][okres_lau]['umrti_doposud_sto_tisic'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['max_umrti_doposud_sto_tisic'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['min_umrti_doposud_sto_tisic'].toFixed(2);
-                    text_current_data.innerHTML = "Celkový počet zemřelých k danému dni na 100 tisíc obyvatel";
-                    analysis_name_value = "umrti_doposud_sto_tisic";
-                    analysis_name_max_value = "max_umrti_doposud_sto_tisic";
-                    analysis_name_min_value = "min_umrti_doposud_sto_tisic";
-                }
-                else {
-                    okres_value = new_data[selected_date_text][okres_lau]['umrti_doposud'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['max_umrti_doposud'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['min_umrti_doposud'].toFixed(2);
-                    text_current_data.innerHTML = "Celkový počet zemřelých k danému dni";
-                    analysis_name_value = "umrti_doposud";
-                    analysis_name_max_value = "max_umrti_doposud";
-                    analysis_name_min_value = "min_umrti_doposud";
-                }
-                break;
-
-            case "Počet nově zemřelých daný den":
-                if (data_recalculation) {
-                    okres_value = new_data[selected_date_text][okres_lau]['umrti_den_sto_tisic'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['max_umrti_den_sto_tisic'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['min_umrti_den_sto_tisic'].toFixed(2);
-                    text_current_data.innerHTML = "Počet nově zemřelých daný den na 100 tisíc obyvatel";
-                    analysis_name_value = "umrti_den_sto_tisic";
-                    analysis_name_max_value = "max_umrti_den_sto_tisic";
-                    analysis_name_min_value = "min_umrti_den_sto_tisic";
-                }
-                else {
-                    okres_value = new_data[selected_date_text][okres_lau]['umrti_den'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['max_umrti_den'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['min_umrti_den'].toFixed(2);
-                    text_current_data.innerHTML = "Počet nově zemřelých daný den";
-                    analysis_name_value = "umrti_den";
-                    analysis_name_max_value = "max_umrti_den";
-                    analysis_name_min_value = "min_umrti_den";
-                }
-                break;
-
-            case "Aktuální celkový počet otestovaných doposud":
-                if (data_recalculation) {
-                    okres_value = new_data[selected_date_text][okres_lau]['celkem_sto_tisic'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['celkem_max_den_sto_tisic'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['celkem_min_den_sto_tisic'].toFixed(2);
-                    text_current_data.innerHTML = "Celkový počet otestovaných k danému dni na 100 tisíc obyvatel";
-                    analysis_name_value = "celkem_sto_tisic";
-                    analysis_name_max_value = "celkem_max_den_sto_tisic";
-                    analysis_name_min_value = "celkem_min_den_sto_tisic";
-                }
-                else {
-                    okres_value = new_data[selected_date_text][okres_lau]['celkem'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['celkem_max_den'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['celkem_min_den'].toFixed(2);
-                    text_current_data.innerHTML = "Celkový počet otestovaných k danému dni";
-                    analysis_name_value = "celkem";
-                    analysis_name_max_value = "celkem_max_den";
-                    analysis_name_min_value = "celkem_min_den";
-                }
-                break;
-
-            case "Počet nově otestovaných daný den":
-                if (data_recalculation) {
-                    okres_value = new_data[selected_date_text][okres_lau]['prirustek_sto_tisic'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['max_den_sto_tisic'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['min_den_sto_tisic'].toFixed(2);
-                    text_current_data.innerHTML = "Počet nově otestovaných daný den na 100 tisíc obyvatel";
-                    analysis_name_value = "prirustek_sto_tisic";
-                    analysis_name_max_value = "max_den_sto_tisic";
-                    analysis_name_min_value = "min_den_sto_tisic";
-                }
-                else {
-                    okres_value = new_data[selected_date_text][okres_lau]['prirustek'].toFixed(2);
-                    maximum_day = new_data[selected_date_text]['max_den'].toFixed(2);
-                    minimum_day = new_data[selected_date_text]['min_den'].toFixed(2);
-                    text_current_data.innerHTML = "Počet nově otestovaných daný den";
-                    analysis_name_value = "prirustek";
-                    analysis_name_max_value = "max_den";
-                    analysis_name_min_value = "min_den";
-                }
-                break;
-        }
-
+        analysis_name_value = value_name;
+        analysis_name_min_value = min_value_name;
+        analysis_name_max_value = max_value_name;
 
         current_values.push(okres_value);
         totalValue += okres_value;
@@ -702,7 +409,9 @@ function updatePage() {
 
         // Calculate colors
         var color1 = [];
+        var color1_PIP = [];
         var color2 = [];
+        var color2_PIP = [];
         switch (current_analysis) {
             case "nakazeni-analyze":
                 color1 = [255, 105, 0];
@@ -726,6 +435,29 @@ function updatePage() {
                 break;
         }
 
+        switch (current_pip_analysis) {
+            case "nakazeni-analyze":
+                color1_PIP = [255, 105, 0];
+                color2_PIP = [255, 255, 255];
+                break;
+            case "ockovani-analyze":
+                color1_PIP = [0, 150, 0];
+                color2_PIP = [255, 255, 255];
+                break;
+            case "umrti-analyze":
+                color1_PIP = [30, 30, 30];
+                color2_PIP = [255, 255, 255];
+                break;
+            case "testovani-analyze":
+                color1_PIP = [0, 0, 200];
+                color2_PIP = [255, 255, 255];
+                break;
+            default:
+                color1_PIP = [255, 0, 0];
+                color2_PIP = [0, 255, 0];
+                break;
+        }
+
         // Draw scale rectangle
         document.getElementById("scale_rectangle").style.background = "linear-gradient(90deg, rgba(" + color2[0] + "," + color2[1] + "," + color2[2] + ",1) 0%, rgba(" + color1[0] + "," + color1[1] + "," + color1[2] + ",1) 100%)";
         document.getElementById("scale_min").innerHTML = numberWithCommas(minimum_day);
@@ -737,19 +469,29 @@ function updatePage() {
 
         // Calculate other stuff and set color
         var min_max_difference = maximum_day - minimum_day;
+        var min_max_difference_PIP = maximum_day_PIP - minimum_day_PIP;
         if (min_max_difference == 0) {
             children[i].setAttribute("fill", "#FFFFFF");
+            continue;
+        }
+        if (min_max_difference_PIP == 0) {
             children_pip[i].setAttribute("fill", "#FFFFFF");
             continue;
         }
         var w1 = (okres_value - minimum_day) / min_max_difference;
+        var w1_PIP = (okres_value_PIP - minimum_day_PIP) / min_max_difference_PIP;
         var w2 = 1 - w1;
+        var w2_PIP = 1 - w1_PIP;
         var rgb = [Math.round(color1[0] * w1 + color2[0] * w2),
         Math.round(color1[1] * w1 + color2[1] * w2),
         Math.round(color1[2] * w1 + color2[2] * w2)];
+        var rgb_PIP = [Math.round(color1_PIP[0] * w1_PIP + color2_PIP[0] * w2_PIP),
+        Math.round(color1_PIP[1] * w1_PIP + color2_PIP[1] * w2_PIP),
+        Math.round(color1_PIP[2] * w1_PIP + color2_PIP[2] * w2_PIP)];
         var color_string = "#" + componentToHex(rgb[0]) + componentToHex(rgb[1]) + componentToHex(rgb[2]);
+        var color_string_PIP = "#" + componentToHex(rgb_PIP[0]) + componentToHex(rgb_PIP[1]) + componentToHex(rgb_PIP[2]);
         children[i].setAttribute("fill", color_string);
-        children_pip[i].setAttribute("fill", color_string);
+        children_pip[i].setAttribute("fill", color_string_PIP);
     }
 }
 
@@ -757,7 +499,8 @@ function updatePage() {
 function selectAnalysis(type) {
 
     current_analysis = type;
-    selectSliderType(slider_current_type);
+    analysis_selected = true;
+    // selectSliderType(slider_current_type);
     analyze_fields.forEach((element) => {
         // Set colors and other elements according to selected type of analysis
         if (element == type) {
@@ -997,6 +740,7 @@ function selectSliderPIPType(value)
     {
         case 'Nakažení':
             current_pip_analysis = 'nakazeni-analyze';
+            map_show_data_PIP = 'Současně nakažení';
 
             var option1 = document.createElement('option');
             option1.value = "Současně nakažení";
@@ -1009,6 +753,7 @@ function selectSliderPIPType(value)
             break;
         case 'Očkování':
             current_pip_analysis = 'ockovani-analyze';
+            map_show_data_PIP = 'Všechny dávky tento den';
 
             var options = [
                 "Všechny dávky tento den",
@@ -1032,6 +777,8 @@ function selectSliderPIPType(value)
             break;
         case 'Úmrtí':
             current_pip_analysis = 'umrti-analyze';
+            map_show_data_PIP = 'Aktuální celkový počet zemřelých doposud';
+
             var options = [
                 "Aktuální celkový počet zemřelých doposud",
                 "Počet nově zemřelých daný den"
@@ -1047,6 +794,7 @@ function selectSliderPIPType(value)
             break;
         case 'PCR testování':
             current_pip_analysis = 'testovani-analyze';
+            map_show_data_PIP = 'Aktuální celkový počet otestovaných doposud';
 
             var options = [
                 "Aktuální celkový počet otestovaných doposud",
@@ -1061,6 +809,8 @@ function selectSliderPIPType(value)
             );
             break;
     }
+
+    updatePage();
 }
 
 function selectSliderType(value) {
@@ -1120,6 +870,12 @@ function selectSliderType(value) {
     }
 
     // valuesSlider
+}
+
+function selectSliderPIPData(value)
+{
+    map_show_data_PIP = value;
+    updatePage();
 }
 
 function selectSliderData(value) {
