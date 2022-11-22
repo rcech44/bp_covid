@@ -63,6 +63,7 @@ var analysis_name_value;
 var analysis_name_min_value;
 var analysis_name_max_value;
 var current_analysis_color;
+var main_slider_range_max = (new Date().getTime() - covid_start.getTime()) / (1000 * 3600 * 24);
 
 // Initialize and modify webpage on startup
 function onIframeLoad() {
@@ -865,6 +866,7 @@ function selectSliderType(value) {
                     max: days_since_covid - 2
                 }
             });
+            main_slider_range_max = days_since_covid - 2;
             break;
         case "Týden":
             valuesSlider.noUiSlider.updateOptions({
@@ -874,6 +876,7 @@ function selectSliderType(value) {
                     max: (days_since_covid / 7) - 2
                 }
             });
+            main_slider_range_max = (days_since_covid / 7) - 2;
             break;
         case "Měsíc":
             valuesSlider.noUiSlider.updateOptions({
@@ -883,8 +886,7 @@ function selectSliderType(value) {
                     max: (days_since_covid / 30) - 2
                 }
             });
-            break;
-        case "Rok":
+            main_slider_range_max = (days_since_covid / 30) - 2;
             break;
     }
 
@@ -966,6 +968,17 @@ function confirmRangeAnalysis() {
         toast("Vyberte prosím data k vizualizaci");
         return;
     }
+
+    var slider_current_max = main_slider_range_max;
+    var slider_values_difference = slider_current_values[1] - slider_current_values[0];
+    if ((slider_values_difference / slider_current_max) > 0.7)
+    {
+        if (!confirm('Zvolili jste rozsáhlé časové okno, načtení může trvat delší dobu (závisí na vašem internetovém připojení). Chcete pokračovat?'))
+        {
+            return;
+        }
+    }
+
     analysis_changed = false;
     if (map_enabled == false) {
         iframe.style.pointerEvents = "auto";
@@ -974,27 +987,20 @@ function confirmRangeAnalysis() {
     var value_min = new Date();
     var value_max = new Date();
 
-    slider.setAttribute("min", 0);
     switch (slider_current_type) {
         case "Den":
             value_min.setDate(value_min.getDate() - (slider_values.length - slider_current_values[0]));
             value_max.setDate(value_max.getDate() - (slider_values.length - slider_current_values[1]));
-            slider.setAttribute("max", slider_current_values[1] - slider_current_values[0]);
             break;
         case "Týden":
             value_min.setDate(value_min.getDate() - (slider_values.length - (slider_current_values[0] * 7)));
             value_max.setDate(value_max.getDate() - (slider_values.length - (slider_current_values[1] * 7)));
-            slider.setAttribute("max", (slider_current_values[1] - slider_current_values[0]) * 7);
             break;
         case "Měsíc":
             value_min.setDate(value_min.getDate() - (slider_values.length - (slider_current_values[0] * 30)));
             value_max.setDate(value_max.getDate() - (slider_values.length - (slider_current_values[1] * 30)));
-            slider.setAttribute("max", (slider_current_values[1] - slider_current_values[0]) * 30);
-            break;
-        case "Rok":
             break;
     }
-    slider.value = "0";
 
     var url;
     switch (current_analysis) {
@@ -1018,11 +1024,26 @@ function confirmRangeAnalysis() {
         headers: { 'accept': 'application/json' },
         type: "GET",
         success: function (result) {
+            slider.setAttribute("min", 0);
+            slider.value = "0";
+
+            switch (slider_current_type) {
+                case "Den":
+                    slider.setAttribute("max", slider_current_values[1] - slider_current_values[0]);
+                    break;
+                case "Týden":
+                    slider.setAttribute("max", (slider_current_values[1] - slider_current_values[0]) * 7);
+                    break;
+                case "Měsíc":
+                    slider.setAttribute("max", (slider_current_values[1] - slider_current_values[0]) * 30);
+                    break;
+            }
             processGetDataFromSlider(result);
             initChart();
         },
         error: function (error) {
             console.log(error);
+            toast('Prosím vyčkejte před dalším požadavkem')
         }
     })
 }
@@ -1215,4 +1236,9 @@ function initChart() {
 
     // Display using Plotly
     Plotly.newPlot("district_chart", data, layout, { displayModeBar: true });
+}
+
+function hideSplashScreen()
+{
+    $('#splashscreen').fadeOut(350);
 }
