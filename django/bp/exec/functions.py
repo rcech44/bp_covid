@@ -228,6 +228,7 @@ def checkUpToDate():
     url_prehled = 'https://onemocneni-aktualne.mzcr.cz/api/v3/zakladni-prehled?page=1&itemsPerPage=100&apiToken=c54d8c7d54a31d016d8f3c156b98682a'
     url_ockovani = "https://onemocneni-aktualne.mzcr.cz/api/v3/ockovani-geografie?page=1&itemsPerPage=10000&datum%5Bbefore%5D=XYZ&datum%5Bafter%5D=XYZ&apiToken=c54d8c7d54a31d016d8f3c156b98682a"
     datum_string_now = datetime.now().strftime("%Y-%m-%d")
+    hour_now = datetime.now().hour
     datum_string_yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
     datum_string_two_days_ago = (datetime.now() - timedelta(days=2)).strftime("%Y-%m-%d")
 
@@ -250,6 +251,9 @@ def checkUpToDate():
 
                     # Update database
                     for i in range(delta_days):
+                        if i == delta_days - 1:
+                            if hour_now < 10:
+                                continue
                         update_date = (date_database + timedelta(days=i+1)).strftime("%Y-%m-%d")
                         if update_date not in updated_dates:
                             updated_dates.append(update_date)
@@ -346,6 +350,9 @@ def checkUpToDate():
 
                     # Update database
                     for i in range(delta_days):
+                        if i == delta_days - 1:
+                            if hour_now < 10:
+                                continue
                         update_date = (date_database + timedelta(days=i+1)).strftime("%Y-%m-%d")
                         update_date_yesterday = (date_database + timedelta(days=i)).strftime("%Y-%m-%d")
                         if update_date not in updated_dates:
@@ -446,6 +453,9 @@ def checkUpToDate():
             while True:
                 current_date = (start_date + timedelta(days=i))
                 current_date_text = current_date.strftime('%Y-%m-%d')
+                if current_date_text == yesterday_date.strftime('%Y-%m-%d'):
+                    if hour_now < 10:
+                        break
                 if current_date_text == today_date.strftime('%Y-%m-%d'):
                     break
                 i += 1
@@ -489,6 +499,9 @@ def checkUpToDate():
             while True:
                 current_date = (start_date + timedelta(days=i))
                 current_date_text = current_date.strftime('%Y-%m-%d')
+                if current_date_text == yesterday_date.strftime('%Y-%m-%d'):
+                    if hour_now < 10:
+                        break
                 if current_date_text == today_date.strftime('%Y-%m-%d'):
                     break
                 i += 1
