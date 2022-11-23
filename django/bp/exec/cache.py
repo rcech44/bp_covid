@@ -20,22 +20,28 @@ def ip_allow_request(ip):
             cached_ips[ip] = datetime.now()
             return True
 
-def load_cache():
+def load_cache(update_dates):
     global cached_data
 
     # Variables
     all_requested_dates = []
     date_today = datetime.now().strftime("%Y-%m-%d")
 
-    # Generate all dates and fill cache with blank dates
-    count = 0
-    while True:
-        d = (datetime.strptime('2020-03-01', '%Y-%m-%d') + timedelta(days=count)).strftime("%Y-%m-%d")
-        if d == date_today:
-            break
-        all_requested_dates.append(d)
-        cached_data[d] = {}
-        count += 1
+    if update_dates is not None:
+        # Update dates
+        all_requested_dates = update_dates
+        print('[CACHE] Cache is updating...')
+
+    else:
+        # Generate all dates and fill cache with blank dates
+        count = 0
+        while True:
+            d = (datetime.strptime('2020-03-01', '%Y-%m-%d') + timedelta(days=count)).strftime("%Y-%m-%d")
+            if d == date_today:
+                break
+            all_requested_dates.append(d)
+            cached_data[d] = {}
+            count += 1
 
     # Download all data
     try:

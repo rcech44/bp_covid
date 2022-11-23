@@ -20,7 +20,7 @@ from exec.cache import *
 # thread.start()
 print('[INIT] Loading cache...')
 start_time = time.perf_counter()
-load_cache()
+load_cache(None)
 end_time = time.perf_counter()
 print(f"[INIT] Loading cache complete - finished in {end_time - start_time} seconds")
 
