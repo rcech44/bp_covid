@@ -299,6 +299,8 @@ function updatePage() {
     var value_name_PIP;
     var max_value_name_PIP;
     var min_value_name_PIP;
+    var skip_normal_map;
+    var skip_pip_map;
 
     // Get all variables connected with date
     switch (slider_current_type) {
@@ -386,6 +388,9 @@ function updatePage() {
     }
 
     for (let i = 0; i < 77; i++) {
+        skip_normal_map = false;
+        skip_pip_map = false;
+
         // Get district LAU code
         var okres_lau = children[i].getAttribute('okres_lau');
 
@@ -492,26 +497,33 @@ function updatePage() {
         var min_max_difference_PIP = maximum_day_PIP - minimum_day_PIP;
         if (min_max_difference == 0) {
             children[i].setAttribute("fill", "#FFFFFF");
-            continue;
+            skip_normal_map = true;
         }
         if (min_max_difference_PIP == 0) {
             children_pip[i].setAttribute("fill", "#FFFFFF");
-            continue;
+            skip_pip_map = true;
         }
-        var w1 = (okres_value - minimum_day) / min_max_difference;
-        var w1_PIP = (okres_value_PIP - minimum_day_PIP) / min_max_difference_PIP;
-        var w2 = 1 - w1;
-        var w2_PIP = 1 - w1_PIP;
-        var rgb = [Math.round(color1[0] * w1 + color2[0] * w2),
-        Math.round(color1[1] * w1 + color2[1] * w2),
-        Math.round(color1[2] * w1 + color2[2] * w2)];
-        var rgb_PIP = [Math.round(color1_PIP[0] * w1_PIP + color2_PIP[0] * w2_PIP),
-        Math.round(color1_PIP[1] * w1_PIP + color2_PIP[1] * w2_PIP),
-        Math.round(color1_PIP[2] * w1_PIP + color2_PIP[2] * w2_PIP)];
-        var color_string = "#" + componentToHex(rgb[0]) + componentToHex(rgb[1]) + componentToHex(rgb[2]);
-        var color_string_PIP = "#" + componentToHex(rgb_PIP[0]) + componentToHex(rgb_PIP[1]) + componentToHex(rgb_PIP[2]);
-        children[i].setAttribute("fill", color_string);
-        children_pip[i].setAttribute("fill", color_string_PIP);
+        if (!skip_normal_map)
+        {
+            var w1_PIP = (okres_value_PIP - minimum_day_PIP) / min_max_difference_PIP;
+            var w2_PIP = 1 - w1_PIP;
+            var rgb_PIP = [Math.round(color1_PIP[0] * w1_PIP + color2_PIP[0] * w2_PIP),
+            Math.round(color1_PIP[1] * w1_PIP + color2_PIP[1] * w2_PIP),
+            Math.round(color1_PIP[2] * w1_PIP + color2_PIP[2] * w2_PIP)];
+            var color_string_PIP = "#" + componentToHex(rgb_PIP[0]) + componentToHex(rgb_PIP[1]) + componentToHex(rgb_PIP[2]);
+            children_pip[i].setAttribute("fill", color_string_PIP);
+        }
+        if (!skip_pip_map)
+        {
+            var w1 = (okres_value - minimum_day) / min_max_difference;
+            var w2 = 1 - w1;
+            var rgb = [Math.round(color1[0] * w1 + color2[0] * w2),
+            Math.round(color1[1] * w1 + color2[1] * w2),
+            Math.round(color1[2] * w1 + color2[2] * w2)];
+            var color_string = "#" + componentToHex(rgb[0]) + componentToHex(rgb[1]) + componentToHex(rgb[2]);
+            children[i].setAttribute("fill", color_string);
+        }
+        
     }
 }
 
