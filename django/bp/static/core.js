@@ -503,7 +503,7 @@ function updatePage() {
             children_pip[i].setAttribute("fill", "#FFFFFF");
             skip_pip_map = true;
         }
-        if (!skip_normal_map)
+        if (!skip_pip_map)
         {
             var w1_PIP = (okres_value_PIP - minimum_day_PIP) / min_max_difference_PIP;
             var w2_PIP = 1 - w1_PIP;
@@ -513,7 +513,7 @@ function updatePage() {
             var color_string_PIP = "#" + componentToHex(rgb_PIP[0]) + componentToHex(rgb_PIP[1]) + componentToHex(rgb_PIP[2]);
             children_pip[i].setAttribute("fill", color_string_PIP);
         }
-        if (!skip_pip_map)
+        if (!skip_normal_map)
         {
             var w1 = (okres_value - minimum_day) / min_max_difference;
             var w2 = 1 - w1;
