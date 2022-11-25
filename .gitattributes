@@ -1,2 +1,5 @@
 django/bp/templates/map.html linguist-vendored
 django/bp/templates/map_pip.html linguist-vendored
+django/bp/templates/old_version.html linguist-vendored
+django/bp/templates/statistics.html linguist-vendored
+django/bp/templates/summary.html linguist-vendored
