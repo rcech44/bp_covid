@@ -58,12 +58,28 @@ var deaths_start = new Date("03/22/2020");
 var deaths_start_string = "03/22/2020";
 var testing_start = new Date("08/01/2020");
 var testing_start_string = "08/01/2020";
+var covid_start_week = new Date("03/02/2020");
+var covid_start_week_string = "03/02/2020";
+var covid_start_weeks = [];
+var covid_start_month = new Date("03/01/2020");
+var covid_start_month_string = "03/01/2020";
+var covid_start_months = [];
 var current_values = []
 var analysis_name_value;
 var analysis_name_min_value;
 var analysis_name_max_value;
 var current_analysis_color;
 var main_slider_range_max = (new Date().getTime() - covid_start.getTime()) / (1000 * 3600 * 24);
+// if (new Date().getHours() >= 20)
+// {
+//     main_slider_range_max = (new Date().getTime() - covid_start.getTime()) / (1000 * 3600 * 24);
+// }
+// else
+// {
+//     var yesterday = new Date();
+//     yesterday.setDate(yesterday.getDate() - 2);
+//     main_slider_range_max = (yesterday.getTime() - covid_start.getTime()) / (1000 * 3600 * 24);
+// }
 
 // Initialize and modify webpage on startup
 function onIframeLoad() {
@@ -108,6 +124,8 @@ function loadPageComponents() {
 }
 
 function initPage() {
+    generateWeeksMonths();
+    
     slider.oninput = updatePage;
     iframe = document.getElementById("iframe");
     iframe_pip = document.getElementById("iframe_pip");
@@ -308,10 +326,10 @@ function updatePage() {
             selected_date.setDate(selected_date.getDate() - Math.floor(days_since_covid - slider_current_values[0]) - 1);
             break;
         case "Týden":
-            selected_date.setDate(selected_date.getDate() - Math.floor(days_since_covid - (slider_current_values[0] * 7)) - 1);
+            selected_date = new Date(covid_start_weeks[slider_current_values[0] - 1]);
             break;
         case "Měsíc":
-            selected_date.setDate(selected_date.getDate() - Math.floor(days_since_covid - (slider_current_values[0] * 30)) - 1);
+            selected_date = new Date(covid_start_months[slider_current_values[0] - 1]);
             break;
         case "Rok":
             break;
@@ -727,16 +745,28 @@ function loadTimeFrameSlider() {
             return valuesForSlider.indexOf(Number(value));
         }
     };
+
+    // Disallow user to get yesterday values if they have not been yet released
+    var slider_maximum_day;
+    if (today.getHours() >= 10)
+    {
+        slider_maximum_day = valuesForSlider.length - 2;
+    }
+    else
+    {
+        slider_maximum_day = valuesForSlider.length - 3;
+    }
+
     noUiSlider.create(valuesSlider, {
-        start: [8, 24],
+        start: [1, 100],
         // A linear range from 0 to 15 (16 values)
-        range: { min: 0, max: valuesForSlider.length - 2 },
+        range: { min: 0, max: slider_maximum_day },
         connect: [false, true, false],
         // steps of 1
         step: 1,
         format: format
     });
-    valuesSlider.noUiSlider.set(['7', '28']);
+    valuesSlider.noUiSlider.set(['1', '100']);
     valuesSlider.noUiSlider.on('update', function (values, handle) {
         analysis_changed = true;
         var selected_date = new Date();
@@ -746,11 +776,13 @@ function loadTimeFrameSlider() {
                 slider_text_value.innerHTML = "<i>" + (values[1] - values[0]) + " dní</i>";
                 break;
             case "Týden":
-                selected_date.setDate(selected_date.getDate() - (slider_values.length - (values[handle] * 7)));
+                selected_date = new Date(covid_start_weeks[values[handle] - 1]);
+                // selected_date.setDate(selected_date.getDate() - (slider_values.length - (values[handle] * 7)));
                 slider_text_value.innerHTML = "<i>" + (values[1] - values[0]) + " týdnů</i>";
                 break;
             case "Měsíc":
-                selected_date.setDate(selected_date.getDate() - (slider_values.length - (values[handle] * 30)));
+                selected_date = new Date(covid_start_months[values[handle] - 1]);
+                // selected_date.setDate(selected_date.getDate() - (slider_values.length - (values[handle] * 30)));
                 slider_text_value.innerHTML = "<i>" + (values[1] - values[0]) + " měsíců</i>";
                 break;
             case "Rok":
@@ -869,36 +901,47 @@ function selectSliderType(value) {
     }
     var days_since = diff / (1000 * 3600 * 24);
 
+    // Disallow user to get yesterday values if they have not been yet released
+    var slider_maximum;
+    if (today.getHours() >= 10)
+    {
+        slider_maximum = 2;
+    }
+    else
+    {
+        slider_maximum = 3;
+    }
+
     switch (value) {
         case "Den":
             valuesSlider.noUiSlider.updateOptions({
                 range:
                 {
                     min: days_since_covid - days_since,
-                    max: days_since_covid - 2
+                    max: days_since_covid - slider_maximum
                 }
             });
-            main_slider_range_max = days_since_covid - 2;
+            main_slider_range_max = days_since_covid - slider_maximum;
             break;
         case "Týden":
             valuesSlider.noUiSlider.updateOptions({
                 range:
                 {
-                    min: ((days_since_covid - days_since) / 7),
-                    max: (days_since_covid / 7) - 2
+                    min: 0,
+                    max: covid_start_weeks.length - 1
                 }
             });
-            main_slider_range_max = (days_since_covid / 7) - 2;
+            main_slider_range_max = covid_start_weeks.length - 1;
             break;
         case "Měsíc":
             valuesSlider.noUiSlider.updateOptions({
                 range:
                 {
-                    min: ((days_since_covid - days_since) / 30),
-                    max: (days_since_covid / 30) - 2
+                    min: 0,
+                    max: covid_start_months.length - 1
                 }
             });
-            main_slider_range_max = (days_since_covid / 30) - 2;
+            main_slider_range_max = covid_start_months.length - 1 ;
             break;
     }
 
@@ -998,6 +1041,8 @@ function confirmRangeAnalysis() {
     }
     var value_min = new Date();
     var value_max = new Date();
+    var date1 = new Date();
+    var date2 = new Date();
 
     switch (slider_current_type) {
         case "Den":
@@ -1005,12 +1050,17 @@ function confirmRangeAnalysis() {
             value_max.setDate(value_max.getDate() - (slider_values.length - slider_current_values[1]));
             break;
         case "Týden":
-            value_min.setDate(value_min.getDate() - (slider_values.length - (slider_current_values[0] * 7)));
-            value_max.setDate(value_max.getDate() - (slider_values.length - (slider_current_values[1] * 7)));
+            value_min = new Date(covid_start_weeks[slider_current_values[0] - 1]);
+            value_max = new Date(covid_start_weeks[slider_current_values[1] - 1]);
+            date1 = new Date(covid_start_weeks[slider_current_values[0] - 1]);
+            date2 = new Date(covid_start_weeks[slider_current_values[1] - 1]);
             break;
         case "Měsíc":
-            value_min.setDate(value_min.getDate() - (slider_values.length - (slider_current_values[0] * 30)));
-            value_max.setDate(value_max.getDate() - (slider_values.length - (slider_current_values[1] * 30)));
+            value_min = new Date(covid_start_months[slider_current_values[0] - 1]);
+            value_max = new Date(covid_start_months[slider_current_values[1] - 1]);
+            date1 = new Date(covid_start_months[slider_current_values[0] - 1]);
+            date2 = new Date(covid_start_months[slider_current_values[1] - 1]);
+            //value_max.setDate(value_max.getDate() - (slider_values.length - (slider_current_values[1] * 30)));
             break;
     }
 
@@ -1029,6 +1079,13 @@ function confirmRangeAnalysis() {
             url = "http://127.0.0.1:8000/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max) + "&type=testing";
             break;
     }
+      
+    // To calculate the time difference of two dates
+    var Difference_In_Time = date2.getTime() - date1.getTime();
+      
+    // To calculate the no. of days between two dates
+    var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+      
 
     loadingToast("Stahuji nová data...");
     $.ajax({
@@ -1044,10 +1101,10 @@ function confirmRangeAnalysis() {
                     slider.setAttribute("max", slider_current_values[1] - slider_current_values[0]);
                     break;
                 case "Týden":
-                    slider.setAttribute("max", (slider_current_values[1] - slider_current_values[0]) * 7);
+                    slider.setAttribute("max", Difference_In_Days);
                     break;
                 case "Měsíc":
-                    slider.setAttribute("max", (slider_current_values[1] - slider_current_values[0]) * 30);
+                    slider.setAttribute("max", Difference_In_Days);
                     break;
             }
             processGetDataFromSlider(result);
@@ -1253,4 +1310,39 @@ function initChart() {
 function hideSplashScreen()
 {
     $('#splashscreen').fadeOut(350);
+}
+
+function generateWeeksMonths()
+{
+    var odd = true;
+    var current = covid_start_week;
+    var today = new Date();
+    today.setHours(0,0,0,0);
+    while (true)
+    {
+        if (today.getTime() <= current.getTime())
+            break;
+        var text = getFormattedDate(current);
+        covid_start_weeks.push(text);
+        current.setDate(current.getDate() + 7);
+    }
+
+    current = covid_start_month;
+    while (true)
+    {
+        if (today.getTime() <= current.getTime())
+            break;
+        var text = getFormattedDate(current);
+        covid_start_months.push(text);
+
+        var month = current.getMonth() + 1;
+        var year = current.getFullYear();
+        var number_of_days = daysInMonth(month, year);
+        current.setDate(current.getDate() + number_of_days);
+    }
+}
+
+function daysInMonth (month, year) 
+{
+    return new Date(year, month, 0).getDate();
 }

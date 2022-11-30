@@ -252,7 +252,7 @@ def checkUpToDate():
                     # Update database
                     for i in range(delta_days):
                         if i == delta_days - 1:
-                            if hour_now < 10:
+                            if hour_now < 9:
                                 continue
                         update_date = (date_database + timedelta(days=i+1)).strftime("%Y-%m-%d")
                         if update_date not in updated_dates:
@@ -351,7 +351,7 @@ def checkUpToDate():
                     # Update database
                     for i in range(delta_days):
                         if i == delta_days - 1:
-                            if hour_now < 10:
+                            if hour_now < 9:
                                 continue
                         update_date = (date_database + timedelta(days=i+1)).strftime("%Y-%m-%d")
                         update_date_yesterday = (date_database + timedelta(days=i)).strftime("%Y-%m-%d")
@@ -454,7 +454,7 @@ def checkUpToDate():
                 current_date = (start_date + timedelta(days=i))
                 current_date_text = current_date.strftime('%Y-%m-%d')
                 if current_date_text == yesterday_date.strftime('%Y-%m-%d'):
-                    if hour_now < 10:
+                    if hour_now < 9:
                         break
                 if current_date_text == today_date.strftime('%Y-%m-%d'):
                     break
@@ -500,7 +500,7 @@ def checkUpToDate():
                 current_date = (start_date + timedelta(days=i))
                 current_date_text = current_date.strftime('%Y-%m-%d')
                 if current_date_text == yesterday_date.strftime('%Y-%m-%d'):
-                    if hour_now < 10:
+                    if hour_now < 9:
                         break
                 if current_date_text == today_date.strftime('%Y-%m-%d'):
                     break
