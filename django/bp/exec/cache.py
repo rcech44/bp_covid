@@ -617,7 +617,10 @@ def load_cache(update_dates):
 
 def get_cache(range_from, range_to):
     result = {}
+    max_values = {}
     count = 0
+
+    # Get all values from main dictionary
     while True:
         d = (datetime.strptime(range_from, '%Y-%m-%d') + timedelta(days=count)).strftime("%Y-%m-%d")
         result[d] = {}
@@ -625,5 +628,19 @@ def get_cache(range_from, range_to):
         if d == range_to:
             break
         count += 1
+
+    # Find all maximums for new set of data
+    result_values = result.values()
+
+    max_values['max_nove_pripady'] =                max(float(d['max_nove']) for d in result_values)
+    max_values['max_nove_pripady_sto_tisic'] =      max(float(d['max_nove_sto_tisic']) for d in result_values)
+
+    max_values['max_celkem_den'] =                  max(float(d['davka_celkem_den_max']) for d in result_values)
+    max_values['max_celkem_den_sto_tisic'] =        max(float(d['davka_celkem_den_max_sto_tisic']) for d in result_values)
+    max_values['max_celkem_doposud'] =              max(float(d['davka_celkem_doposud_max']) for d in result_values)
+    max_values['max_celkem_doposud_sto_tisic'] =    max(float(d['davka_celkem_doposud_max_sto_tisic']) for d in result_values)
+
+    # Merge new dataset with found maximums
+    result = result | max_values
 
     return result

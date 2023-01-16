@@ -1008,10 +1008,10 @@ function selectSliderData(value) {
             break;
 
         case "Aktuální celkový počet otestovaných doposud":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty úmrtí - celkový počet otestovaných doposud";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty testovaných - celkový počet otestovaných doposud";
             break;
         case "Počet nově otestovaných daný den":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty úmrtí - počet nově otestovaných k danému dni";
+            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty testovaných - počet nově otestovaných k danému dni";
             break;
     }
     updatePage();
