@@ -38,8 +38,8 @@ var slider_current_selected_date;
 var slider_text_value;
 var ongoing_animation = true;
 var animation_speed = 5;
-var map_show_data = "Současně nakažení";
-var map_show_data_PIP = "Současně nakažení";
+var map_show_data = "Nové případy";
+var map_show_data_PIP = "Nové případy";
 var text_current_data_sto_tisic;
 var text_current_data;
 var iframe;
@@ -578,13 +578,13 @@ function selectAnalysis(type) {
                     document.getElementById("testovani-analyze").style.borderStyle = "none";
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#ff9800";
                     map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty nakažených";
-                    var option1 = document.createElement('option');
-                    option1.value = "Současně nakažení";
-                    option1.innerHTML = "Současně nakažení";
+                    // var option1 = document.createElement('option');
+                    // option1.value = "Současně nakažení";
+                    // option1.innerHTML = "Současně nakažení";
                     var option2 = document.createElement('option');
                     option2.value = "Nové případy";
                     option2.innerHTML = "Nové případy";
-                    select_2.appendChild(option1);
+                    // select_2.appendChild(option1);
                     select_2.appendChild(option2);
                     current_analysis_color = "#ff9800";
                     document.getElementById("analysis-text-name").innerHTML = "<b>Dataset:</b> Nakažení";
@@ -804,15 +804,15 @@ function selectSliderPIPType(value)
     {
         case 'Nakažení':
             current_pip_analysis = 'nakazeni-analyze';
-            map_show_data_PIP = 'Současně nakažení';
+            map_show_data_PIP = 'Nové případy';
 
-            var option1 = document.createElement('option');
-            option1.value = "Současně nakažení";
-            option1.innerHTML = "Současně nakažení";
+            // var option1 = document.createElement('option');
+            // option1.value = "Současně nakažení";
+            // option1.innerHTML = "Současně nakažení";
             var option2 = document.createElement('option');
             option2.value = "Nové případy";
             option2.innerHTML = "Nové případy";
-            select_4.appendChild(option1);
+            // select_4.appendChild(option1);
             select_4.appendChild(option2);
             break;
         case 'Očkování':
