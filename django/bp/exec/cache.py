@@ -71,6 +71,12 @@ def load_cache(update_dates):
                 aktivni_min = 999999
                 aktivni_max_sto_tisic = 0
                 aktivni_min_sto_tisic = 999999
+                max_nove_7 = 0
+                max_nove_7_sto_tisic = 0
+                max_nove_14 = 0
+                max_nove_14_sto_tisic = 0
+                max_nove_65 = 0
+                max_nove_65_sto_tisic = 0
                 for okres in response:
                     if okres[2] is not None:
                         cached_data[date][okres[2]] = {}
@@ -78,9 +84,15 @@ def load_cache(update_dates):
                         cached_data[date][okres[2]]['aktivni_pripady'] = okres[4]
                         cached_data[date][okres[2]]['nove_pripady_7'] = okres[5]
                         cached_data[date][okres[2]]['nove_pripady_14'] = okres[6]
-                        cached_data[date][okres[2]]['nove_pripady_65_vek'] = okres[7]
+                        cached_data[date][okres[2]]['nove_pripady_65'] = okres[7]
                         cached_data[date][okres[2]]['nove_pripady_sto_tisic'] = okres[3] / (pocet_obyvatel[okres[2]] / 100000)
                         cached_data[date][okres[2]]['aktivni_pripady_sto_tisic'] = okres[4] / (pocet_obyvatel[okres[2]] / 100000)
+
+                        # New
+                        cached_data[date][okres[2]]['nove_pripady_7_sto_tisic'] = okres[5] / (pocet_obyvatel[okres[2]] / 100000)
+                        cached_data[date][okres[2]]['nove_pripady_14_sto_tisic'] = okres[6] / (pocet_obyvatel[okres[2]] / 100000)
+                        cached_data[date][okres[2]]['nove_pripady_65_sto_tisic'] = okres[7] / (pocet_obyvatel[okres[2]] / 100000)
+
                         nove_pocet += okres[3]
                         aktivni_pocet += okres[4]
                         if cached_data[date][okres[2]]['nove_pripady'] > nove_max: nove_max = cached_data[date][okres[2]]['nove_pripady']
@@ -91,6 +103,14 @@ def load_cache(update_dates):
                         if cached_data[date][okres[2]]['aktivni_pripady'] < aktivni_min: aktivni_min = cached_data[date][okres[2]]['aktivni_pripady']
                         if cached_data[date][okres[2]]['aktivni_pripady_sto_tisic'] > aktivni_max_sto_tisic: aktivni_max_sto_tisic = cached_data[date][okres[2]]['aktivni_pripady_sto_tisic']
                         if cached_data[date][okres[2]]['aktivni_pripady_sto_tisic'] < aktivni_min_sto_tisic: aktivni_min_sto_tisic = cached_data[date][okres[2]]['aktivni_pripady_sto_tisic']
+
+                        # New
+                        if cached_data[date][okres[2]]['nove_pripady_7'] > max_nove_7: max_nove_7 = cached_data[date][okres[2]]['nove_pripady_7']
+                        if cached_data[date][okres[2]]['nove_pripady_14'] > max_nove_14: max_nove_14 = cached_data[date][okres[2]]['nove_pripady_14']
+                        if cached_data[date][okres[2]]['nove_pripady_65'] > max_nove_65: max_nove_65 = cached_data[date][okres[2]]['nove_pripady_65']
+                        if cached_data[date][okres[2]]['nove_pripady_7_sto_tisic'] > max_nove_7_sto_tisic: max_nove_7_sto_tisic = cached_data[date][okres[2]]['nove_pripady_7_sto_tisic']
+                        if cached_data[date][okres[2]]['nove_pripady_14_sto_tisic'] > max_nove_14_sto_tisic: max_nove_14_sto_tisic = cached_data[date][okres[2]]['nove_pripady_14_sto_tisic']
+                        if cached_data[date][okres[2]]['nove_pripady_65_sto_tisic'] > max_nove_65_sto_tisic: max_nove_65_sto_tisic = cached_data[date][okres[2]]['nove_pripady_65_sto_tisic']
 
                         if cached_data[date][okres[2]]['nove_pripady'] > max_nove_pripady: max_nove_pripady = cached_data[date][okres[2]]['nove_pripady']
                         if cached_data[date][okres[2]]['nove_pripady_sto_tisic'] > max_nove_pripady_sto_tisic: max_nove_pripady_sto_tisic = cached_data[date][okres[2]]['nove_pripady_sto_tisic']
@@ -106,6 +126,15 @@ def load_cache(update_dates):
                 cached_data[date]['min_nove_sto_tisic'] = nove_min_sto_tisic
                 cached_data[date]['nove_celkovy_pocet'] = nove_pocet
                 cached_data[date]['aktivni_celkovy_pocet'] = aktivni_pocet
+
+                # New
+                cached_data[date]['max_nove_7'] = max_nove_7
+                cached_data[date]['max_nove_7_sto_tisic'] = max_nove_7_sto_tisic
+                cached_data[date]['max_nove_14'] = max_nove_14
+                cached_data[date]['max_nove_14_sto_tisic'] = max_nove_14_sto_tisic
+                cached_data[date]['max_nove_65'] = max_nove_65
+                cached_data[date]['max_nove_65_sto_tisic'] = max_nove_65_sto_tisic
+
                 celkem_pripady += nove_pocet
                 cached_data[date]['celkem_pripady'] = celkem_pripady
                 cached_data['max_nove_pripady'] = max_nove_pripady
@@ -635,6 +664,12 @@ def get_cache(range_from, range_to):
     # Maximum - infections
     max_values['max_nove_pripady'] =                        max(float(d['max_nove']) for d in result_values)
     max_values['max_nove_pripady_sto_tisic'] =              max(float(d['max_nove_sto_tisic']) for d in result_values)
+    max_values['max_nove_pripady_7'] =                      max(float(d['max_nove_7']) for d in result_values)
+    max_values['max_nove_pripady_7_sto_tisic'] =            max(float(d['max_nove_7_sto_tisic']) for d in result_values)
+    max_values['max_nove_pripady_14'] =                     max(float(d['max_nove_14']) for d in result_values)
+    max_values['max_nove_pripady_14_sto_tisic'] =           max(float(d['max_nove_14_sto_tisic']) for d in result_values)
+    max_values['max_nove_pripady_65'] =                     max(float(d['max_nove_65']) for d in result_values)
+    max_values['max_nove_pripady_65_sto_tisic'] =           max(float(d['max_nove_65_sto_tisic']) for d in result_values)
 
     # Maximum - vaccinations
     max_values['max_celkem_den'] =                          max(float(d['davka_celkem_den_max']) for d in result_values)

@@ -27,6 +27,45 @@ data_analysis_types = {
         max_range_100: 'max_nove_pripady_sto_tisic',
         text_100: "Počet nově nakažených na 100 tisíc obyvatel"
     },
+    "Nové případy za poslední týden":
+    {
+        value: "nove_pripady_7",
+        max_value: "max_nove_7",
+        min_value: "min_nove_7",
+        max_range: 'max_nove_pripady_7',
+        text: "Počet nově nakažených za posledních 7 dní",
+        value_100: "nove_pripady_7_sto_tisic",
+        max_value_100: "max_nove_7_sto_tisic",
+        min_value_100: "min_nove_7_sto_tisic",
+        max_range_100: 'max_nove_pripady_7_sto_tisic',
+        text_100: "Počet nově nakažených za posledních 7 dní na 100 tisíc obyvatel"
+    },
+    "Nové případy za poslední dva týdny":
+    {
+        value: "nove_pripady_14",
+        max_value: "max_nove_14",
+        min_value: "min_nove_14",
+        max_range: 'max_nove_pripady_14',
+        text: "Počet nově nakažených za posledních 14 dní",
+        value_100: "nove_pripady_14_sto_tisic",
+        max_value_100: "max_nove_14_sto_tisic",
+        min_value_100: "min_nove_14_sto_tisic",
+        max_range_100: 'max_nove_pripady_14_sto_tisic',
+        text_100: "Počet nově nakažených za posledních 14 dní na 100 tisíc obyvatel"
+    },
+    "Nové případy lidí starších 65 let":
+    {
+        value: "nove_pripady_65",
+        max_value: "max_nove_65",
+        min_value: "min_nove_65",
+        max_range: 'max_nove_pripady_65',
+        text: "Počet nově nakažených lidí starších 65 let",
+        value_100: "nove_pripady_65_sto_tisic",
+        max_value_100: "max_nove_65_sto_tisic",
+        min_value_100: "min_nove_65_sto_tisic",
+        max_range_100: 'max_nove_pripady_65_sto_tisic',
+        text_100: "Počet nově nakažených lidí starších 65 let na 100 tisíc obyvatel"
+    },
     "Všechny dávky tento den":
     {
         value: "davka_celkem_den",
