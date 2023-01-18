@@ -632,13 +632,43 @@ def get_cache(range_from, range_to):
     # Find all maximums for new set of data
     result_values = result.values()
 
-    max_values['max_nove_pripady'] =                max(float(d['max_nove']) for d in result_values)
-    max_values['max_nove_pripady_sto_tisic'] =      max(float(d['max_nove_sto_tisic']) for d in result_values)
+    # Maximum - infections
+    max_values['max_nove_pripady'] =                        max(float(d['max_nove']) for d in result_values)
+    max_values['max_nove_pripady_sto_tisic'] =              max(float(d['max_nove_sto_tisic']) for d in result_values)
 
-    max_values['max_celkem_den'] =                  max(float(d['davka_celkem_den_max']) for d in result_values)
-    max_values['max_celkem_den_sto_tisic'] =        max(float(d['davka_celkem_den_max_sto_tisic']) for d in result_values)
-    max_values['max_celkem_doposud'] =              max(float(d['davka_celkem_doposud_max']) for d in result_values)
-    max_values['max_celkem_doposud_sto_tisic'] =    max(float(d['davka_celkem_doposud_max_sto_tisic']) for d in result_values)
+    # Maximum - vaccinations
+    max_values['max_celkem_den'] =                          max(float(d['davka_celkem_den_max']) for d in result_values)
+    max_values['max_celkem_den_sto_tisic'] =                max(float(d['davka_celkem_den_max_sto_tisic']) for d in result_values)
+    max_values['max_celkem_doposud'] =                      max(float(d['davka_celkem_doposud_max']) for d in result_values)
+    max_values['max_celkem_doposud_sto_tisic'] =            max(float(d['davka_celkem_doposud_max_sto_tisic']) for d in result_values)
+    max_values['max_celkem_davka_1_den'] =                  max(float(d['davka_1_max']) for d in result_values)
+    max_values['max_celkem_davka_1_den_sto_tisic'] =        max(float(d['davka_1_max_sto_tisic']) for d in result_values)
+    max_values['max_celkem_davka_1_doposud'] =              max(float(d['davka_1_doposud_max']) for d in result_values)
+    max_values['max_celkem_davka_1_doposud_sto_tisic'] =    max(float(d['davka_1_doposud_max_sto_tisic']) for d in result_values)
+    max_values['max_celkem_davka_2_den'] =                  max(float(d['davka_2_max']) for d in result_values)
+    max_values['max_celkem_davka_2_den_sto_tisic'] =        max(float(d['davka_2_max_sto_tisic']) for d in result_values)
+    max_values['max_celkem_davka_2_doposud'] =              max(float(d['davka_2_doposud_max']) for d in result_values)
+    max_values['max_celkem_davka_2_doposud_sto_tisic'] =    max(float(d['davka_2_doposud_max_sto_tisic']) for d in result_values)
+    max_values['max_celkem_davka_3_den'] =                  max(float(d['davka_3_max']) for d in result_values)
+    max_values['max_celkem_davka_3_den_sto_tisic'] =        max(float(d['davka_3_max_sto_tisic']) for d in result_values)
+    max_values['max_celkem_davka_3_doposud'] =              max(float(d['davka_3_doposud_max']) for d in result_values)
+    max_values['max_celkem_davka_3_doposud_sto_tisic'] =    max(float(d['davka_3_doposud_max_sto_tisic']) for d in result_values)
+    max_values['max_celkem_davka_4_den'] =                  max(float(d['davka_4_max']) for d in result_values)
+    max_values['max_celkem_davka_4_den_sto_tisic'] =        max(float(d['davka_4_max_sto_tisic']) for d in result_values)
+    max_values['max_celkem_davka_4_doposud'] =              max(float(d['davka_4_doposud_max']) for d in result_values)
+    max_values['max_celkem_davka_4_doposud_sto_tisic'] =    max(float(d['davka_4_doposud_max_sto_tisic']) for d in result_values)
+
+    # Maximum - deaths
+    max_values['celkem_max_doposud'] =                      max(float(d['max_umrti_doposud']) for d in result_values)
+    max_values['celkem_max_sto_tisic_doposud'] =            max(float(d['max_umrti_doposud_sto_tisic']) for d in result_values)
+    max_values['celkem_max_den'] =                          max(float(d['max_umrti_den']) for d in result_values)
+    max_values['celkem_max_sto_tisic_den'] =                max(float(d['max_umrti_den_sto_tisic']) for d in result_values)
+
+    # Maximum - PCR testing
+    max_values['rozsah_max_celkem'] =                       max(float(d['celkem_max_den']) for d in result_values)
+    max_values['rozsah_max_celkem_sto_tisic'] =             max(float(d['celkem_max_den_sto_tisic']) for d in result_values)
+    max_values['rozsah_max_prirustek'] =                    max(float(d['max_den']) for d in result_values)
+    max_values['rozsah_max_prirustek_sto_tisic'] =          max(float(d['max_den_sto_tisic']) for d in result_values)
 
     # Merge new dataset with found maximums
     result = result | max_values
