@@ -807,7 +807,7 @@ function selectSliderPIPType(value)
 
     switch (value)
     {
-        case 'Nakažení':
+        case 'Infekce':
             current_pip_analysis = 'nakazeni-analyze';
             map_show_data_PIP = 'Nové případy';
 
