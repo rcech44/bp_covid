@@ -59,6 +59,27 @@
             border-color: rgb(63, 63, 63);
         }
     </style>
+    {% comment %} <style>
+        input[type="range"] {
+            -webkit-appearance: none;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 5px;
+            background-image: linear-gradient(#ff4500, #ff4500);
+            background-size: 70% 100%;
+            background-repeat: no-repeat;
+          }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #000000;
+            cursor: ew-resize;
+            box-shadow: 0 0 2px 0 #555;
+            transition: background .3s ease-in-out;
+          }
+    </style> {% endcomment %}
 </head>
 
 <body id="outer-page-background" class="w3-light-gray">
@@ -102,7 +123,7 @@
             <tr>
                 <td id="map_title" style="width:50%;padding-top:12px;padding-left: 20px;"><b>Vizualizace COVID-19 v
                         České republice</b></td>
-                <td style="width:10%;padding-top:12px;padding-right: 20px;text-align: right;">
+                <td style="width:10%;padding-top:12px;padding-right: 20px;padding-left: 20px;text-align: right;">
                     <div id="nakazeni-analyze" color="w3-orange" class="w3-card w3-orange w3-center"
                         style="cursor: pointer;" onclick="selectAnalysis('nakazeni-analyze')">Infekce</div>
                 </td>
@@ -114,16 +135,10 @@
                     <div id="ockovani-analyze" color="w3-green" class="w3-card w3-green w3-center"
                         style="cursor: pointer;" onclick="selectAnalysis('ockovani-analyze')">Očkování</div>
                 </td>
-                <td style="width:10%;padding-top:12px;padding-right: 20px;text-align: right;">
+                <td style="width:10%;padding-top:12px;padding-right: 20px;text-align: right">
                     <div id="testovani-analyze" color="w3-deep-purple" class="w3-card w3-deep-purple w3-center"
                         style="cursor: pointer;" onclick="selectAnalysis('testovani-analyze')">Testování (PCR)</div>
                 </td>
-                <!-- <td style="width:10%;padding-top:12px;padding-right: 20px;text-align: right;">
-                <div id="umrti-analyze" color="w3-dark-grey" class="w3-card w3-dark-grey w3-center" style="cursor: pointer;" onclick="selectAnalysis('umrti-analyze')">Úmrtí</div>
-            </td>
-            <td style="width:10%;padding-top:12px;padding-right: 20px;text-align: right;">
-                <div id="ovlivneno-analyze" color="w3-light-blue" class="w3-card w3-light-blue w3-center" style="cursor: pointer;" onclick="selectAnalysis('ovlivneno-analyze')">PCR testování</div>
-            </td> -->
             </tr>
         </table>
 
@@ -250,8 +265,9 @@
                                     <td style="width:10%"><button class="w3-button w3-block w3-light-gray w3-left-align"
                                             onclick="sliderDateChange(-1)">
                                             <b> < </b></button></td>
-                                    <td style="width:80%" class="w3-center"><input id="slider" type="range" min="1"
-                                            max="30" value="30" style="width:90%;margin-top:5px;"></td>
+                                    <td style="width:80%" class="w3-center">
+                                        <input id="slider" type="range" min="1" max="30" value="30" style="width:90%;margin-top:5px;" oninput="slider.value=value">
+                                    </td>
                                     <td style="width:10%"><button
                                             class="w3-button w3-block w3-light-gray w3-right-align"
                                             onclick="sliderDateChange(1)"><b>></b></button></td>

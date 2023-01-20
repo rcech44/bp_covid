@@ -116,6 +116,8 @@ def load_cache(update_dates):
                         if cached_data[date][okres[2]]['nove_pripady_sto_tisic'] > max_nove_pripady_sto_tisic: max_nove_pripady_sto_tisic = cached_data[date][okres[2]]['nove_pripady_sto_tisic']
                         if cached_data[date][okres[2]]['aktivni_pripady'] > max_aktivni_pripady: max_aktivni_pripady = cached_data[date][okres[2]]['aktivni_pripady']
                         if cached_data[date][okres[2]]['aktivni_pripady_sto_tisic'] > max_aktivni_pripady_sto_tisic: max_aktivni_pripady_sto_tisic = cached_data[date][okres[2]]['aktivni_pripady_sto_tisic']
+                    else:
+                        nove_pocet += okres[3] 
                 cached_data[date]['max_aktivni'] = aktivni_max
                 cached_data[date]['min_aktivni'] = aktivni_min
                 cached_data[date]['max_nove'] = nove_max

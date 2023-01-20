@@ -123,8 +123,42 @@ function loadPageComponents() {
     snackbar = document.getElementById("snackbar");
 }
 
+function onResize()
+{
+    console.log(window.innerWidth);
+    var x = document.getElementById("map_title");
+    if (window.innerWidth <= 1350)
+    {
+        x.style.display = "none";
+    }
+    else
+    {
+        x.style.display = "";
+    }
+
+    x = document.getElementById("left_upper_panel");
+    x2 = document.getElementById("button_left_upper_panel");
+    if (window.innerHeight <= 980)
+    {
+        x.style.display = "none";
+        x2.innerHTML = "<b>Zobrazit nastavení</b>";
+    }
+    // var x = document.getElementById("map_title");
+    // if (x.style.display === "none") {
+    //     x.style.display = "block";
+    //     x3.style.width = "400px";
+    //     x2.innerHTML = "<b>Skrýt obraz v obraze</b>";
+    // } else {
+    //     x.style.display = "none";
+    //     x3.style.width = "200px";
+    //     x2.innerHTML = "<b>Zobrazit obraz v obraze</b>";
+    // }
+}
+
 function initPage() {
     generateWeeksMonths();
+
+    window.addEventListener('resize', onResize);
     
     slider.oninput = updatePage;
     iframe = document.getElementById("iframe");
@@ -347,8 +381,9 @@ function updatePage() {
     switch (current_analysis) {
         case "nakazeni-analyze":
             map_info_1.innerHTML = "<b>Nové případy za tento den:</b> " + numberWithCommas(new_data[selected_date_text]['nove_celkovy_pocet']);
-            map_info_2.innerHTML = "<b>Současný počet případů za tento den:</b> " + numberWithCommas(new_data[selected_date_text]['aktivni_celkovy_pocet']);
-            map_info_3.innerHTML = "<b>Celkový počet zaznamenaných případů v tento den:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_pripady']);
+            // map_info_2.innerHTML = "<b>Současný počet případů za tento den:</b> " + numberWithCommas(new_data[selected_date_text]['aktivni_celkovy_pocet']);
+            map_info_2.innerHTML = "<b>Celkový počet zaznamenaných případů v tento den:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_pripady']);
+            map_info_3.innerHTML = "";
             break;
         case "ockovani-analyze":
             map_info_1.innerHTML = "<b>Nová očkování za tento den:</b> " + numberWithCommas(new_data[selected_date_text]['davka_celkem_den']);
