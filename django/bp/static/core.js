@@ -127,7 +127,7 @@ function onResize()
 {
     console.log(window.innerWidth);
     var x = document.getElementById("map_title");
-    if (window.innerWidth <= 1350)
+    if (window.innerWidth <= 1150)
     {
         x.style.display = "none";
     }
@@ -138,11 +138,11 @@ function onResize()
 
     x = document.getElementById("left_upper_panel");
     x2 = document.getElementById("button_left_upper_panel");
-    if (window.innerHeight <= 980)
-    {
-        x.style.display = "none";
-        x2.innerHTML = "<b>Zobrazit nastavení</b>";
-    }
+    // if (window.innerHeight <= 980)
+    // {
+    //     x.style.display = "none";
+    //     x2.innerHTML = "<b>Zobrazit nastavení</b>";
+    // }
     // var x = document.getElementById("map_title");
     // if (x.style.display === "none") {
     //     x.style.display = "block";
@@ -220,6 +220,12 @@ function initPIP()
 // click function - AJAX request
 function onClickMap(name, okres_lau, object) 
 {
+    // If no analysis havent been selected, dont do anything
+    if (map_enabled == false)
+    {
+        return;
+    }
+
     // Save district
     okres_clicked = okres_lau;
 
@@ -384,23 +390,27 @@ function updatePage() {
             // map_info_2.innerHTML = "<b>Současný počet případů za tento den:</b> " + numberWithCommas(new_data[selected_date_text]['aktivni_celkovy_pocet']);
             map_info_2.innerHTML = "<b>Celkový počet zaznamenaných případů v tento den:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_pripady']);
             map_info_3.innerHTML = "";
+            map_info_3.style.display = "none";
             break;
         case "ockovani-analyze":
             map_info_1.innerHTML = "<b>Nová očkování za tento den:</b> " + numberWithCommas(new_data[selected_date_text]['davka_celkem_den']);
             map_info_3.innerHTML = "<b>Celkový počet obyvatel naočkovaných alespoň první a druhou dávkou:</b> " + numberWithCommas(new_data[selected_date_text]['davka_2_doposud']);
             map_info_2.innerHTML = "<b>Celkový počet zaznamenaných očkování doposud:</b> " + numberWithCommas(new_data[selected_date_text]['davka_celkem_doposud']);
+            map_info_3.style.display = "block";
             if (selected_date < vaccination_start) map_date.innerHTML = selected_date_text_local + " (data nejsou v tento den dostupná)";
             break;
         case "umrti-analyze":
             map_info_1.innerHTML = "<b>Počet zemřelých tento den:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_den']);
             map_info_2.innerHTML = "<b>Celkový počet zemřelých k tomuto dni:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_doposud']);
             map_info_3.innerHTML = "";
+            map_info_3.style.display = "none";
             if (selected_date < deaths_start) map_date.innerHTML = selected_date_text_local + " (data nejsou v tento den dostupná)";
             break;
         case "testovani-analyze":
             map_info_1.innerHTML = "<b>Počet otestovaných tento den:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_prirustek_den']);
             map_info_2.innerHTML = "<b>Celkový počet otestovaných k tomuto dni:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_celkem_den']);
             map_info_3.innerHTML = "";
+            map_info_3.style.display = "none";
             if (selected_date < testing_start) map_date.innerHTML = selected_date_text_local + " (data nejsou v tento den dostupná)";
             break;
     }
@@ -626,8 +636,8 @@ function selectAnalysis(type) {
                     }
                     );
                     current_analysis_color = "#ff9800";
-                    document.getElementById("analysis-text-name").innerHTML = "<b>Dataset:</b> Nakažení";
-                    document.getElementById("analysis-text-datefrom").innerHTML = "<b>Data dostupná od:</b> 1.3.2020";
+                    // document.getElementById("analysis-text-name").innerHTML = "<b>Dataset:</b> Nakažení";
+                    document.getElementById("analysis-text-datefrom").innerHTML = "1.3.2020";
                     // document.getElementById("slider").style.accentColor = "#ff9800";
                     // document.getElementById("slider").style.backgroundColor = "#ffffff";
                     break;
@@ -672,8 +682,8 @@ function selectAnalysis(type) {
                     }
                     );
                     current_analysis_color = "#4caf50";
-                    document.getElementById("analysis-text-name").innerHTML = "<b>Dataset:</b> Očkování";
-                    document.getElementById("analysis-text-datefrom").innerHTML = "<b>Data dostupná od:</b> 27.12.2020";
+                    // document.getElementById("analysis-text-name").innerHTML = "<b>Dataset:</b> Očkování";
+                    document.getElementById("analysis-text-datefrom").innerHTML = "27.12.2020";
                     // document.getElementById("slider").style.accentColor = "#4caf50";
                     // document.getElementById("slider").style.background = "#ffffff";
                     break;
@@ -709,8 +719,8 @@ function selectAnalysis(type) {
                     }
                     );
                     current_analysis_color = "#9e9e9e";
-                    document.getElementById("analysis-text-name").innerHTML = "<b>Dataset:</b> Úmrtí";
-                    document.getElementById("analysis-text-datefrom").innerHTML = "<b>Data dostupná od:</b> 22.3.2020";
+                    // document.getElementById("analysis-text-name").innerHTML = "<b>Dataset:</b> Úmrtí";
+                    document.getElementById("analysis-text-datefrom").innerHTML = "22.3.2020";
                     // document.getElementById("slider").style.accentColor = "#616161";
                     // document.getElementById("slider").style.background = "#ffffff";
                     break;
@@ -747,8 +757,8 @@ function selectAnalysis(type) {
                     }
                     );
                     current_analysis_color = "#673ab7";
-                    document.getElementById("analysis-text-name").innerHTML = "<b>Dataset:</b> PCR testování";
-                    document.getElementById("analysis-text-datefrom").innerHTML = "<b>Data dostupná od:</b> 1.8.2020";
+                    // document.getElementById("analysis-text-name").innerHTML = "<b>Dataset:</b> PCR testování";
+                    document.getElementById("analysis-text-datefrom").innerHTML = "1.8.2020";
                     // document.getElementById("slider").style.accentColor = "#616161";
                     // document.getElementById("slider").style.background = "#ffffff";
                     break;
@@ -1164,6 +1174,10 @@ function confirmRangeAnalysis() {
             }
             processGetDataFromSlider(result);
             initChart();
+
+            // Open animation tab
+            document.getElementById("time_window").style.display = "none";
+            document.getElementById("animation_window").style.display = "block";
         },
         error: function (error) {
             console.log(error);
