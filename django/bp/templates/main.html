@@ -4,7 +4,7 @@
 <html>
 
 <head>
-    <title>Bakalářská práce</title>
+    <title>Vizualizace COVID-19</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -88,6 +88,7 @@
     <div id="splashscreen" style="position:absolute;top:0;left:0;bottom:0;width:100%;z-index: 99;height:100%;background-color: #ffffffaf;">
         <div class="w3-card" style="position: fixed;top: 50%;left: 50%;-webkit-transform: translate(-50%, -50%);transform: translate(-50%, -50%);opacity: 1;background-color: white;max-width: 800px;">
             <div style="margin:20px;">
+                <img src="{% static 'pictures/vsb_long.png' %}" style="display: block;margin-left: auto;margin-right: auto;width: 30%">
                 <h2 class="w3-center">Vizualizace COVID-19 v České republice</h2>
                 <hr>
                 <p class="w3-center">
@@ -108,36 +109,42 @@
                     </ol>
                 </div>
                 <p style="margin-left:20px;margin-right:20px;margin-top:15px">
-                    Aktuálně můžete data aktualizovat jednou za minutu, aby se zamezilo zatížení serveru. <b>Stahování dat závisí na rychlosti vašeho internetového připojení.</b>
+                    Aktuálně můžete data aktualizovat jednou za minutu, aby se zamezilo zatížení serveru. Stahování dat závisí na rychlosti vašeho internetového připojení.
+                </p>
+                <p style="margin-left:20px;margin-right:20px;margin-top:15px;color: red; text-align: center; font-weight: bold">
+                    MZČR data neustále aktualizuje a zpětně opravuje, takže může docházet k nepřesnostem
                 </p>
                 <div>
-                    <button class="w3-button w3-block w3-light-gray w3-center" style="margin-top:30px;font-weight: bolder;" onclick="hideSplashScreen()">Přejít k aplikaci</button>
+                    <button class="w3-button w3-block w3-light-gray w3-center" style="margin-top:20px;font-weight: bolder;" onclick="hideSplashScreen()">Přejít k aplikaci</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Top container -->
-    <div id="topbar" class="w3-bar w3-top w3-white w3-large w3-card" style="z-index:4;width:100%;height: 53px;">
+    <div id="topbar" class="w3-bar w3-top w3-white w3-large w3-card" style="z-index:4;width:100%;height: 53px">
         <table style="width:100%">
             <tr>
-                <td id="map_title" style="width:50%;padding-top:12px;padding-left: 20px;"><b>Vizualizace COVID-19 v
-                        České republice</b></td>
-                <td style="width:10%;padding-top:12px;padding-right: 20px;padding-left: 20px;text-align: right;">
-                    <div id="nakazeni-analyze" color="w3-orange" class="w3-card w3-orange w3-center"
+                <td style="width:2%;padding-top:0px;padding-left: 10px">
+                    <img src="{% static 'pictures/vsb_long.png' %}" style="max-height: 53px">
+                </td>
+                <td id="map_title" style="width:48%;padding-left: 15px;font-weight:bold">Vizualizace COVID-19 v
+                        České republice</td>
+                <td style="width:10%;padding-right: 20px;padding-left: 20px;text-align: right;">
+                    <div id="nakazeni-analyze" color="w3-orange" class="w3-card w3-center"
                         style="cursor: pointer;" onclick="selectAnalysis('nakazeni-analyze')">Infekce</div>
                 </td>
-                <td style="width:10%;padding-top:12px;padding-right: 20px;text-align: right;">
-                    <div id="umrti-analyze" color="w3-grey" class="w3-card w3-grey w3-center"
+                <td style="width:10%;padding-right: 20px;text-align: right;">
+                    <div id="umrti-analyze" color="w3-grey" class="w3-card w3-center"
                         style="cursor: pointer;" onclick="selectAnalysis('umrti-analyze')">Úmrtí</div>
                 </td>
-                <td style="width:10%;padding-top:12px;padding-right: 20px;text-align: right;">
-                    <div id="ockovani-analyze" color="w3-green" class="w3-card w3-green w3-center"
+                <td valign="center" style="width:10%;padding-right: 20px;text-align: right;">
+                    <div id="ockovani-analyze" color="w3-green" class="w3-card w3-center"
                         style="cursor: pointer;" onclick="selectAnalysis('ockovani-analyze')">Očkování</div>
                 </td>
-                <td style="width:10%;padding-top:12px;padding-right: 20px;text-align: right">
-                    <div id="testovani-analyze" color="w3-deep-purple" class="w3-card w3-deep-purple w3-center"
-                        style="cursor: pointer;" onclick="selectAnalysis('testovani-analyze')">Testování (PCR)</div>
+                <td valign="center" style="width:10%;padding-right: 20px;text-align: right">
+                    <div id="testovani-analyze" color="w3-deep-purple" class="w3-card w3-center"
+                        style="cursor: pointer;" onclick="selectAnalysis('testovani-analyze')">PCR testy</div>
                 </td>
             </tr>
         </table>
@@ -208,23 +215,36 @@
                     style="background-color:rgba(255, 255, 255, 1); margin-right: 10px; margin-bottom:10px">
                     {% comment %} https://codepen.io/joosts/pen/rNLdxvK {% endcomment %}
                     <div class="w3-container" style="padding-top:16px;padding-bottom:16px;">
-                        <button id="button_left_upper_panel"
+                        <table style="width:100%">
+                            <tr>
+                                <td style="width:50%"><button id="button_left_bottom_panel_1"
+                                        class="w3-button w3-padding-small w3-ripple w3-small w3-block w3-white w3-center"
+                                        style="outline: none;height:25px" onclick="showHideTimeWindow()"><b>Časové okno</b></button></td>
+                                <td style="width:50%"><button id="button_left_bottom_panel_2"
+                                        class="w3-button w3-padding-small w3-ripple w3-small w3-block w3-white w3-center"
+                                        style="outline: none;height:25px" onclick="showHideAnimationWindow()"><b>Animace</b></button></td>
+                            </tr>
+                        </table>
+                        {% comment %} <button id="button_left_upper_panel"
                             class="w3-button w3-padding-small w3-ripple w3-small w3-block w3-white w3-center"
                             style="outline: none;height:25px" onclick="showHideLeftUpperPanel()"><b>Skrýt
-                                nastavení</b></button>
+                                nastavení</b></button> {% endcomment %}
                         <div>
                             <table style="width:100%;margin-top:10px" class="w3-small">
                                 <tr>
-                                    <td id="analysis-text-name" style="text-align:left;width: 50%;"><b>Dataset:</b> - </td>
-                                    <td id="analysis-text-datefrom" style="text-align:right;width: 50%;"><b>Data dostupná od:</b> - </td>
+                                    <td id="analysis-text-name" style="text-align:center;width: 50%;display:none"><b>Dataset:</b> - </td>
                                 </tr>
                             </table>
                         </div>
-                        <div id="left_upper_panel" class="w3-animate-top" style="margin-top:10px">
+                        <div id="time_window" class="w3-animate-top" style="margin-top:10px">
                             <div class="w3-center">
                                 <hr>
                                 <label for="sel1" style="margin-bottom:20px"><strong>Nastavení časového okna</strong></label>
                                 <table style="width:100%">
+                                    <tr>
+                                        <td style="width:60%;text-align:left">Data dostupná od: - </td>
+                                        <td id="analysis-text-datefrom" style="width:40%;text-align:left">Data dostupná od: - </td>
+                                    </tr>
                                     <tr>
                                         <td style="width:60%;text-align: left;">Části časového okna: </td>
                                         <td style="width:40%">
@@ -257,8 +277,9 @@
                                 <button class="w3-button w3-block w3-light-gray w3-left-align w3-center"
                                     onclick="confirmRangeAnalysis()"><b>Potvrdit</b></button>
                             </div>
+                        </div>
+                        <div id="animation_window" class="w3-animate-top" style="margin-top:10px;display:none;">
                             <hr>
-
                             <label style="text-align:center;width:100%;margin-bottom: 20px;" for="slider"><strong>Animace a zvolení dat</strong></label>
                             <table style="width:100%;margin-bottom:15px">
                                 <tr>
@@ -275,27 +296,36 @@
                             </table>
                             <table style="width:100%;margin-bottom: 10px;">
                                 <tr>
-                                    <td style="width:60%">
-                                        <label for="quantity">Rychlost animace: </label>
-                                        <input onchange="changeAnimationSpeed(this.value)" type="number" id="quantity"
-                                            name="quantity" min="1" max="10" value="5">
-                                    </td>
                                     <td colspan="2" id="slider_text"
-                                        style="width:40%;text-align: center;font-weight: bold">
+                                        style="width:100%;text-align: center;font-weight: bold">
                                         -
                                     </td>
                                 </tr>
                             </table>
                             <table style="width:100%">
                                 <tr>
-                                    <td colspan="3" style="width:100%">
+                                    <td style="padding-top:10px">
+                                        Typ dat:
+                                    </td>
+                                    <td colspan="3" style="width:75%;padding-top:10px">
                                         <select oninput="selectSliderData(this.value)" class="form-control" id="sel2">
                                         </select>
                                     </td>
                                 </tr>
+                            </table>
+                            <table style="width:100%">
+                                <tr>
+                                    <td style="width:75%;padding-top:5px">
+                                        Rychlost animace:
+                                    </td>
+                                    <td style="width:25%;padding-top:5px">
+                                        <input onchange="changeAnimationSpeed(this.value)" class="form-control" type="number" id="quantity"
+                                        name="quantity" min="1" max="10" value="5" style="width:100%">
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td colspan="3">
-                                        <input type="checkbox" id="checkerChangeMaxValue" style="margin-top:13px"
+                                        <input type="checkbox" id="checkerChangeMaxValue" style="margin-top:10px"
                                             onclick="changeRecalculationMaxValue()">
                                         <label for="checkerChangeMaxValue"> Škálovat barvy podle max. hodnoty v období</label>
                                     </td>
@@ -308,22 +338,17 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>
-
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="width:75%"><button
+                                    <td style="width:75%;padding-top:10px"><button
                                             class="w3-button w3-block w3-light-gray w3-left-align w3-center"
                                             onclick="handleAnimation()"><b>Spustit animaci</b></button></td>
-                                    <td style="width:25%"><button
+                                    <td style="width:25%;padding-top:10px"><button
                                             class="w3-button w3-block w3-light-gray w3-left-align w3-center"
                                             onclick="stopAnimation()"><b>Zastavit</b></button></td>
                                 </tr>
                             </table>
                             <div class="w3-center">
-
                             </div>
+                        </div>
                         </div>
                     </div>
                 </div>

@@ -584,7 +584,6 @@ function updatePage() {
 function selectAnalysis(type) {
 
     current_analysis = type;
-    analysis_selected = true;
     // selectSliderType(slider_current_type);
     analyze_fields.forEach((element) => {
         // Set colors and other elements according to selected type of analysis
@@ -612,7 +611,7 @@ function selectAnalysis(type) {
                     document.getElementById("testovani-analyze").style.opacity = 0.6;
                     document.getElementById("testovani-analyze").style.borderStyle = "none";
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#ff9800";
-                    map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty nakažených";
+                    map_title.innerHTML = "Počty nakažených";
                     var options = [
                         "Nové případy",
                         "Nové případy za poslední týden",
@@ -651,7 +650,7 @@ function selectAnalysis(type) {
                     document.getElementById("testovani-analyze").style.opacity = 0.6;
                     document.getElementById("testovani-analyze").style.borderStyle = "none";
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#4caf50";
-                    map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty naočkovaných";
+                    map_title.innerHTML = "Počty naočkovaných";
 
                     var options = [
                         "Všechny dávky tento den",
@@ -697,7 +696,7 @@ function selectAnalysis(type) {
                     document.getElementById("testovani-analyze").style.opacity = 0.6;
                     document.getElementById("testovani-analyze").style.borderStyle = "none";
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#9e9e9e";
-                    map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty úmrtí";
+                    map_title.innerHTML = "Počty úmrtí";
                     var options = [
                         "Aktuální celkový počet zemřelých doposud",
                         "Počet nově zemřelých daný den"
@@ -735,7 +734,7 @@ function selectAnalysis(type) {
                     document.getElementById("testovani-analyze").style.borderColor = "#4a2983";
 
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#673ab7";
-                    map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počty otestovaných (PCR)";
+                    map_title.innerHTML = "Počty otestovaných (PCR)";
                     var options = [
                         "Aktuální celkový počet otestovaných doposud",
                         "Počet nově otestovaných daný den"
@@ -757,7 +756,9 @@ function selectAnalysis(type) {
         }
 
     })
-    selectSliderData(select_2.value);
+    if (analysis_selected)
+        selectSliderData(select_2.value);
+    analysis_selected = true;
     // updatePage();
 }
 
@@ -1004,68 +1005,68 @@ function selectSliderData(value) {
     initChart();
     switch (value) {
         case "Současně nakažení":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Současný počet případů";
+            map_title.innerHTML = "Současný počet případů";
             break;
         case "Nové případy":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počet nově zjištěných případů";
+            map_title.innerHTML = "Počet nově zjištěných případů";
             break;
         case "Nové případy za poslední týden":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počet nově zjištěných případů za posledních 7 dní";
+            map_title.innerHTML = "Počet nově zjištěných případů za posledních 7 dní";
             break;
         case "Nové případy za poslední dva týdny":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počet nově zjištěných případů za posledních 14 dní";
+            map_title.innerHTML = "Počet nově zjištěných případů za posledních 14 dní";
             break;
         case "Nové případy lidí starších 65 let":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počet nově zjištěných případů lidí starších 65 let";
+            map_title.innerHTML = "Počet nově zjištěných případů lidí starších 65 let";
             break;
 
         case "Všechny dávky tento den":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Celkový počet vydaných dávek očkování daný den";
+            map_title.innerHTML = "Celkový počet vydaných dávek očkování daný den";
             break;
         case "Všechny dávky doposud":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Celkový počet vydaných dávek očkování doposud";
+            map_title.innerHTML = "Celkový počet vydaných dávek očkování doposud";
             break;
 
         case "První dávka tento den":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počet vydaných prvních dávek očkování daný den";
+            map_title.innerHTML = "Počet vydaných prvních dávek očkování daný den";
             break;
         case "První dávka doposud":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Celkový počet vydaných prvních dávek očkování doposud";
+            map_title.innerHTML = "Celkový počet vydaných prvních dávek očkování doposud";
             break;
 
         case "Druhá dávka tento den":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počet vydaných druhých dávek očkování daný den";
+            map_title.innerHTML = "Počet vydaných druhých dávek očkování daný den";
             break;
         case "Druhá dávka doposud":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Celkový počet vydaných druhých dávek očkování doposud";
+            map_title.innerHTML = "Celkový počet vydaných druhých dávek očkování doposud";
             break;
 
         case "Třetí dávka tento den":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počet vydaných třetích dávek očkování daný den";
+            map_title.innerHTML = "Počet vydaných třetích dávek očkování daný den";
             break;
         case "Třetí dávka doposud":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Celkový počet vydaných třetích dávek očkování doposud";
+            map_title.innerHTML = "Celkový počet vydaných třetích dávek očkování doposud";
             break;
 
         case "Čtvrtá dávka tento den":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počet vydaných čtvrtých dávek očkování daný den";
+            map_title.innerHTML = "Počet vydaných čtvrtých dávek očkování daný den";
             break;
         case "Čtvrtá dávka doposud":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Celkový počet vydaných čtvrtých dávek očkování doposud";
+            map_title.innerHTML = "Celkový počet vydaných čtvrtých dávek očkování doposud";
             break;
 
         case "Aktuální celkový počet zemřelých doposud":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Celkový počet zemřelých doposud";
+            map_title.innerHTML = "Celkový počet zemřelých doposud";
             break;
         case "Počet nově zemřelých daný den":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počet nově zemřelých k danému dni";
+            map_title.innerHTML = "Počet nově zemřelých k danému dni";
             break;
 
         case "Aktuální celkový počet otestovaných doposud":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Celkový počet otestovaných doposud";
+            map_title.innerHTML = "Celkový počet otestovaných doposud";
             break;
         case "Počet nově otestovaných daný den":
-            map_title.innerHTML = "<b>Vizualizace COVID-19 v České republice</b> | Počet nově otestovaných k danému dni";
+            map_title.innerHTML = "Počet nově otestovaných k danému dni";
             break;
     }
     updatePage();
@@ -1293,6 +1294,28 @@ function showHideLeftBottomPanel2() {
     } else {
         x.style.display = "none";
         x2.innerHTML = "<b>Zobrazit graf</b>";
+    }
+}
+
+function showHideTimeWindow()
+{
+    var x = document.getElementById("time_window");
+    document.getElementById("animation_window").style.display = "none";
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+}
+
+function showHideAnimationWindow()
+{
+    var x = document.getElementById("animation_window");
+    document.getElementById("time_window").style.display = "none";
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
     }
 }
 
