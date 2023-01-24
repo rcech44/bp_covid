@@ -1334,29 +1334,58 @@ function showHideAnimationWindow()
 }
 
 function initChart() {
-    var val_min = slider_current_values[0];
-    var val_max = slider_current_values[1];
-    var no_x_labels = (slider_current_values[1] - slider_current_values[0]) / 7;
-    if (okres_clicked == "") return;
 
-    var date_start = addDays(covid_start_string, val_min - 1);
-    var date_end = addDays(covid_start_string, val_max - 1);
+    // If no district is selected, dont show graph
+    if (okres_clicked == "")
+    {
+        return;
+    }
 
     var xArray = [];
     var yArray = [];
 
-    for (var i = val_min; i <= val_max; i++) {
-        if (i == val_min) xArray.push(getFormattedDateLocal(date_start));
-        else if (i == val_max) xArray.push(getFormattedDateLocal(date_end));
-        else xArray.push(getFormattedDateLocal(addDays(covid_start_string, i)));
-    }
+    var data_keys = Object.keys(new_data);
+    var data_keys_dates = [];
+    data_keys.forEach(element => {
+        if (typeof new_data[element] === 'object' && new_data[element] !== null)
+        {
+            xArray.push(getFormattedDateLocal(new Date(element)));
+            data_keys_dates.push(element);
+        }
+    });
 
-    for (var i = val_min; i < val_max; i++) {
-        var d = getFormattedDate(addDays(covid_start_string, i));
+    data_keys_dates.forEach(element => {
+        var d = element;
         var o = okres_clicked;
         var v = analysis_name_value;
         yArray.push(new_data[d][o][v]);
-    }
+    });
+
+    // Old crappy method
+    
+    // var val_min = slider_current_values[0];
+    // var val_max = slider_current_values[1];
+    // var no_x_labels = (slider_current_values[1] - slider_current_values[0]) / 7;
+    // if (okres_clicked == "") return;
+
+    // var date_start = addDays(covid_start_string, val_min - 1);
+    // var date_end = addDays(covid_start_string, val_max - 1);
+
+    // var xArray = [];
+    // var yArray = [];
+
+    // for (var i = val_min; i <= val_max; i++) {
+    //     if (i == val_min) xArray.push(getFormattedDateLocal(date_start));
+    //     else if (i == val_max) xArray.push(getFormattedDateLocal(date_end));
+    //     else xArray.push(getFormattedDateLocal(addDays(covid_start_string, i)));
+    // }
+
+    // for (var i = val_min; i < val_max; i++) {
+    //     var d = getFormattedDate(addDays(covid_start_string, i));
+    //     var o = okres_clicked;
+    //     var v = analysis_name_value;
+    //     yArray.push(new_data[d][o][v]);
+    // }
 
     // Define Data
     var data = [{
