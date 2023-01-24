@@ -125,7 +125,7 @@ function loadPageComponents() {
 
 function onResize()
 {
-    console.log(window.innerWidth);
+    // console.log(window.innerWidth);
     var x = document.getElementById("map_title");
     if (window.innerWidth <= 1150)
     {
@@ -339,6 +339,12 @@ function getFormattedDate(date) {
 
 // function that updates slider text
 function updatePage() {
+
+    if (analysis_changed) {
+        toast("Prosím potvrďte nové změny");
+        return;
+    }
+    
     current_values = []
 
     // Init needed variables
@@ -1362,7 +1368,7 @@ function initChart() {
     });
 
     // Old crappy method
-    
+
     // var val_min = slider_current_values[0];
     // var val_max = slider_current_values[1];
     // var no_x_labels = (slider_current_values[1] - slider_current_values[0]) / 7;
