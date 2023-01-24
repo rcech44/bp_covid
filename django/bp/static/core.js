@@ -218,7 +218,7 @@ function initPIP()
 }
 
 // click function - AJAX request
-function onClickMap(name, okres_lau, object) 
+async function onClickMap(name, okres_lau, object) 
 {
     // If no analysis havent been selected, dont do anything
     if (map_enabled == false)
@@ -250,6 +250,27 @@ function onClickMap(name, okres_lau, object)
 
     // Update page
     updatePage();
+
+    // Popup
+    var popups = [];
+    console.log(popups);
+    while (popups.length == 0)
+    {
+        await sleep(10);
+        popups = iframe.contentWindow.document.getElementsByClassName("leaflet-popup-content");
+        console.log(popups);
+    }
+
+    var popup_element_content = popups[0].children[0];
+    popups[0].style.width = "auto";
+    popups[0].style.height = "auto";
+    popup_element_content.innerHTML = "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww";
+
+    // Delete popup close button
+    var close_buttons = iframe.contentWindow.document.getElementsByClassName("leaflet-popup-close-button");
+    while(close_buttons.length > 0){
+        close_buttons[0].parentNode.removeChild(close_buttons[0]);
+    }
 }
 
 // sleep function

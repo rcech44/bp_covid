@@ -211,28 +211,28 @@
         , { "className": "foliumtooltip", "sticky": true });
 
 
-    // geo_json_ba897c3a7503a979b8cd5770c531f25f.bindPopup(
-    //     function (layer) {
-    //         let div = L.DomUtil.create('div');
+    geo_json_ba897c3a7503a979b8cd5770c531f25f.bindPopup(
+        function (layer) {
+            let div = L.DomUtil.create('div');
 
-    //         let handleObject = feature => typeof (feature) == 'object' ? JSON.stringify(feature) : feature;
-    //         let fields = ["name"];
-    //         let aliases = ["Okres"];
-    //         let table = '<table>' +
-    //             String(
-    //                 fields.map(
-    //                     (v, i) =>
-    //                         `<tr>
-    //         <th>${aliases[i].toLocaleString()}</th>
+            let handleObject = feature => typeof (feature) == 'object' ? JSON.stringify(feature) : feature;
+            let fields = ["name"];
+            let aliases = ["Okres"];
+            let table = '<table>' +
+                String(
+                    fields.map(
+                        (v, i) =>
+                            `<tr>
+            <th>${aliases[i].toLocaleString()}</th>
             
-    //         <td>${handleObject(layer.feature.properties[v]).toLocaleString()}</td>
-    //     </tr>`).join(''))
-    //             + '</table>';
-    //         div.innerHTML = table;
+            <td>${handleObject(layer.feature.properties[v]).toLocaleString()}</td>
+        </tr>`).join(''))
+                + '</table>';
+            div.innerHTML = table;
 
-    //         return div
-    //     }
-    //     , { "className": "foliumpopup" });
+            return div
+        }
+        , { "className": "foliumpopup" });
 
 
     var layer_control_3eefbdeb5b3f909211e5108fd63d0208 = {
