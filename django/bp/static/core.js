@@ -243,15 +243,7 @@ async function onClickMap(name, okres_lau, object)
     // Get needed variables
     selected_date_text = getFormattedDate(slider_current_selected_date);
 
-    // Update text with selected district data
-    okres_nazev.innerHTML = name;
-    okres_kod.innerHTML = okres_lau;
-    okres_pocet_obyvatel.innerHTML = okresy_pocet_obyvatel[okres_lau].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-    // Update page
-    updatePage();
-
-    // Popup
+    // Get popup
     var popups = [];
     console.log(popups);
     while (popups.length == 0)
@@ -261,16 +253,93 @@ async function onClickMap(name, okres_lau, object)
         console.log(popups);
     }
 
+    // Edit popup properties
     var popup_element_content = popups[0].children[0];
     popups[0].style.width = "auto";
     popups[0].style.height = "auto";
-    popup_element_content.innerHTML = "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww";
+    popup_element_content.innerHTML = "";
+
+    // Create popup elements
+    var popup_table = document.createElement("table");
+    var popup_row_1 = document.createElement("tr");
+    var popup_row_2 = document.createElement("tr");
+    var popup_row_3 = document.createElement("tr");
+    var popup_row_4 = document.createElement("tr");
+    var popup_row_1_cell_1 = document.createElement("td");
+    var popup_row_1_cell_2 = document.createElement("td");
+    var popup_row_2_cell_1 = document.createElement("td");
+    var popup_row_2_cell_2 = document.createElement("td");
+    var popup_row_3_cell_1 = document.createElement("td");
+    var popup_row_3_cell_2 = document.createElement("td");
+    var popup_row_4_cell_1 = document.createElement("td");
+    var popup_row_4_cell_2 = document.createElement("td");
+
+    // Edit popup elements
+    popup_table.style.width = "200px";
+    // popup_row_1_cell_1.setAttribute("width", "60%");
+    // popup_row_2_cell_1.setAttribute("width", "60%");
+    // popup_row_3_cell_1.setAttribute("width", "60%");
+    // popup_row_4_cell_1.setAttribute("width", "60%");
+    // popup_row_1_cell_2.setAttribute("width", "40%");
+    // popup_row_2_cell_2.setAttribute("width", "40%");
+    // popup_row_3_cell_2.setAttribute("width", "40%");
+    // popup_row_4_cell_2.setAttribute("width", "40%");
+    // popup_row_1_cell_1.innerHTML = "<b>Okres</b>";
+    popup_row_2_cell_1.innerHTML = "<b>Hodnota</b>";
+    popup_row_3_cell_1.innerHTML = "<b>Hodnota / 100 tisíc</b>";
+    popup_row_4_cell_1.innerHTML = "<b>Počet obyvatel</b>";
+    popup_row_1_cell_1.setAttribute("id", "text_okres_nazev");
+    popup_row_1_cell_1.style.padding = "3px";
+    popup_row_1_cell_1.style.paddingBottom = "5px";
+    popup_row_1_cell_1.style.fontSize = "17px";
+    popup_row_1_cell_1.style.fontWeight = "bolder";
+    popup_row_2_cell_2.setAttribute("id", "text_okres_nakazeni");
+    popup_row_2_cell_1.style.padding = "3px";
+    popup_row_3_cell_1.setAttribute("id", "text_current_data");
+    popup_row_3_cell_2.setAttribute("id", "text_okres_nakazeni_100");
+    popup_row_3_cell_1.style.padding = "3px";
+    popup_row_4_cell_2.setAttribute("id", "text_okres_pocet_obyvatel");
+    popup_row_4_cell_1.style.padding = "3px";
+
+    // Add district data into popup
+    popup_row_1_cell_1.innerHTML = name;
+    popup_row_2_cell_2.innerHTML = okres_lau;
+    popup_row_3_cell_2.innerHTML = " ";
+    popup_row_4_cell_2.innerHTML = okresy_pocet_obyvatel[okres_lau].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+    // Add elements into popup
+    popup_row_1.appendChild(popup_row_1_cell_1);
+    popup_row_1.appendChild(popup_row_1_cell_2);
+    popup_row_2.appendChild(popup_row_2_cell_1);
+    popup_row_2.appendChild(popup_row_2_cell_2);
+    popup_row_3.appendChild(popup_row_3_cell_1);
+    popup_row_3.appendChild(popup_row_3_cell_2);
+    popup_row_4.appendChild(popup_row_4_cell_1);
+    popup_row_4.appendChild(popup_row_4_cell_2);
+    popup_table.appendChild(popup_row_1);
+    popup_table.appendChild(popup_row_2);
+    popup_table.appendChild(popup_row_3);
+    popup_table.appendChild(popup_row_4);
+    popup_element_content.appendChild(popup_table);
 
     // Delete popup close button
     var close_buttons = iframe.contentWindow.document.getElementsByClassName("leaflet-popup-close-button");
     while(close_buttons.length > 0){
         close_buttons[0].parentNode.removeChild(close_buttons[0]);
     }
+
+    var popup_tip = iframe.contentWindow.document.getElementsByClassName("leaflet-popup-tip-container");
+    while(popup_tip.length > 0){
+        popup_tip[0].parentNode.removeChild(popup_tip[0]);
+    }
+
+    // Update page
+    updatePage();
+
+    // Update text with selected district data
+    // okres_nazev.innerHTML = name;
+    // okres_kod.innerHTML = okres_lau;
+    // okres_pocet_obyvatel.innerHTML = okresy_pocet_obyvatel[okres_lau].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 // sleep function
@@ -378,6 +447,7 @@ function updatePage() {
     var minimum_day_PIP;
     var selected_date = new Date();
     var value_name;
+    var value_name_second;
     var max_value_name;
     var min_value_name;
     var text;
@@ -386,6 +456,7 @@ function updatePage() {
     var min_value_name_PIP;
     var skip_normal_map;
     var skip_pip_map;
+    var selected_100 = false;
 
     // Get all variables connected with date
     switch (slider_current_type) {
@@ -448,7 +519,9 @@ function updatePage() {
 
     if (data_recalculation)
     {
+        selected_100 = true;
         value_name = data_analysis_types[map_show_data]['value_100'];
+        value_name_second = data_analysis_types[map_show_data]['value'];
         value_name_PIP = data_analysis_types[map_show_data_PIP]['value_100'];
         max_value_name = data_analysis_types[map_show_data]['max_value_100'];
         max_value_name_PIP = data_analysis_types[map_show_data_PIP]['max_value_100'];
@@ -464,6 +537,7 @@ function updatePage() {
     else
     {
         value_name = data_analysis_types[map_show_data]['value'];
+        value_name_second = data_analysis_types[map_show_data]['value_100'];
         value_name_PIP = data_analysis_types[map_show_data_PIP]['value'];
         max_value_name = data_analysis_types[map_show_data]['max_value'];
         max_value_name_PIP = data_analysis_types[map_show_data_PIP]['max_value'];
@@ -486,6 +560,7 @@ function updatePage() {
 
         // Get needed values that are required for later computations and set some texts on page according to selected data
         okres_value = new_data[selected_date_text][okres_lau][value_name].toFixed(2);
+        okres_value_second = new_data[selected_date_text][okres_lau][value_name_second].toFixed(2);
         okres_value_PIP = new_data[selected_date_text][okres_lau][value_name_PIP].toFixed(2);
         if (data_max_recalculation)
         {
@@ -499,7 +574,11 @@ function updatePage() {
         }
         minimum_day = 0;
         minimum_day_PIP = 0;
-        text_current_data.innerHTML = text;
+        
+        // if (iframe.contentWindow.document.getElementById("text_current_data") != null)
+        // {
+        //     iframe.contentWindow.document.getElementById("text_current_data").innerHTML = text;
+        // }
 
         analysis_name_value = value_name;
         analysis_name_min_value = min_value_name;
@@ -510,16 +589,21 @@ function updatePage() {
         if (data_minimum_type == "zero") minimum_day = 0;
 
         // Update text if current district is selected
-        if (okres_clicked == okres_lau) {
-            switch (map_show_data) {
-                case "Současně nakažení":
-                    okres_nakazeni.innerHTML = parseInt(new_data[selected_date_text][okres_lau]['aktivni_pripady']);
-                    break;
-                case "Nové případy":
-                    okres_nakazeni.innerHTML = parseInt(new_data[selected_date_text][okres_lau]['nove_pripady']);
-                    break;
+        if (okres_clicked == okres_lau)
+        {
+            if (iframe.contentWindow.document.getElementById("text_okres_nakazeni") != null)
+            {
+                if (selected_100)
+                {
+                    iframe.contentWindow.document.getElementById("text_okres_nakazeni_100").innerHTML = okres_value;
+                    iframe.contentWindow.document.getElementById("text_okres_nakazeni").innerHTML = okres_value_second;
+                }
+                else
+                {
+                    iframe.contentWindow.document.getElementById("text_okres_nakazeni_100").innerHTML = okres_value_second;
+                    iframe.contentWindow.document.getElementById("text_okres_nakazeni").innerHTML = okres_value;
+                }
             }
-            okres_nakazeni.innerHTML = okres_value;
         }
 
         // Calculate colors
@@ -1312,28 +1396,31 @@ function showHideLeftUpperPanel() {
     }
 }
 
-function showHideLeftBottomPanel1() {
-    var x = document.getElementById("left_bottom_panel_1");
-    document.getElementById("left_bottom_panel_2").style.display = "none";
-    var x2 = document.getElementById("button_left_bottom_panel_1");
-    if (x.style.display === "none") {
-        x.style.display = "block";
-        x2.innerHTML = "<b>Skrýt informace o okrese</b>";
-    } else {
-        x.style.display = "none";
-        x2.innerHTML = "<b>Zobrazit informace o okrese</b>";
-    }
-}
+// function showHideLeftBottomPanel1() {
+//     var x = document.getElementById("left_bottom_panel_1");
+//     document.getElementById("left_bottom_panel_2").style.display = "none";
+//     var x2 = document.getElementById("button_left_bottom_panel_1");
+//     if (x.style.display === "none") {
+//         x.style.display = "block";
+//         x2.innerHTML = "<b>Skrýt informace o okrese</b>";
+//     } else {
+//         x.style.display = "none";
+//         x2.innerHTML = "<b>Zobrazit informace o okrese</b>";
+//     }
+// }
 
 function showHideLeftBottomPanel2() {
     var x = document.getElementById("left_bottom_panel_2");
-    document.getElementById("left_bottom_panel_1").style.display = "none";
+    // document.getElementById("left_bottom_panel_1").style.display = "none";
     var x2 = document.getElementById("button_left_bottom_panel_2");
+    var x3 = document.getElementById("right_bottom_container");
     if (x.style.display === "none") {
         x.style.display = "block";
+        x3.style.width = "590px";
         x2.innerHTML = "<b>Skrýt graf</b>";
     } else {
         x.style.display = "none";
+        x3.style.width = "200px"
         x2.innerHTML = "<b>Zobrazit graf</b>";
     }
 }
