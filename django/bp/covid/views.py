@@ -73,10 +73,10 @@ def api_range_days(request, range_from, range_to, type):
     else:
         ip = request.META.get('REMOTE_ADDR')
 
-    if ip_allow_request(ip) == False:
-        print(f"[REQUEST-API] Declined incoming request from {ip}")
-        # Return 429 - Too many requests
-        return HttpResponse({}, status=429)
+    # if ip_allow_request(ip) == False:
+    #     print(f"[REQUEST-API] Declined incoming request from {ip}")
+    #     # Return 429 - Too many requests
+    #     return HttpResponse({}, status=429)
     
     print(f"[REQUEST-API] Accepted incoming request from {ip}")
     data = getData(range_from, range_to, type)

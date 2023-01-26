@@ -19,6 +19,7 @@ var covid_data_days_max = {};
 var covid_data_days_min = {};
 var covid_summary = {};
 var okres_clicked = "";
+var okres_clicked_name = "";
 var okres_clicked_map_object = -1;
 var analyze_fields = ["nakazeni-analyze", "ockovani-analyze", "umrti-analyze", "testovani-analyze"];
 var current_analysis = "nakazeni-analyze";
@@ -70,6 +71,8 @@ var analysis_name_min_value;
 var analysis_name_max_value;
 var current_analysis_color;
 var main_slider_range_max = (new Date().getTime() - covid_start.getTime()) / (1000 * 3600 * 24);
+var current_time_window_low;
+var current_time_window_high;
 // if (new Date().getHours() >= 20)
 // {
 //     main_slider_range_max = (new Date().getTime() - covid_start.getTime()) / (1000 * 3600 * 24);
@@ -229,6 +232,7 @@ async function onClickMap(name, okres_lau, object)
 
     // Save district
     okres_clicked = okres_lau;
+    okres_clicked_name = name;
 
     // Graph
     initChart();
@@ -383,7 +387,7 @@ function stopAnimation() {
 
 // handle change animation speed clicker
 function changeAnimationSpeed(value) {
-    animation_speed = 16 - parseInt(value);
+    animation_speed = 11 - parseInt(value);
 }
 
 // https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
@@ -1252,6 +1256,9 @@ function confirmRangeAnalysis() {
             break;
     }
 
+    current_time_window_low = value_min;
+    current_time_window_high = value_max;
+
     var url;
     switch (current_analysis) {
         case "nakazeni-analyze":
@@ -1363,11 +1370,6 @@ function checkboxCovidWaveClick(el) {
     }
 }
 
-// function checkboxGetMinimumType(val) {
-//     this.data_minimum_type = val;
-//     updatePage();
-// }
-
 function changeRecalculation() {
     this.data_recalculation = !this.data_recalculation;
     updatePage();
@@ -1408,33 +1410,27 @@ function showHideLeftUpperPanel() {
     }
 }
 
-// function showHideLeftBottomPanel1() {
-//     var x = document.getElementById("left_bottom_panel_1");
-//     document.getElementById("left_bottom_panel_2").style.display = "none";
-//     var x2 = document.getElementById("button_left_bottom_panel_1");
-//     if (x.style.display === "none") {
-//         x.style.display = "block";
-//         x2.innerHTML = "<b>Skrýt informace o okrese</b>";
-//     } else {
-//         x.style.display = "none";
-//         x2.innerHTML = "<b>Zobrazit informace o okrese</b>";
-//     }
-// }
-
 function showHideLeftBottomPanel2() {
     var x = document.getElementById("left_bottom_panel_2");
     // document.getElementById("left_bottom_panel_1").style.display = "none";
     var x2 = document.getElementById("button_left_bottom_panel_2");
     var x3 = document.getElementById("right_bottom_container");
+    var x4 = document.getElementById("left_bottom_panel_district_text");
+    var x5 = document.getElementById("left_bottom_panel_time_window_text");
     if (x.style.display === "none") {
         x.style.display = "block";
-        x3.style.width = "590px";
+        x4.style.display = "block";
+        x5.style.display = "block";
+        x3.style.width = "570px";
         x2.innerHTML = "<b>Skrýt graf</b>";
     } else {
         x.style.display = "none";
+        x4.style.display = "none";
+        x5.style.display = "none";
         x3.style.width = "200px"
         x2.innerHTML = "<b>Zobrazit graf</b>";
     }
+    initChart();
 }
 
 function showHideTimeWindow()
@@ -1466,6 +1462,12 @@ function initChart() {
     {
         return;
     }
+
+    // Display district name
+    var district_name_box = document.getElementById("left_bottom_panel_district_text");
+    var time_box = document.getElementById("left_bottom_panel_time_window_text");
+    district_name_box.innerHTML = "Zvolený okres: " + okres_clicked_name;
+    time_box.innerHTML = "Časové okno: " + getFormattedDateLocal(current_time_window_low) + " - " + getFormattedDateLocal(current_time_window_high);
 
     var xArray = [];
     var yArray = [];
@@ -1541,8 +1543,8 @@ function initChart() {
         },
         height: 300,
         margin: {
-            l: 45,
-            r: 30,
+            l: 40,
+            r: 20,
             b: 30,
             t: 80,
             pad: 4
