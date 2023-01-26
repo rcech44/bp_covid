@@ -383,7 +383,7 @@ function stopAnimation() {
 
 // handle change animation speed clicker
 function changeAnimationSpeed(value) {
-    animation_speed = 11 - parseInt(value);
+    animation_speed = 16 - parseInt(value);
 }
 
 // https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
