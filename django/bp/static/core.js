@@ -156,6 +156,7 @@ function onResize()
 }
 
 function initPage() {
+    // $('#contactscreen').fadeOut(0);
     generateWeeksMonths();
 
     window.addEventListener('resize', onResize);
@@ -255,12 +256,14 @@ async function onClickMap(name, okres_lau, object)
 
     // Edit popup properties
     var popup_element_content = popups[0].children[0];
+    // var popup_wrapper = iframe.contentWindow.document.getElementsByClassName("leaflet-popup-content-wrapper")[0];
     popups[0].style.width = "auto";
     popups[0].style.height = "auto";
     popup_element_content.innerHTML = "";
 
     // Create popup elements
     var popup_table = document.createElement("table");
+    var popup_table_2 = document.createElement("table");
     var popup_row_1 = document.createElement("tr");
     var popup_row_2 = document.createElement("tr");
     var popup_row_3 = document.createElement("tr");
@@ -273,9 +276,16 @@ async function onClickMap(name, okres_lau, object)
     var popup_row_3_cell_2 = document.createElement("td");
     var popup_row_4_cell_1 = document.createElement("td");
     var popup_row_4_cell_2 = document.createElement("td");
+    var popup_hr = document.createElement("hr");
 
     // Edit popup elements
-    popup_table.style.width = "200px";
+    // popup_wrapper.style.backgroundColor = "#fbefe5";
+    popup_table.style.width = "180px";
+    popup_table_2.style.width = "180px";
+    popup_hr.style.marginRight = "30px";
+    popup_hr.style.marginLeft = "2px";
+    popup_hr.style.marginTop = "3px";
+    popup_hr.style.marginBottom = "5px";
     // popup_row_1_cell_1.setAttribute("width", "60%");
     // popup_row_2_cell_1.setAttribute("width", "60%");
     // popup_row_3_cell_1.setAttribute("width", "60%");
@@ -290,7 +300,7 @@ async function onClickMap(name, okres_lau, object)
     popup_row_4_cell_1.innerHTML = "<b>Počet obyvatel</b>";
     popup_row_1_cell_1.setAttribute("id", "text_okres_nazev");
     popup_row_1_cell_1.style.padding = "3px";
-    popup_row_1_cell_1.style.paddingBottom = "5px";
+    // popup_row_1_cell_1.style.paddingBottom = "5px";
     popup_row_1_cell_1.style.fontSize = "17px";
     popup_row_1_cell_1.style.fontWeight = "bolder";
     popup_row_2_cell_2.setAttribute("id", "text_okres_nakazeni");
@@ -317,10 +327,12 @@ async function onClickMap(name, okres_lau, object)
     popup_row_4.appendChild(popup_row_4_cell_1);
     popup_row_4.appendChild(popup_row_4_cell_2);
     popup_table.appendChild(popup_row_1);
-    popup_table.appendChild(popup_row_2);
-    popup_table.appendChild(popup_row_3);
-    popup_table.appendChild(popup_row_4);
+    popup_table_2.appendChild(popup_row_2);
+    popup_table_2.appendChild(popup_row_3);
+    popup_table_2.appendChild(popup_row_4);
     popup_element_content.appendChild(popup_table);
+    popup_element_content.appendChild(popup_hr);
+    popup_element_content.appendChild(popup_table_2);
 
     // Delete popup close button
     var close_buttons = iframe.contentWindow.document.getElementsByClassName("leaflet-popup-close-button");
@@ -1544,6 +1556,21 @@ function initChart() {
 function hideSplashScreen()
 {
     $('#splashscreen').fadeOut(350);
+}
+
+function showSplashScreen()
+{
+    $('#splashscreen').fadeIn(350);
+}
+
+function showContactScreen()
+{
+    $('#contactscreen').fadeIn(350);
+}
+
+function hideContactScreen()
+{
+    $('#contactscreen').fadeOut(350);
 }
 
 function generateWeeksMonths()

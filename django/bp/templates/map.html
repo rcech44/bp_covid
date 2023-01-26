@@ -199,9 +199,8 @@
                     fields.map(
                         (v, i) =>
                             `<tr>
-            <th>${aliases[i]}</th>
             
-            <td>${handleObject(layer.feature.properties[v])}</td>
+            <td><b>${handleObject(layer.feature.properties[v])}</b></td>
         </tr>`).join(''))
                 + '</table>';
             div.innerHTML = table;
