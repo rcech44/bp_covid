@@ -23,6 +23,7 @@ urlpatterns = [
     path('', covid.views.root, name='root'),
     path('admin/', admin.site.urls, name='admin'),
     path('main/', covid.views.main, name='main'),
+    path('main_material/', covid.views.main_material, name='main_material'),
     path('map/', covid.views.map, name='map'),
     path('map_pip/', covid.views.map_pip, name='map_pip'),
     path('statistics/', covid.views.statistics, name='statistics'),

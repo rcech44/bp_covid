@@ -51,6 +51,10 @@ def main(request):
     checkUpToDate()
     return render(request, 'main.html', {'data_covid': {}})
 
+def main_material(request):
+    checkUpToDate()
+    return render(request, 'main_material.html', {'data_covid': {}})
+
 def map(request):
     return render(request, 'map.html', {})
 
