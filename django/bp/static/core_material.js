@@ -283,18 +283,30 @@ async function onClickMap(name, okres_lau, object)
     var popup_row_4 = document.createElement("tr");
     var popup_row_1_cell_1 = document.createElement("td");
     var popup_row_1_cell_2 = document.createElement("td");
+    var popup_row_2_cell_0 = document.createElement("td");
     var popup_row_2_cell_1 = document.createElement("td");
     var popup_row_2_cell_2 = document.createElement("td");
+    var popup_row_3_cell_0 = document.createElement("td");
     var popup_row_3_cell_1 = document.createElement("td");
     var popup_row_3_cell_2 = document.createElement("td");
+    var popup_row_4_cell_0 = document.createElement("td");
     var popup_row_4_cell_1 = document.createElement("td");
     var popup_row_4_cell_2 = document.createElement("td");
+    var icon_1 = document.createElement("span");
+    var icon_2 = document.createElement("span");
+    var icon_3 = document.createElement("span");
     var popup_hr = document.createElement("hr");
 
     // Edit popup elements
     // popup_wrapper.style.backgroundColor = "#fbefe5";
-    popup_table.style.width = "180px";
-    popup_table_2.style.width = "180px";
+    icon_1.className = "material-symbols-outlined";
+    icon_2.className = "material-symbols-outlined";
+    icon_3.className = "material-symbols-outlined";
+    icon_1.innerHTML = "bar_chart";
+    icon_2.innerHTML = "grouped_bar_chart";
+    icon_3.innerHTML = "person";
+    popup_table.style.width = "200px";
+    popup_table_2.style.width = "200px";
     popup_hr.style.marginRight = "30px";
     popup_hr.style.marginLeft = "2px";
     popup_hr.style.marginTop = "3px";
@@ -308,21 +320,30 @@ async function onClickMap(name, okres_lau, object)
     // popup_row_3_cell_2.setAttribute("width", "40%");
     // popup_row_4_cell_2.setAttribute("width", "40%");
     // popup_row_1_cell_1.innerHTML = "<b>Okres</b>";
+    popup_row_2_cell_0.appendChild(icon_1);
     popup_row_2_cell_1.innerHTML = "<b>Hodnota</b>";
+    popup_row_3_cell_0.appendChild(icon_2);
     popup_row_3_cell_1.innerHTML = "<b>Hodnota / 100 tisíc</b>";
+    popup_row_4_cell_0.appendChild(icon_3);
     popup_row_4_cell_1.innerHTML = "<b>Počet obyvatel</b>";
     popup_row_1_cell_1.setAttribute("id", "text_okres_nazev");
     popup_row_1_cell_1.style.padding = "3px";
     // popup_row_1_cell_1.style.paddingBottom = "5px";
     popup_row_1_cell_1.style.fontSize = "17px";
     popup_row_1_cell_1.style.fontWeight = "bolder";
+    // popup_row_1_cell_1.style.marginLeft = "15px";
     popup_row_2_cell_2.setAttribute("id", "text_okres_nakazeni");
     popup_row_2_cell_1.style.padding = "3px";
+    popup_row_2_cell_1.style.paddingLeft = "5px";
     popup_row_3_cell_1.setAttribute("id", "text_current_data");
     popup_row_3_cell_2.setAttribute("id", "text_okres_nakazeni_100");
     popup_row_3_cell_1.style.padding = "3px";
+    popup_row_3_cell_1.style.paddingLeft = "5px";
+    popup_row_3_cell_1.style.paddingRight = "5px";
+    // popup_row_3_cell_1.style.marginLeft = "15px";
     popup_row_4_cell_2.setAttribute("id", "text_okres_pocet_obyvatel");
     popup_row_4_cell_1.style.padding = "3px";
+    popup_row_4_cell_1.style.paddingLeft = "5px";
 
     // Add district data into popup
     popup_row_1_cell_1.innerHTML = name;
@@ -333,10 +354,13 @@ async function onClickMap(name, okres_lau, object)
     // Add elements into popup
     popup_row_1.appendChild(popup_row_1_cell_1);
     popup_row_1.appendChild(popup_row_1_cell_2);
+    popup_row_2.appendChild(popup_row_2_cell_0);
     popup_row_2.appendChild(popup_row_2_cell_1);
     popup_row_2.appendChild(popup_row_2_cell_2);
+    popup_row_3.appendChild(popup_row_3_cell_0);
     popup_row_3.appendChild(popup_row_3_cell_1);
     popup_row_3.appendChild(popup_row_3_cell_2);
+    popup_row_4.appendChild(popup_row_4_cell_0);
     popup_row_4.appendChild(popup_row_4_cell_1);
     popup_row_4.appendChild(popup_row_4_cell_2);
     popup_table.appendChild(popup_row_1);
@@ -508,6 +532,8 @@ function updatePage() {
     output.innerHTML = selected_date.toLocaleDateString("cs-CZ");
     map_date.innerHTML = selected_date_text_local;
 
+    map_info_1.style.display = "block";
+    map_info_2.style.display = "block";
     switch (current_analysis) {
         case "nakazeni-analyze":
             map_info_1.innerHTML = "<b>Nové případy za tento den:</b> " + numberWithCommas(new_data[selected_date_text]['nove_celkovy_pocet']);
@@ -1444,6 +1470,22 @@ function showHideAnimationWindow()
         x.style.display = "block";
     } else {
         x.style.display = "none";
+    }
+}
+
+function showHideBottomLeft()
+{
+    var x = document.getElementById("info_table");
+    var x3 = document.getElementById("info_table_separator");
+    var x2 = document.getElementById("expand_button_1");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+        x3.style.display = "block";
+        x2.innerHTML = "expand_more";
+    } else {
+        x.style.display = "none";
+        x3.style.display = "none";
+        x2.innerHTML = "expand_less";
     }
 }
 
