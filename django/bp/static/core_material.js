@@ -740,23 +740,19 @@ function selectAnalysis(type) {
 
             switch (element) {
                 case 'nakazeni-analyze':
-                    document.getElementById("nakazeni-analyze").classList.add("w3-orange");
                     document.getElementById("nakazeni-analyze").style.opacity = 1;
-                    document.getElementById("nakazeni-analyze").style.borderStyle = "solid";
-                    document.getElementById("nakazeni-analyze").style.borderWidth = "2px";
-                    document.getElementById("nakazeni-analyze").style.borderColor = "#cc7900";
-                    document.getElementById("ockovani-analyze").classList.remove("w3-green");
-                    document.getElementById("ockovani-analyze").style.backgroundColor = "#FFFFFF";
+                    document.getElementById("nakazeni-analyze").style.borderBottom = "7px orange solid";
+                    document.getElementById("nakazeni-analyze").style.fontWeight = "900";
+                    document.getElementById("nakazeni-analyze").style.backgroundColor = "transparent";
                     document.getElementById("ockovani-analyze").style.opacity = 0.6;
-                    document.getElementById("ockovani-analyze").style.borderStyle = "none";
-                    document.getElementById("umrti-analyze").classList.remove("w3-grey");
-                    document.getElementById("umrti-analyze").style.backgroundColor = "#FFFFFF";
+                    document.getElementById("ockovani-analyze").style.borderBottom = "0px green solid";
+                    document.getElementById("ockovani-analyze").style.fontWeight = "normal";
                     document.getElementById("umrti-analyze").style.opacity = 0.6;
-                    document.getElementById("umrti-analyze").style.borderStyle = "none";
-                    document.getElementById("testovani-analyze").classList.remove("w3-deep-purple");
-                    document.getElementById("testovani-analyze").style.backgroundColor = "#FFFFFF";
+                    document.getElementById("umrti-analyze").style.borderBottom = "0px gray solid";
+                    document.getElementById("umrti-analyze").style.fontWeight = "normal";
                     document.getElementById("testovani-analyze").style.opacity = 0.6;
-                    document.getElementById("testovani-analyze").style.borderStyle = "none";
+                    document.getElementById("testovani-analyze").style.borderBottom = "0px purple solid";
+                    document.getElementById("testovani-analyze").style.fontWeight = "normal";
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#ff9800";
                     map_title.innerHTML = "Počty nakažených";
                     var options = [
@@ -779,23 +775,18 @@ function selectAnalysis(type) {
                     // document.getElementById("slider").style.backgroundColor = "#ffffff";
                     break;
                 case 'ockovani-analyze':
-                    document.getElementById("nakazeni-analyze").classList.remove("w3-orange");
-                    document.getElementById("nakazeni-analyze").style.backgroundColor = "#FFFFFF";
                     document.getElementById("nakazeni-analyze").style.opacity = 0.6;
-                    document.getElementById("nakazeni-analyze").style.borderStyle = "none";
-                    document.getElementById("ockovani-analyze").classList.add("w3-green");
+                    document.getElementById("nakazeni-analyze").style.borderBottom = "0px orange solid";
+                    document.getElementById("nakazeni-analyze").style.fontWeight = "normal";
                     document.getElementById("ockovani-analyze").style.opacity = 1;
-                    document.getElementById("ockovani-analyze").style.borderStyle = "solid";
-                    document.getElementById("ockovani-analyze").style.borderWidth = "2px";
-                    document.getElementById("ockovani-analyze").style.borderColor = "#357c38";
-                    document.getElementById("umrti-analyze").classList.remove("w3-grey");
-                    document.getElementById("umrti-analyze").style.backgroundColor = "#FFFFFF";
+                    document.getElementById("ockovani-analyze").style.borderBottom = "7px green solid";
+                    document.getElementById("ockovani-analyze").style.fontWeight = "bolder";
                     document.getElementById("umrti-analyze").style.opacity = 0.6;
-                    document.getElementById("umrti-analyze").style.borderStyle = "none";
-                    document.getElementById("testovani-analyze").classList.remove("w3-deep-purple");
-                    document.getElementById("testovani-analyze").style.backgroundColor = "#FFFFFF";
+                    document.getElementById("umrti-analyze").style.borderBottom = "0px gray solid";
+                    document.getElementById("umrti-analyze").style.fontWeight = "normal";
                     document.getElementById("testovani-analyze").style.opacity = 0.6;
-                    document.getElementById("testovani-analyze").style.borderStyle = "none";
+                    document.getElementById("testovani-analyze").style.borderBottom = "0px purple solid";
+                    document.getElementById("testovani-analyze").style.fontWeight = "normal";
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#4caf50";
                     map_title.innerHTML = "Počty naočkovaných";
 
@@ -825,23 +816,18 @@ function selectAnalysis(type) {
                     // document.getElementById("slider").style.background = "#ffffff";
                     break;
                 case 'umrti-analyze':
-                    document.getElementById("nakazeni-analyze").classList.remove("w3-orange");
-                    document.getElementById("nakazeni-analyze").style.backgroundColor = "#FFFFFF";
                     document.getElementById("nakazeni-analyze").style.opacity = 0.6;
-                    document.getElementById("nakazeni-analyze").style.borderStyle = "none";
-                    document.getElementById("ockovani-analyze").classList.remove("w3-green");
-                    document.getElementById("ockovani-analyze").style.backgroundColor = "#FFFFFF";
+                    document.getElementById("nakazeni-analyze").style.borderBottom = "0px orange solid";
+                    document.getElementById("nakazeni-analyze").style.fontWeight = "normal";
                     document.getElementById("ockovani-analyze").style.opacity = 0.6;
-                    document.getElementById("ockovani-analyze").style.borderStyle = "none";
-                    document.getElementById("umrti-analyze").classList.add("w3-grey");
+                    document.getElementById("ockovani-analyze").style.borderBottom = "0px green solid";
+                    document.getElementById("ockovani-analyze").style.fontWeight = "normal";
                     document.getElementById("umrti-analyze").style.opacity = 1;
-                    document.getElementById("umrti-analyze").style.borderStyle = "solid";
-                    document.getElementById("umrti-analyze").style.borderWidth = "2px";
-                    document.getElementById("umrti-analyze").style.borderColor = "#515151";
-                    document.getElementById("testovani-analyze").classList.remove("w3-deep-purple");
-                    document.getElementById("testovani-analyze").style.backgroundColor = "#FFFFFF";
+                    document.getElementById("umrti-analyze").style.borderBottom = "7px gray solid";
+                    document.getElementById("umrti-analyze").style.fontWeight = "bolder";
                     document.getElementById("testovani-analyze").style.opacity = 0.6;
-                    document.getElementById("testovani-analyze").style.borderStyle = "none";
+                    document.getElementById("testovani-analyze").style.borderBottom = "0px purple solid";
+                    document.getElementById("testovani-analyze").style.fontWeight = "normal";
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#9e9e9e";
                     map_title.innerHTML = "Počty úmrtí";
                     var options = [
@@ -862,23 +848,18 @@ function selectAnalysis(type) {
                     // document.getElementById("slider").style.background = "#ffffff";
                     break;
                 case 'testovani-analyze':
-                    document.getElementById("nakazeni-analyze").classList.remove("w3-orange");
-                    document.getElementById("nakazeni-analyze").style.backgroundColor = "#FFFFFF";
                     document.getElementById("nakazeni-analyze").style.opacity = 0.6;
-                    document.getElementById("nakazeni-analyze").style.borderStyle = "none";
-                    document.getElementById("ockovani-analyze").classList.remove("w3-green");
-                    document.getElementById("ockovani-analyze").style.backgroundColor = "#FFFFFF";
+                    document.getElementById("nakazeni-analyze").style.borderBottom = "0px orange solid";
+                    document.getElementById("nakazeni-analyze").style.fontWeight = "normal";
                     document.getElementById("ockovani-analyze").style.opacity = 0.6;
-                    document.getElementById("ockovani-analyze").style.borderStyle = "none";
-                    document.getElementById("umrti-analyze").classList.remove("w3-grey");
-                    document.getElementById("umrti-analyze").style.backgroundColor = "#FFFFFF";
+                    document.getElementById("ockovani-analyze").style.borderBottom = "0px green solid";
+                    document.getElementById("ockovani-analyze").style.fontWeight = "normal";
                     document.getElementById("umrti-analyze").style.opacity = 0.6;
-                    document.getElementById("umrti-analyze").style.borderStyle = "none";
-                    document.getElementById("testovani-analyze").classList.add("w3-deep-purple");
+                    document.getElementById("umrti-analyze").style.borderBottom = "0px gray solid";
+                    document.getElementById("umrti-analyze").style.fontWeight = "normal";
                     document.getElementById("testovani-analyze").style.opacity = 1;
-                    document.getElementById("testovani-analyze").style.borderStyle = "solid";
-                    document.getElementById("testovani-analyze").style.borderWidth = "2px";
-                    document.getElementById("testovani-analyze").style.borderColor = "#4a2983";
+                    document.getElementById("testovani-analyze").style.borderBottom = "7px purple solid";
+                    document.getElementById("testovani-analyze").style.fontWeight = "bolder";
 
                     document.getElementsByClassName("noUi-connect")[0].style.background = "#673ab7";
                     map_title.innerHTML = "Počty otestovaných (PCR)";
@@ -1557,7 +1538,7 @@ function initChart() {
             l: 40,
             r: 20,
             b: 30,
-            t: 80,
+            t: 90,
             pad: 4
         },
     };
