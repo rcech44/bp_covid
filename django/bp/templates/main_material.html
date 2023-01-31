@@ -18,8 +18,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href='https://fonts.googleapis.com/css?family=Poppins&family=Open Sans' rel='stylesheet'>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,150,0,0" />
-    <script src = "https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     <link rel = "stylesheet" href = "https://code.getmdl.io/1.3.0/material.blue_grey-indigo.min.css">
     {% comment %} <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet"> {% endcomment %}
     {% comment %} <script type="module" src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script> {% endcomment %}
@@ -46,6 +46,7 @@
     <script src="{% static 'nouislider.js' %}"></script>
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,0,0" />
     <style>
         html,
         body,
@@ -78,7 +79,7 @@
 
     <!-- Welcome window -->
     <div id="splashscreen"
-        style="position:absolute;top:0;left:0;bottom:0;width:100%;z-index: 99;height:100%;background-color: #ffffffaf;">
+        style="position:absolute;top:0;left:0;bottom:0;width:100%;z-index: 99;height:100%;background-color: #ffffffaf;display:none">
         <div class="w3-card"
             style="position: fixed;top: 50%;left: 50%;-webkit-transform: translate(-50%, -50%);transform: translate(-50%, -50%);opacity: 1;background-color: white;max-width: 800px;">
             <div style="margin:20px;">
@@ -247,50 +248,29 @@
     <div class="w3-light-gray" id="page-background">
 
         <div style="width:100%; height:100%;">
+            <div id="div_middle_top_part" style="left:calc(50% - 175px);display:none;margin-top:80px;z-index: 1;overflow: hidden;position: absolute;width:375px;height:100px">
+                <div class="w3-container w3-round w3-white w3-card" style="width:350px; height:75px;">
+                    <table style="margin-top:15px">
+                        <tr>
+                            <td style="width:18%"><span class="material-symbols-rounded" style="font-size:40px;margin-top:2px">
+                                error
+                                </span>
+                            </td>
+                            <td style="width:82%">Data nejsou v tento den dostupná k tomuto datasetu</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
             <div id="div_right_upper_part"
-                style="margin-right:10px; right:0; margin-top:80px;margin-bottom:10px;z-index: 1;background-color: rgba(255, 255, 255, 0);overflow: hidden;position: absolute;width:200px;height:fit-content">
-                <div class="w3-card w3-round"
-                    style="background-color:rgba(255, 255, 255, 1); margin-right: 10px; margin-bottom:10px">
+                style="margin-right:10px; right:0; margin-top:70px;margin-bottom:10px;z-index: 1;background-color: rgba(255, 255, 255, 0);overflow: hidden;position: absolute;width:200px;height:fit-content">
+                <div class="w3-card w3-round w3-animate-right" id="right_upper_panel"
+                    style="background-color:rgba(255, 255, 255, 1); margin-right: 10px; margin-bottom:10px;display:none;margin-top:10px;margin-left:10px">
                     <div class="w3-container" style="padding-top:10px;padding-bottom:10px;">
-                        <button id="button_right_upper_panel"
-                            class="w3-button w3-padding-small w3-ripple w3-small w3-block w3-white w3-center"
-                            style="outline: none;height:25px" onclick="showHideRightUpperPanel()">
-                            <b>Zobrazit obraz v obraze</b>
-                        </button>
-                        <div id="right_upper_panel" class="w3-animate-top"
-                            style="margin-top:10px;display:none;height:320px;margin-bottom:7px;">
-                            <hr>
-                            <div>
-                                <table style="width:100%">
-                                    <tr>
-                                        <td style="width:20%">Dataset:</td>
-                                        <td style="width:80%">
-                                            <select oninput="selectSliderPIPType(this.value)" class="form-control"
-                                                id="sel3" style="margin-top:0px">
-                                                <option>Infekce</option>
-                                                <option>Očkování</option>
-                                                <option>Úmrtí</option>
-                                                <option>PCR testování</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width:20%">Typ dat:</td>
-                                        <td style="width:80%">
-                                            <select oninput="selectSliderPIPData(this.value)" class="form-control"
-                                                id="sel4" style="margin-top:0px">
-                                                <option>Nové případy</option>
-                                                <option>Nové případy za poslední týden</option>
-                                                <option>Nové případy za poslední dva týdny</option>
-                                                <option>Nové případy lidí starších 65 let</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
+                        <div class="w3-animate-right"
+                            style="margin-top:10px;height:200px;margin-bottom:7px;">
                             <div>
                                 <iframe id="iframe_pip" src="/../map_pip"
-                                    style="position:absolute; top:0; left:0; bottom:0; right:0; width:100%; height:230px; margin-top:100px;border:none; padding:0;pointer-events: none;"
+                                    style="position:absolute; top:0; left:0; bottom:0; right:0; width:100%; height:210px; margin-top:0px;border:none; padding:0;pointer-events: none;"
                                     title="Iframe Example" onload="onIframePIPLoad()"></iframe>
                             </div>
                         </div>
@@ -298,21 +278,29 @@
                 </div>
             </div>
             <div
-                style="margin-left:20px; margin-top:80px;margin-bottom:10px;z-index: 1;background-color: rgba(255, 255, 255, 0);overflow: hidden;position: absolute;width:400px;height:fit-content">
+                style="margin-left:10px; margin-top:70px;margin-bottom:10px;z-index: 1;background-color: rgba(255, 255, 255, 0);overflow: hidden;position: absolute;width:400px;height:fit-content">
                 <div class="w3-card w3-round"
-                    style="background-color:rgba(255, 255, 255, 1); margin-right: 10px; margin-bottom:10px">
+                    style="background-color:rgba(255, 255, 255, 1); margin-right: 10px; margin-bottom:10px;margin-top:10px;margin-left:10px">
                     {% comment %} https://codepen.io/joosts/pen/rNLdxvK {% endcomment %}
                     <div class="w3-container" style="padding-top:10px;padding-bottom: 10px;">
                         <table style="width:100%">
                             <tr>
-                                <td style="width:50%"><button
+                                <td colspan="3" class="w3-large" style="width:100%;text-align:center;padding-bottom:15px;font-weight:bold;padding-top:10px">
+                                    Nastavení aplikace
+                                </td>
+                            <tr>
+                                <td style="width:33%"><button id="time_window_button"
                                         class="w3-button w3-padding-small w3-ripple w3-small w3-block w3-white w3-center"
-                                        style="outline: none;height:25px" onclick="showHideTimeWindow()"><b>Časové
-                                            okno</b></button></td>
-                                <td style="width:50%"><button
+                                        style="outline: none;height:25px;font-weight:bold;" onclick="showHideTimeWindow()">Časové
+                                            okno</button></td>
+                                <td style="width:33%"><button id="view_window_button"
                                         class="w3-button w3-padding-small w3-ripple w3-small w3-block w3-white w3-center"
                                         style="outline: none;height:25px"
-                                        onclick="showHideAnimationWindow()"><b>Data a animace</b></button></td>
+                                        onclick="showHideViewWindow()">Zobrazení</button></td>
+                                <td style="width:33%"><button id="animation_window_button"
+                                        class="w3-button w3-padding-small w3-ripple w3-small w3-block w3-white w3-center"
+                                        style="outline: none;height:25px"
+                                        onclick="showHideAnimationWindow()">Data a animace</button></td>
                             </tr>
                         </table>
                         <!-- <button id="button_left_upper_panel"
@@ -329,8 +317,6 @@
                         <div id="time_window" class="w3-animate-top" style="padding-bottom:5px;">
                             <div class="w3-center">
                                 <hr>
-                                <label for="sel1" style="margin-bottom:20px"><strong>Nastavení časového
-                                        okna</strong></label>
                                 <table style="width:100%">
                                     <tr>
                                         <td style="width:60%;text-align:left;">Data dostupná od:</td>
@@ -384,21 +370,8 @@
                                     onclick="confirmRangeAnalysis()"><b>Potvrdit</b></button>
                             </div>
                         </div>
-                        <div id="animation_window" class="w3-animate-top" style="display:none;padding-bottom:5px;">
+                        <div id="view_window" class="w3-animate-top" style="display:none;padding-bottom:5px;">
                             <hr>
-                            <label style="text-align:center;width:100%;margin-bottom: 10px;"
-                                ><strong>Data</strong></label>
-                            <table style="width:100%;margin-bottom:10px">
-                                <tr>
-                                    <td style="padding-top:10px">
-                                        Typ dat:
-                                    </td>
-                                    <td colspan="3" style="width:75%;padding-top:10px;">
-                                        <select oninput="selectSliderData(this.value)" class="form-control" id="sel2">
-                                        </select>
-                                    </td>
-                                </tr>
-                            </table>
                             <table style="width:100%">
                                 {% comment %} <tr>
                                     <td colspan="2" style="padding-top:9px">
@@ -406,10 +379,10 @@
                                     </td>
                                 </tr> {% endcomment %}
                                 <tr>
-                                    <td style="width:85%;padding-top:10px">
+                                    <td style="width:85%;padding-top:5px">
                                         Škálovat podle max. hodnoty v období
                                     </td>
-                                    <td class="w3-right" style="width:15%;text-align:right;margin-right:8px;padding-top:10px" align="right"> 
+                                    <td class="w3-right" style="width:15%;text-align:right;margin-right:8px;padding-top:5px" align="right"> 
                                         <label class = "mdl-switch mdl-js-switch mdl-js-ripple-effect w3-right" 
                                             for = "checkerChangeMaxValue">
                                             <input type = "checkbox" id="checkerChangeMaxValue" onclick="changeRecalculationMaxValue()" 
@@ -429,10 +402,87 @@
                                         </label>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td style="width:85%;padding-top:13px">
+                                        Zobrazit graf daného okresu
+                                    </td>
+                                    <td class="w3-right" style="width:15%;text-align:right;margin-right:8px;padding-top:13px" align="right"> 
+                                        <label class = "mdl-switch mdl-js-switch mdl-js-ripple-effect w3-right" 
+                                            for = "checkerChart">
+                                            <input type = "checkbox" id="checkerChart" onclick="showHideLeftBottomPanel2()" 
+                                                class = "mdl-switch__input w3-right">
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:85%;padding-top:13px">
+                                        Zobrazit obraz v obraze
+                                    </td>
+                                    <td class="w3-right" style="width:15%;text-align:right;margin-right:8px;padding-top:13px" align="right"> 
+                                        <label class = "mdl-switch mdl-js-switch mdl-js-ripple-effect w3-right" 
+                                            for = "to_do_2">
+                                            <input type = "checkbox" id="to_do_2" onclick="showHideRightUpperPanel()" 
+                                                class = "mdl-switch__input w3-right">
+                                        </label>
+                                    </td>
+                                </tr>
                             </table>
+                            <div id="pip_settings" class="w3-animate-top" style="display:none">
+                                <hr>
+                                <label style="margin-bottom:20px;text-align:center;width:100%"><strong>Nastavení obrazu v obraze (PiP)</strong></label>
+                                <table style="width:100%">
+                                    <tr>
+                                        <td style="width:20%">Dataset:</td>
+                                        <td style="width:80%">
+                                            <select oninput="selectSliderPIPType(this.value)" class="form-control"
+                                                id="sel3" style="margin-top:0px">
+                                                <option>Infekce</option>
+                                                <option>Očkování</option>
+                                                <option>Úmrtí</option>
+                                                <option>PCR testování</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:20%;padding-top:5px">Typ dat:</td>
+                                        <td style="width:80%;padding-top:5px">
+                                            <select oninput="selectSliderPIPData(this.value)" class="form-control"
+                                                id="sel4" style="margin-top:0px">
+                                                <option>Nové případy</option>
+                                                <option>Nové případy za poslední týden</option>
+                                                <option>Nové případy za poslední dva týdny</option>
+                                                <option>Nové případy lidí starších 65 let</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            
+                        </div>
+                        <div id="animation_window" class="w3-animate-top" style="display:none;padding-bottom:5px;">
                             <hr>
-                            <label style="text-align:center;width:100%;margin-bottom: 10px;">
-                                <strong>Animace</strong></label>
+                            <table style="width:100%;margin-bottom:15px">
+                                <tr>
+                                    <td style="width:25%;padding-top:10px">
+                                        Typ dat:
+                                    </td>
+                                    <td colspan="2" style="width:75%;padding-top:10px;">
+                                        <select oninput="selectSliderData(this.value)" class="form-control" id="sel2">
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="width:75%;padding-top:10px">
+                                        Rychlost animace:
+                                    </td>
+                                    <td style="width:25%;padding-top:5px">
+                                        <input onchange="changeAnimationSpeed(this.value)" class="form-control"
+                                            type="number" id="quantity" name="quantity" min="1" max="10" value="5"
+                                            style="width:100%">
+                                    </td>
+                                </tr>
+                            </table>
                             <table style="width:100%;margin-bottom:10px">
                                 <tr>
                                     <td style="width:5%"><button style="width:10px" class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect"
@@ -450,18 +500,8 @@
                             <table style="width:100%">
                                 <tr>
                                     <td colspan="2" id="slider_text"
-                                        style="width:100%;text-align: center;font-weight: bold">
+                                        style="width:100%;text-align: center;font-weight: bold;padding-bottom:10px">
                                         -
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="width:75%;padding-top:10px">
-                                        Rychlost animace:
-                                    </td>
-                                    <td style="width:25%;padding-top:5px">
-                                        <input onchange="changeAnimationSpeed(this.value)" class="form-control"
-                                            type="number" id="quantity" name="quantity" min="1" max="10" value="5"
-                                            style="width:100%">
                                     </td>
                                 </tr>
                             </table>
@@ -472,7 +512,7 @@
                                             onclick="handleAnimation()"><b>Spustit animaci</b></button></td>
                                     <td style="width:5%"></td>
                                     <td style="width:25%;padding-top:10px"><button
-                                            class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" style="font-size:12px"
+                                            class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" style="font-size:12px;width:100%"
                                             onclick="stopAnimation()"><b>Zastavit</b></button></td>
                                 </tr>
                             </table>
@@ -485,11 +525,11 @@
             </div>
         </div>
         <div
-        id="right_bottom_container" style="bottom:0; right:0; margin-right:20px; margin-bottom: 20px;z-index: 1;background-color: rgba(255, 255, 255, 0);overflow: hidden;position: absolute;width:200px;height:auto">
-            <div class="w3-card w3-round" style="background-color:rgba(255, 255, 255, 1); margin-bottom:10px;">
-                <div class="w3-container" style="padding-top:10px;padding-bottom:10px;">
+        id="right_bottom_container" style="bottom:0; right:0; margin-right:10px; margin-bottom: 20px;z-index: 1;background-color: rgba(255, 255, 255, 0);overflow: hidden;position: absolute;width:570px;height:auto">
+            <div id="left_bottom_panel_2" class="w3-card w3-round w3-animate-right" style="display:none;background-color:rgba(255, 255, 255, 1); margin-bottom:10px;margin-top:10px;margin-right:10px;margin-left:10px">
+                <div class="w3-container" style="padding-top:10px;padding-bottom:10px;padding-right:15px">
 
-                <div id="left_bottom_panel_2" class="w3-animate-bottom" style="display:none;background-color:#ffffff99;">
+                <div class="w3-animate-right" style="background-color:#ffffff99;">
                     <div id="district_chart" style="width:100%;max-height: 400px;max-width: 550px"></div>
                 </div>
                 <div id="left_bottom_panel_district_text" style="width:100%;text-align:right;padding-right:10px;display:none;font-style:italic;font-size:12px">
@@ -497,21 +537,17 @@
                 </div>
                 <div id="left_bottom_panel_time_window_text" style="width:100%;text-align:right;padding-right:10px;display:none;font-style:italic;font-size:12px;margin-bottom:5px">
                 </div>
-                <button id="button_left_bottom_panel_2"
-                                class="w3-button w3-padding-small w3-ripple w3-small w3-block w3-white w3-center"
-                                style="outline: none;height:25px" onclick="showHideLeftBottomPanel2()"><b>Zobrazit
-                                    graf</b></button>
                 </div>
             </div>
         </div>
         <div
-            style="bottom:0; left:0; margin-left:20px; margin-bottom:10px;z-index: 1;background-color: rgba(255, 255, 255, 0);overflow: hidden;position: absolute;width:fit-content;height:fit-content">
-            <div class="w3-card w3-round-large" style="background-color:rgba(255, 255, 255, 0.7);margin-bottom:10px;margin-right:5px;padding-top: 13px;padding-bottom:13px">
-                <table id="info_table" style="margin-left: 10px; margin-right: 10px;display:block">
-                    <!-- <tr>
-                        <td id="map_date" style="text-align:left;font-size: x-large;height:50px">Vizualizace
+            style="bottom:0; left:0; margin-left:10px; margin-bottom:10px;z-index: 1;background-color: rgba(255, 255, 255, 0);overflow: hidden;position: absolute;width:fit-content;height:fit-content">
+            <div class="w3-card w3-round-large" style="background-color:rgba(255, 255, 255, 0.7);margin-bottom:10px;margin-right:5px;padding-top: 13px;padding-bottom:13px;margin-top:10px;margin-left:10px">
+                <table id="info_table" style="margin-left: 10px; margin-right: 10px;padding-left:10px;padding-right:10px;display:block">
+                    <tr>
+                        <td id="map_date_1" style="text-align:left;font-size: x-large;height:40px">Vizualizace
                             COVID-19 dat</td>
-                    </tr> -->
+                    </tr>
                     <tr>
                         <td id="map_info_1" style="text-align:left;font-size: small;height:20px">Zvolte data k
                             vizualizaci (viz. tlačítka výše).</td>
@@ -525,7 +561,7 @@
                             můžete přizpůsobit v panelu pod časovým oknem.</td>
                     </tr>
                 </table>
-                <hr id="info_table_separator" style="background-color:rgb(139, 139, 139);height:1px;margin-left: 10px;margin-right: 10px;margin-bottom: 10px;margin-top:10px;visibility:hidden;">
+                <hr id="info_table_separator" style="background-color:rgb(139, 139, 139);height:1px;margin-left: 10px;margin-right: 10px;margin-bottom: 5px;margin-top:10px;visibility:hidden;">
                 <table>
                     <tr>
                         <td>
@@ -543,7 +579,7 @@
                             </tr>
                             </table>
                         </td>
-                        <td id="map_date" style="text-align:center;font-size: 20px;font-weight:bold;min-width:150px;margin-right:10px;border-left: 1px solid black;height: 20px;padding-right:10px;padding-left:10px">1.3.2020</td>
+                        <td id="map_date_2" style="display:none;text-align:center;font-size: 20px;font-weight:bold;min-width:150px;margin-right:10px;border-left: 1px solid black;height: 20px;padding-right:10px;padding-left:10px">1.3.2020</td>
                     </tr>
                 </table>
             </div>
@@ -583,6 +619,11 @@
             overlayBg.style.display = "none";
         }
     </script>
+
+    <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button class="mdl-snackbar__action" type="button"></button>
+    </div>
 
 </body>
 

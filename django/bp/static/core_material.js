@@ -31,6 +31,7 @@ var current_analysis = "nakazeni-analyze";
 var current_pip_analysis = "nakazeni-analyze";
 var analysis_selected = false;
 var analysis_changed = true;
+var analysis_first_picked = false;
 var slider_values;
 var days_since_covid;
 var slider_current_type = "Den";
@@ -78,6 +79,7 @@ var current_analysis_color;
 var main_slider_range_max = (new Date().getTime() - covid_start.getTime()) / (1000 * 3600 * 24);
 var current_time_window_low;
 var current_time_window_high;
+var warning_block;
 // if (new Date().getHours() >= 20)
 // {
 //     main_slider_range_max = (new Date().getTime() - covid_start.getTime()) / (1000 * 3600 * 24);
@@ -124,7 +126,8 @@ function loadPageComponents() {
     map_info_1 = document.getElementById("map_info_1");
     map_info_2 = document.getElementById("map_info_2");
     map_info_3 = document.getElementById("map_info_3");
-    map_date = document.getElementById("map_date");
+    map_date_1 = document.getElementById("map_date_1");
+    map_date_2 = document.getElementById("map_date_2");
     map_title = document.getElementById("map_title");
     slider = document.getElementById("slider");
     output = document.getElementById("slider_text");
@@ -133,6 +136,7 @@ function loadPageComponents() {
     iframe_pip = document.getElementById("iframe_pip");
     select_2 = document.getElementById("sel2");
     snackbar = document.getElementById("snackbar");
+    warning_block = document.getElementById("div_middle_top_part");
 }
 
 function onResize()
@@ -399,7 +403,7 @@ function sleep(ms) {
 // handle animation button
 async function handleAnimation() {
     if (analysis_changed) {
-        toast("Prosím potvrďte nové změny");
+        newToast("Prosím potvrďte nové změny");
         return;
     }
     ongoing_animation = true;
@@ -480,8 +484,14 @@ function getFormattedDate(date) {
 // function that updates slider text
 function updatePage() {
 
+    if (!analysis_first_picked)
+    {
+        newToast("Prosím potvrďte volbu datasetu v okně \"Časové okno\"");
+        return;
+    }
+
     if (analysis_changed) {
-        toast("Prosím potvrďte nové změny");
+        newToast("Prosím potvrďte nové změny");
         return;
     }
     
@@ -530,10 +540,12 @@ function updatePage() {
 
     // Update some values and texts on page
     output.innerHTML = selected_date.toLocaleDateString("cs-CZ");
-    map_date.innerHTML = selected_date_text_local;
+    map_date_1.innerHTML = selected_date_text_local;
+    map_date_2.innerHTML = selected_date_text_local;
 
     map_info_1.style.display = "block";
     map_info_2.style.display = "block";
+    warning_block.style.display = "none";
     switch (current_analysis) {
         case "nakazeni-analyze":
             map_info_1.innerHTML = "<b>Nové případy za tento den:</b> " + numberWithCommas(new_data[selected_date_text]['nove_celkovy_pocet']);
@@ -547,21 +559,21 @@ function updatePage() {
             map_info_3.innerHTML = "<b>Celkový počet obyvatel naočkovaných alespoň první a druhou dávkou:</b> " + numberWithCommas(new_data[selected_date_text]['davka_2_doposud']);
             map_info_2.innerHTML = "<b>Celkový počet zaznamenaných očkování doposud:</b> " + numberWithCommas(new_data[selected_date_text]['davka_celkem_doposud']);
             map_info_3.style.display = "block";
-            if (selected_date < vaccination_start) map_date.innerHTML = selected_date_text_local + " (data nejsou v tento den dostupná)";
+            if (selected_date < vaccination_start) warning_block.style.display = "block";
             break;
         case "umrti-analyze":
             map_info_1.innerHTML = "<b>Počet zemřelých tento den:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_den']);
             map_info_2.innerHTML = "<b>Celkový počet zemřelých k tomuto dni:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_doposud']);
             map_info_3.innerHTML = "";
             map_info_3.style.display = "none";
-            if (selected_date < deaths_start) map_date.innerHTML = selected_date_text_local + " (data nejsou v tento den dostupná)";
+            if (selected_date < deaths_start) warning_block.style.display = "block";
             break;
         case "testovani-analyze":
             map_info_1.innerHTML = "<b>Počet otestovaných tento den:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_prirustek_den']);
             map_info_2.innerHTML = "<b>Celkový počet otestovaných k tomuto dni:</b> " + numberWithCommas(new_data[selected_date_text]['celkem_celkem_den']);
             map_info_3.innerHTML = "";
             map_info_3.style.display = "none";
-            if (selected_date < testing_start) map_date.innerHTML = selected_date_text_local + " (data nejsou v tento den dostupná)";
+            if (selected_date < testing_start) warning_block.style.display = "block";
             break;
     }
 
@@ -677,7 +689,7 @@ function updatePage() {
                 color2 = [255, 255, 255];
                 break;
             case "testovani-analyze":
-                color1 = [0, 0, 200];
+                color1 = [128, 0, 128];
                 color2 = [255, 255, 255];
                 break;
             default:
@@ -700,7 +712,7 @@ function updatePage() {
                 color2_PIP = [255, 255, 255];
                 break;
             case "testovani-analyze":
-                color1_PIP = [0, 0, 200];
+                color1_PIP = [128, 0, 128];
                 color2_PIP = [255, 255, 255];
                 break;
             default:
@@ -768,7 +780,8 @@ function selectAnalysis(type) {
                 case 'nakazeni-analyze':
                     document.getElementById("nakazeni-analyze").style.opacity = 1;
                     document.getElementById("nakazeni-analyze").style.borderBottom = "7px orange solid";
-                    document.getElementById("nakazeni-analyze").style.fontWeight = "900";
+                    document.getElementById("nakazeni-analyze").style.fontWeight = "bolder";
+                    // document.getElementById("nakazeni-analyze").style.fontSize = "22px";
                     document.getElementById("nakazeni-analyze").style.backgroundColor = "transparent";
                     document.getElementById("ockovani-analyze").style.opacity = 0.6;
                     document.getElementById("ockovani-analyze").style.borderBottom = "0px green solid";
@@ -910,9 +923,11 @@ function selectAnalysis(type) {
         }
 
     })
+    
+    analysis_selected = true;
     if (analysis_selected)
         selectSliderData(select_2.value);
-    analysis_selected = true;
+    
     // updatePage();
 }
 
@@ -1156,7 +1171,7 @@ function selectSliderPIPData(value)
 
 function selectSliderData(value) {
     map_show_data = value;
-    initChart();
+    // initChart();
     switch (value) {
         case "Současně nakažení":
             map_title.innerHTML = "Současný počet případů";
@@ -1229,7 +1244,7 @@ function selectSliderData(value) {
 
 function confirmRangeAnalysis() {
     if (!analysis_selected) {
-        toast("Vyberte prosím data k vizualizaci");
+        newToast("Vyberte prosím data k vizualizaci");
         return;
     }
 
@@ -1299,7 +1314,7 @@ function confirmRangeAnalysis() {
     var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
       
 
-    loadingToast("Stahuji nová data...");
+    newToast("Stahuji nová data...");
     $.ajax({
         url: url,
         headers: { 'accept': 'application/json' },
@@ -1323,20 +1338,21 @@ function confirmRangeAnalysis() {
             initChart();
 
             // Open animation tab
-            document.getElementById("time_window").style.display = "none";
-            document.getElementById("animation_window").style.display = "block";
+            showHideAnimationWindow();
         },
         error: function (error) {
             console.log(error);
-            toast('Prosím vyčkejte před dalším požadavkem')
+            newToast('Prosím vyčkejte před dalším požadavkem')
         }
     })
+
+    analysis_first_picked = true;
 }
 
 function processGetDataFromSlider(result) {
     new_data = result;
     updatePage();
-    toast("Byla aktualizována data.");
+    newToast("Byla aktualizována data.");
 }
 
 function toast(message) {
@@ -1364,7 +1380,7 @@ function loadingToast(message) {
 
 function sliderDateChange(value) {
     if (analysis_changed) {
-        toast("Prosím potvrďte nové změny");
+        newToast("Prosím potvrďte nové změny");
         return;
     }
     var curr = parseInt(slider.value);
@@ -1375,7 +1391,7 @@ function sliderDateChange(value) {
 
 function iframeCheckClick() {
     if (map_enabled == false) {
-        toast("Prosím vyberte data na analyzování");
+        newToast("Prosím vyberte data na analyzování");
     }
 }
 
@@ -1403,16 +1419,19 @@ function changeRecalculationMaxValue()
 
 function showHideRightUpperPanel() {
     var x = document.getElementById("right_upper_panel");
+    var x2 = document.getElementById("pip_settings");
     var x3 = document.getElementById("div_right_upper_part");
-    var x2 = document.getElementById("button_right_upper_panel");
+    // var x2 = document.getElementById("button_right_upper_panel");
     if (x.style.display === "none") {
         x.style.display = "block";
+        x2.style.display = "block";
         x3.style.width = "400px";
-        x2.innerHTML = "<b>Skrýt obraz v obraze</b>";
+        // x2.innerHTML = "<b>Skrýt obraz v obraze</b>";
     } else {
         x.style.display = "none";
+        x2.style.display = "none";
         x3.style.width = "200px";
-        x2.innerHTML = "<b>Zobrazit obraz v obraze</b>";
+        // x2.innerHTML = "<b>Zobrazit obraz v obraze</b>";
     }
 }
 
@@ -1431,7 +1450,7 @@ function showHideLeftUpperPanel() {
 function showHideLeftBottomPanel2() {
     var x = document.getElementById("left_bottom_panel_2");
     // document.getElementById("left_bottom_panel_1").style.display = "none";
-    var x2 = document.getElementById("button_left_bottom_panel_2");
+    // var x2 = document.getElementById("button_left_bottom_panel_2");
     var x3 = document.getElementById("right_bottom_container");
     var x4 = document.getElementById("left_bottom_panel_district_text");
     var x5 = document.getElementById("left_bottom_panel_time_window_text");
@@ -1439,14 +1458,14 @@ function showHideLeftBottomPanel2() {
         x.style.display = "block";
         x4.style.display = "block";
         x5.style.display = "block";
-        x3.style.width = "570px";
-        x2.innerHTML = "<b>Skrýt graf</b>";
+        // x3.style.width = "570px";
+        // x2.innerHTML = "<b>Skrýt graf</b>";
     } else {
         x.style.display = "none";
         x4.style.display = "none";
         x5.style.display = "none";
-        x3.style.width = "200px"
-        x2.innerHTML = "<b>Zobrazit graf</b>";
+        // x3.style.width = "200px"
+        // x2.innerHTML = "<b>Zobrazit graf</b>";
     }
     initChart();
 }
@@ -1454,11 +1473,26 @@ function showHideLeftBottomPanel2() {
 function showHideTimeWindow()
 {
     var x = document.getElementById("time_window");
+    document.getElementById("view_window").style.display = "none";
     document.getElementById("animation_window").style.display = "none";
+    document.getElementById("time_window_button").style.fontWeight = "bold";
+    document.getElementById("view_window_button").style.fontWeight = "normal";
+    document.getElementById("animation_window_button").style.fontWeight = "normal";
     if (x.style.display === "none") {
         x.style.display = "block";
-    } else {
-        x.style.display = "none";
+    }
+}
+
+function showHideViewWindow()
+{
+    var x = document.getElementById("view_window");
+    document.getElementById("time_window").style.display = "none";
+    document.getElementById("animation_window").style.display = "none";
+    document.getElementById("time_window_button").style.fontWeight = "normal";
+    document.getElementById("view_window_button").style.fontWeight = "bold";
+    document.getElementById("animation_window_button").style.fontWeight = "normal";
+    if (x.style.display === "none") {
+        x.style.display = "block";
     }
 }
 
@@ -1466,10 +1500,12 @@ function showHideAnimationWindow()
 {
     var x = document.getElementById("animation_window");
     document.getElementById("time_window").style.display = "none";
+    document.getElementById("view_window").style.display = "none";
+    document.getElementById("time_window_button").style.fontWeight = "normal";
+    document.getElementById("view_window_button").style.fontWeight = "normal";
+    document.getElementById("animation_window_button").style.fontWeight = "bold";
     if (x.style.display === "none") {
         x.style.display = "block";
-    } else {
-        x.style.display = "none";
     }
 }
 
@@ -1482,10 +1518,12 @@ function showHideBottomLeft()
         x.style.display = "block";
         x3.style.display = "block";
         x2.innerHTML = "expand_more";
+        map_date_2.style.display = "none";
     } else {
         x.style.display = "none";
         x3.style.display = "none";
         x2.innerHTML = "expand_less";
+        map_date_2.style.display = "";
     }
 }
 
@@ -1577,8 +1615,8 @@ function initChart() {
         },
         height: 300,
         margin: {
-            l: 40,
-            r: 20,
+            l: 30,
+            r: 30,
             b: 30,
             t: 90,
             pad: 4
@@ -1642,4 +1680,12 @@ function generateWeeksMonths()
 function daysInMonth (month, year) 
 {
     return new Date(year, month, 0).getDate();
+}
+
+function newToast(text)
+{
+    'use strict';
+    var snackbarContainer = document.querySelector('#demo-toast-example');
+    var data = {message: text, timeout: 2000};
+    snackbarContainer.MaterialSnackbar.showSnackbar(data);
 }
