@@ -1482,8 +1482,11 @@ function showHideTimeWindow()
     document.getElementById("view_window").style.display = "none";
     document.getElementById("animation_window").style.display = "none";
     document.getElementById("time_window_button").style.fontWeight = "bold";
+    document.getElementById("time_window_cell").style.borderBottom = "4px #6d6d6d solid";
     document.getElementById("view_window_button").style.fontWeight = "normal";
+    document.getElementById("view_window_cell").style.borderBottom = "0px #6d6d6d solid";
     document.getElementById("animation_window_button").style.fontWeight = "normal";
+    document.getElementById("animation_window_cell").style.borderBottom = "0px #6d6d6d solid";
     if (x.style.display === "none") {
         x.style.display = "block";
     }
@@ -1495,8 +1498,11 @@ function showHideViewWindow()
     document.getElementById("time_window").style.display = "none";
     document.getElementById("animation_window").style.display = "none";
     document.getElementById("time_window_button").style.fontWeight = "normal";
+    document.getElementById("time_window_cell").style.borderBottom = "0px #6d6d6d solid";
     document.getElementById("view_window_button").style.fontWeight = "bold";
+    document.getElementById("view_window_cell").style.borderBottom = "4px #6d6d6d solid";
     document.getElementById("animation_window_button").style.fontWeight = "normal";
+    document.getElementById("animation_window_cell").style.borderBottom = "0px #6d6d6d solid";
     if (x.style.display === "none") {
         x.style.display = "block";
     }
@@ -1508,8 +1514,11 @@ function showHideAnimationWindow()
     document.getElementById("time_window").style.display = "none";
     document.getElementById("view_window").style.display = "none";
     document.getElementById("time_window_button").style.fontWeight = "normal";
+    document.getElementById("time_window_cell").style.borderBottom = "0px #6d6d6d solid";
     document.getElementById("view_window_button").style.fontWeight = "normal";
+    document.getElementById("view_window_cell").style.borderBottom = "0px #6d6d6d solid";
     document.getElementById("animation_window_button").style.fontWeight = "bold";
+    document.getElementById("animation_window_cell").style.borderBottom = "4px #6d6d6d solid";
     if (x.style.display === "none") {
         x.style.display = "block";
     }
