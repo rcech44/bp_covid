@@ -1495,6 +1495,21 @@ function showHideTimeWindow()
 function showHideViewWindow()
 {
     var x = document.getElementById("view_window");
+    var x2 = document.getElementById("animation_window");
+
+    if (x2.style.display == "none")
+    {
+        x.classList.remove("w3-animate-right");
+        x.classList.remove("w3-animate-left");
+        x.classList.add("w3-animate-right");
+    }
+    else
+    {
+        x.classList.remove("w3-animate-right");
+        x.classList.remove("w3-animate-left");
+        x.classList.add("w3-animate-left");
+    }
+
     document.getElementById("time_window").style.display = "none";
     document.getElementById("animation_window").style.display = "none";
     document.getElementById("time_window_button").style.fontWeight = "normal";
