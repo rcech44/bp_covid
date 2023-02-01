@@ -55,6 +55,10 @@ def main_material(request):
     checkUpToDate()
     return render(request, 'main_material.html', {'data_covid': {}})
 
+def main_material_navbar(request):
+    checkUpToDate()
+    return render(request, 'main_material_navbar.html', {'data_covid': {}})
+
 def map(request):
     return render(request, 'map.html', {})
 

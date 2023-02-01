@@ -47,6 +47,7 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link rel="stylesheet" href="{% static 'ripple_effect.css' %}" />
     <style>
         html,
         body,
@@ -200,7 +201,7 @@
     </div> -->
 
     <div id="topbar" class="w3-bar w3-top w3-white w3-large w3-card w3-round-large" style="z-index:4;width:calc(100% - 30px);height: 53px;margin-top:15px;margin-right:15px;margin-left:15px">
-        <table style="width:100%" cellspacing="3px">
+        <table style="width:100%;z-index:5" cellspacing="3px" id="ripple_effect">
             <tr>
                 <td style="width:2%;padding-top:0px;padding-left: 10px">
                     <img src="{% static 'pictures/vsb_long.png' %}" style="max-height: 53px">
@@ -210,19 +211,19 @@
                 </td>
                 <td style="padding-right: 20px;padding-left: 20px;text-align: right;width:160px;max-width: 160px">
                     <div id="nakazeni-analyze" color="w3-orange" class="w3-center" style="cursor: pointer;min-height:54px;padding-top:17px"
-                        onclick="selectAnalysis('nakazeni-analyze')">Infekce</div>
+                        onclick="selectAnalysis('nakazeni-analyze'); createRipple(&quot;ripple_orange&quot;, &quot;nakazeni-analyze&quot;);">Infekce</div>
                 </td>
                 <td style="padding-right: 20px;text-align: right;width:140px;max-width: 140px">
                     <div id="umrti-analyze" color="w3-grey" class="w3-center" style="cursor: pointer;min-height:54px;padding-top:17px"
-                        onclick="selectAnalysis('umrti-analyze')">Úmrtí</div>
+                        onclick="selectAnalysis('umrti-analyze'); createRipple(&quot;ripple_gray&quot;, &quot;umrti-analyze&quot;);">Úmrtí</div>
                 </td>
                 <td valign="center" style="padding-right: 20px;text-align: right;width:160px;max-width: 160px;">
                     <div id="ockovani-analyze" color="w3-green" class="w3-center" style="cursor: pointer;min-height:54px;padding-top:17px"
-                        onclick="selectAnalysis('ockovani-analyze')">Očkování</div>
+                        onclick="selectAnalysis('ockovani-analyze'); createRipple(&quot;ripple_green&quot;, &quot;ockovani-analyze&quot;);">Očkování</div>
                 </td>
                 <td valign="center" style="padding-right: 20px;text-align: right;width:160px;max-width: 160px;">
                     <div id="testovani-analyze" color="w3-deep-purple" class="w3-center"
-                        style="cursor: pointer;min-height:54px;padding-top:17px" onclick="selectAnalysis('testovani-analyze')">PCR testy</div>
+                        style="cursor: pointer;min-height:54px;padding-top:17px" onclick="selectAnalysis('testovani-analyze'); createRipple(&quot;ripple_purple&quot;, &quot;testovani-analyze&quot;);">PCR testy</div>
                 </td>
                 <td valign="center" style="width:60px;padding-right: 20px;text-align: right">
                     <div color="w3-deep-purple" class="w3-card w3-center w3-blue w3-round"
@@ -319,11 +320,11 @@
                                 <hr style="margin-bottom:23px">
                                 <table style="width:100%">
                                     <tr>
-                                        <td style="width:60%;text-align:left">Data dostupná od:</td>
+                                        <td style="width:60%;text-align:left">Data dostupná od</td>
                                         <td id="analysis-text-datefrom" style="width:40%;text-align:left">zvolte dataset</td>
                                     </tr>
                                     <tr>
-                                        <td style="width:60%;text-align: left;padding-top: 10px;">Části časového okna:
+                                        <td style="width:60%;text-align: left;padding-top: 10px;">Části časového okna
                                         </td>
                                         <td style="width:40%;padding-top: 10px;">
                                             <select oninput="selectSliderType(this.value)" class="form-control"
@@ -332,6 +333,18 @@
                                                 <option>Týden</option>
                                                 <option>Měsíc</option>
                                             </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:70%;text-align:left;padding-top:4px">
+                                            Zobrazit covidové vlny
+                                        </td>
+                                        <td class="w3-right" style="width:30%;text-align:right;margin-right:8px;margin-top:10px;margin-bottom:3px" align="right"> 
+                                            <label class = "mdl-switch mdl-js-switch mdl-js-ripple-effect w3-right" 
+                                                for = "checkerCovidWave">
+                                                <input type = "checkbox" id="checkerCovidWave" onclick="checkboxCovidWaveClick(this)" 
+                                                    class = "mdl-switch__input w3-right">
+                                            </label>
                                         </td>
                                     </tr>
                                 </table>
@@ -347,26 +360,8 @@
                                     <td id="slider-max" style="margin-right:10px;text-align:right;width:33%;"></td>
                                 </tr>
                             </table>
-                            <div style="margin-top:15px;margin-bottom: 10px;">
-                                {% comment %} <input type="checkbox" id="checkerCovidWave" onclick="checkboxCovidWaveClick(this)">
-                                <label for="checkerCovidWave"> Zobrazit covidové vlny</label> {% endcomment %}
-                                <table style="width:100%;">
-                                    <tr>
-                                        <td style="width:70%;">
-                                            Zobrazit covidové vlny
-                                        </td>
-                                        <td class="w3-right" style="width:30%;text-align:right;margin-right:8px;margin-top:3px;margin-bottom:3px" align="right"> 
-                                            <label class = "mdl-switch mdl-js-switch mdl-js-ripple-effect w3-right" 
-                                                for = "checkerCovidWave">
-                                                <input type = "checkbox" id="checkerCovidWave" onclick="checkboxCovidWaveClick(this)" 
-                                                    class = "mdl-switch__input w3-right">
-                                            </label>
-                                        </td>
-                                    </tr>
-                                 </table>   
-                            </div>
                             <div class="w3-center">
-                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" style="width:100%;font-size:12px"
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" style="width:100%;font-size:12px;margin-top:15px"
                                     onclick="confirmRangeAnalysis()"><b>Potvrdit</b></button>
                             </div>
                         </div>
@@ -386,13 +381,63 @@
                                                     onclick="decreaseMapOpacity()"><i class="material-icons">remove</i></button>
                                                 </td>
                                                 <td style="width:60%;text-align:center">
-                                                    <span id="opacity_text" style="width:100%">60%
+                                                    <span id="map_opacity_text" style="width:100%">60%
                                                     </span>
                                                 </td>
                                                 <td style="width:20%">
                                                     <button
                                                     class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect"
                                                     onclick="increaseMapOpacity()"><i class="material-icons">add</i></button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:65%;padding-top:3px">
+                                        Průhlednost okresů
+                                    </td>
+                                    <td style="width:35%;padding-top:3px" align="right">
+                                        <table style="width:100%">
+                                            <tr>
+                                                <td style="width:20%">
+                                                    <button
+                                                    class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect"
+                                                    onclick="decreaseDistrictOpacity()"><i class="material-icons">remove</i></button>
+                                                </td>
+                                                <td style="width:60%;text-align:center">
+                                                    <span id="district_opacity_text" style="width:100%">70%
+                                                    </span>
+                                                </td>
+                                                <td style="width:20%">
+                                                    <button
+                                                    class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect"
+                                                    onclick="increaseDistrictOpacity()"><i class="material-icons">add</i></button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:65%;padding-top:3px">
+                                        Šířka dělících čar
+                                    </td>
+                                    <td style="width:35%;padding-top:3px" align="right">
+                                        <table style="width:100%">
+                                            <tr>
+                                                <td style="width:20%">
+                                                    <button
+                                                    class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect"
+                                                    onclick="decreaseDistrictStrokeOpacity()"><i class="material-icons">remove</i></button>
+                                                </td>
+                                                <td style="width:60%;text-align:center">
+                                                    <span id="district_stroke_opacity_text" style="width:100%">70%
+                                                    </span>
+                                                </td>
+                                                <td style="width:20%">
+                                                    <button
+                                                    class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect"
+                                                    onclick="increaseDistrictStrokeOpacity()"><i class="material-icons">add</i></button>
                                                 </td>
                                             </tr>
                                         </table>
@@ -487,7 +532,7 @@
                             <table style="width:100%;margin-bottom:15px">
                                 <tr>
                                     <td style="width:25%;padding-top:10px">
-                                        Typ dat:
+                                        Typ dat
                                     </td>
                                     <td colspan="2" style="width:75%;padding-top:10px;">
                                         <select oninput="selectSliderData(this.value)" class="form-control" id="sel2">
@@ -496,7 +541,7 @@
                                 </tr>
                                 <tr>
                                     <td colspan="2" style="width:75%;padding-top:10px">
-                                        Rychlost animace:
+                                        Rychlost animace
                                     </td>
                                     <td style="width:25%;padding-top:5px">
                                         <input onchange="changeAnimationSpeed(this.value)" class="form-control"

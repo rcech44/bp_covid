@@ -81,6 +81,9 @@ var current_time_window_low;
 var current_time_window_high;
 var warning_block;
 var current_map_opacity = 0.6;
+var current_district_opacity = 0.7;
+var current_district_stroke_opacity = 0.7;
+
 // if (new Date().getHours() >= 20)
 // {
 //     main_slider_range_max = (new Date().getTime() - covid_start.getTime()) / (1000 * 3600 * 24);
@@ -255,7 +258,7 @@ async function onClickMap(name, okres_lau, object)
 
     // Remove additional stroke-width from previous district
     if (okres_clicked_map_object != -1) {
-        iframe.contentWindow.document.querySelector("g").children[okres_clicked_map_object].setAttribute("stroke-width", 0.5);
+        iframe.contentWindow.document.querySelector("g").children[okres_clicked_map_object].setAttribute("stroke-width", current_district_stroke_opacity);
     }
 
     // Set selected district stroke-width
@@ -769,8 +772,8 @@ function updatePage() {
 }
 
 // Select type of analysis (infected, recovered...)
-function selectAnalysis(type) {
-
+function selectAnalysis(type) 
+{
     current_analysis = type;
     // selectSliderType(slider_current_type);
     analyze_fields.forEach((element) => {
@@ -1706,7 +1709,7 @@ function decreaseMapOpacity()
         return;
     }
     current_map_opacity -= 0.1;
-    var x = document.getElementById("opacity_text");
+    var x = document.getElementById("map_opacity_text");
     x.innerHTML = (current_map_opacity * 100).toFixed(0) + "%";
     var tiles_layer = iframe.contentWindow.document.getElementsByClassName("leaflet-tile-pane")[0];
     tiles_layer.style.opacity = current_map_opacity;
@@ -1719,8 +1722,95 @@ function increaseMapOpacity()
         return;
     }
     current_map_opacity += 0.1;
-    var x = document.getElementById("opacity_text");
+    var x = document.getElementById("map_opacity_text");
     x.innerHTML = (current_map_opacity * 100).toFixed(0) + "%";
     var tiles_layer = iframe.contentWindow.document.getElementsByClassName("leaflet-tile-pane")[0];
     tiles_layer.style.opacity = current_map_opacity;
+}
+
+// https://css-tricks.com/how-to-recreate-the-ripple-effect-of-material-design-buttons/
+function createRipple(ripple_type, element_id) 
+{
+    var eventX = window.innerWidth - 400; 
+    var eventY = 30; 
+    const button = document.getElementById("ripple_effect");
+  
+    var element = document.getElementById(element_id);
+    var element_dims = element.getBoundingClientRect();
+
+    const circle = document.createElement("span");
+    const diameter = Math.max(button.clientWidth, button.clientHeight);
+    const radius = diameter / 2;
+  
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${element_dims.x + 40 - button.offsetLeft - radius}px`;
+    circle.style.top = `${element_dims.y + 23 - button.offsetTop - radius}px`;
+    circle.style.zIndex = 1;
+    circle.classList.add(ripple_type);
+  
+    const ripple = button.getElementsByClassName(ripple_type)[0];
+  
+    if (ripple) {
+      ripple.remove();
+    }
+  
+    button.appendChild(circle);
+}
+
+function increaseDistrictOpacity()
+{
+    if (current_district_opacity > 0.9)
+    {
+        return;
+    }
+    current_district_opacity += 0.1;
+    var x = document.getElementById("district_opacity_text");
+    x.innerHTML = (current_district_opacity * 100).toFixed(0) + "%";
+    refreshMap();
+}
+
+function decreaseDistrictOpacity()
+{
+    if (current_district_opacity < 0.1)
+    {
+        return;
+    }
+    current_district_opacity -= 0.1;
+    var x = document.getElementById("district_opacity_text");
+    x.innerHTML = (current_district_opacity * 100).toFixed(0) + "%";
+    refreshMap();
+}
+
+function increaseDistrictStrokeOpacity()
+{
+    if (current_district_stroke_opacity > 0.9)
+    {
+        return;
+    }
+    current_district_stroke_opacity += 0.1;
+    var x = document.getElementById("district_stroke_opacity_text");
+    x.innerHTML = (current_district_stroke_opacity * 100).toFixed(0) + "%";
+    refreshMap();
+}
+
+function decreaseDistrictStrokeOpacity()
+{
+    if (current_district_stroke_opacity < 0.1)
+    {
+        return;
+    }
+    current_district_stroke_opacity -= 0.1;
+    var x = document.getElementById("district_stroke_opacity_text");
+    x.innerHTML = (current_district_stroke_opacity * 100).toFixed(0) + "%";
+    refreshMap();
+}
+
+function refreshMap()
+{
+    var parent = iframe.contentWindow.document.querySelector("g");
+    var children = parent.children;
+    for (let i = 0; i < 77; i++) {
+        children[i].setAttribute("fill-opacity", current_district_opacity);
+        children[i].setAttribute("stroke-width", current_district_stroke_opacity);
+    }
 }
