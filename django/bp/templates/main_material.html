@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-2021.css">
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-2020.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-signal.css">
     <script src="https://kit.fontawesome.com/3dae043195.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href='https://fonts.googleapis.com/css?family=Poppins&family=Open Sans' rel='stylesheet'>
@@ -36,6 +37,7 @@
         new_data = {{ data_covid | safe }};
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-metro.css">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script type="text/javascript" src="{% static 'data_analysis_types.js' %}" charset="utf-8"></script>
     <script type="text/javascript" src="{% static 'okresy_data.js' %}" charset="utf-8"></script>
@@ -73,7 +75,13 @@
         html * {
           font-family: 'Open Sans', sans-serif;
         }
-      </style>
+    </style>
+    <style>
+        .dark-mode {
+        background-color: black;
+        color: white;
+        }
+    </style>
 </head>
 
 <body id="outer-page-background" class="w3-light-gray">
@@ -204,7 +212,7 @@
         <table style="width:100%;z-index:5" cellspacing="3px" id="ripple_effect">
             <tr>
                 <td style="width:2%;padding-top:0px;padding-left: 10px">
-                    <img src="{% static 'pictures/vsb_long.png' %}" style="max-height: 53px">
+                    <img src="{% static 'pictures/vsb_long.png' %}" style="max-height: 53px" onclick="showEasterEgg()">
                 </td>
                 <td id="map_title" style="padding-left: 5px;"><b>Vizualizace COVID-19 v
                     České republice</b>
@@ -280,7 +288,7 @@
             </div>
             <div
                 style="margin-left:10px; margin-top:75px;margin-bottom:10px;z-index: 1;background-color: rgba(255, 255, 255, 0);overflow: hidden;position: absolute;width:400px;height:fit-content">
-                <div class="w3-card w3-round-large"
+                <div class="w3-card w3-round-large w3-white" id="settings_window"
                     style="background-color:rgba(255, 255, 255, 1); margin-right: 10px; margin-bottom:10px;margin-top:10px;margin-left:5px">
                     {% comment %} https://codepen.io/joosts/pen/rNLdxvK {% endcomment %}
                     <div style="padding-bottom: 10px;">
@@ -300,7 +308,7 @@
                                     </table>
                                 </td>
                             <tr>
-                                <td id="time_window_cell" style="width:33%;border-bottom: 4px #6d6d6d solid" onmouseover="this.style.backgroundColor='#efefef';" onmouseout="this.style.backgroundColor='white';"><button id="time_window_button"
+                                <td id="time_window_cell" style="width:33%;border-bottom: 4px #6d6d6d solid"><button id="time_window_button"
                                         class="w3-button w3-hover-light-grey w3-small w3-padding-small w3-block w3-center w3-ripple" 
                                         style="outline: none;height:35px;font-weight:bold" onclick="showHideTimeWindow()">
                                         Časové okno
@@ -373,7 +381,7 @@
                                 </tr>
                             </table>
                             <div class="w3-center">
-                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" style="width:100%;font-size:12px;margin-top:15px"
+                                <button id="time_window_confirm_button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" style="width:100%;font-size:12px;margin-top:15px"
                                     onclick="confirmRangeAnalysis()"><b>Potvrdit</b></button>
                             </div>
                         </div>
@@ -381,7 +389,7 @@
                             <table style="width:100%">
                                 <tr>
                                     <td style="width:65%;padding-top:18px">
-                                        Průhlednost pozadí
+                                        Průhlednost pozadí mapy
                                     </td>
                                     <td style="width:35%;padding-top:18px" align="right">
                                         <table style="width:100%">
@@ -458,9 +466,21 @@
                             <table style="width:100%">
                                 <tr>
                                     <td style="width:85%;padding-top:9px">
-                                        Škálovat podle max. hodnoty v období
+                                        Použít tmavé pozadí mapy
                                     </td>
                                     <td class="w3-right" style="width:15%;text-align:right;margin-right:8px;padding-top:9px" align="right"> 
+                                        <label class = "mdl-switch mdl-js-switch mdl-js-ripple-effect w3-right" 
+                                            for = "checkerChangeMaxValue">
+                                            <input type = "checkbox" id="checkerChangeMaxValue" onclick="toggleDarkMap()" 
+                                                class = "mdl-switch__input w3-right">
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:85%;padding-top:13px">
+                                        Škálovat podle max. hodnoty v období
+                                    </td>
+                                    <td class="w3-right" style="width:15%;text-align:right;margin-right:8px;padding-top:13px" align="right"> 
                                         <label class = "mdl-switch mdl-js-switch mdl-js-ripple-effect w3-right" 
                                             for = "checkerChangeMaxValue">
                                             <input type = "checkbox" id="checkerChangeMaxValue" onclick="changeRecalculationMaxValue()" 
@@ -584,11 +604,11 @@
                             </table>
                             <table style="width:100%">
                                 <tr>
-                                    <td style="width:70%;padding-top:10px"><button
+                                    <td style="width:70%;padding-top:10px"><button id="animation_window_start_button"
                                             class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" style="width:100%;padding-right:5px;font-size:12px"
                                             onclick="handleAnimation()"><b>Spustit animaci</b></button></td>
                                     <td style="width:5%"></td>
-                                    <td style="width:25%;padding-top:10px"><button
+                                    <td style="width:25%;padding-top:10px"><button id="animation_window_pause_button"
                                             class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" style="font-size:12px;width:100%"
                                             onclick="stopAnimation()"><b>Zastavit</b></button></td>
                                 </tr>
@@ -603,7 +623,7 @@
         </div>
         <div
         id="right_bottom_container" style="bottom:0; right:0; margin-right:0px; margin-bottom: 15px;z-index: 1;background-color: rgba(255, 255, 255, 0);overflow: hidden;position: absolute;width:570px;height:auto">
-            <div id="left_bottom_panel_2" class="w3-card w3-round w3-animate-right" style="display:none;background-color:rgba(255, 255, 255, 1); margin-bottom:5px;margin-top:10px;margin-right:15px;margin-left:10px">
+            <div id="left_bottom_panel_2" class="w3-card w3-round-large w3-animate-right" style="display:none;background-color:rgba(255, 255, 255, 1); margin-bottom:5px;margin-top:10px;margin-right:15px;margin-left:10px">
                 <div class="w3-container" style="padding-top:10px;padding-bottom:0px;padding-right:15px">
 
                 <div class="w3-animate-right" style="background-color:#ffffff99;">
@@ -619,7 +639,7 @@
         </div>
         <div
             style="bottom:0; left:0; margin-left:10px; margin-bottom:10px;z-index: 1;background-color: rgba(255, 255, 255, 0);overflow: hidden;position: absolute;width:fit-content;height:fit-content">
-            <div class="w3-card w3-round-large" style="background-color:rgba(255, 255, 255, 1);margin-bottom:5px;margin-right:5px;padding-top: 10px;padding-bottom:10px;margin-top:10px;margin-left:5px">
+            <div id="bottom_left_view" class="w3-card w3-round-large" style="background-color:rgba(255, 255, 255, 1);margin-bottom:5px;margin-right:5px;padding-top: 10px;padding-bottom:10px;margin-top:10px;margin-left:5px">
                 <table id="info_table" class="w3-animate-bottom" style="margin-left: 10px; margin-right: 10px;padding-left:10px;padding-right:10px;display:block">
                     <tr>
                         <td id="map_date_1" style="text-align:left;font-size: x-large;height:40px">Vizualizace
@@ -627,7 +647,7 @@
                     </tr>
                     <tr>
                         <td id="map_info_1" style="text-align:left;font-size: small;height:20px">Zvolte data k
-                            vizualizaci (viz. tlačítka výše).</td>
+                            vizualizaci (viz. tlačítka v pravém horním rohu).</td>
                     </tr>
                     <tr>
                         <td id="map_info_2" style="text-align:left;font-size: small;height:20px">Poté zvolte časové
@@ -635,7 +655,7 @@
                     </tr>
                     <tr>
                         <td id="map_info_3" style="text-align:left;font-size: small;height:20px">Vyobrazená data si
-                            můžete přizpůsobit v panelu pod časovým oknem.</td>
+                            můžete přizpůsobit v Nastavení aplikace.</td>
                     </tr>
                 </table>
                 <hr id="info_table_separator" style="background-color:rgb(139, 139, 139);height:1px;margin-left: 10px;margin-right: 10px;margin-bottom: 5px;margin-top:10px;visibility:hidden;">

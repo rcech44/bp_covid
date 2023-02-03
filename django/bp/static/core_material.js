@@ -83,6 +83,7 @@ var warning_block;
 var current_map_opacity = 0.6;
 var current_district_opacity = 0.7;
 var current_district_stroke_opacity = 0.7;
+var dark_mode = false;
 
 // if (new Date().getHours() >= 20)
 // {
@@ -1630,9 +1631,9 @@ function initChart() {
     }];
 
     // Define Layout
-    var layout = {
-        plot_bgcolor: "rgba(255, 255, 255, 0.6)",
-        paper_bgcolor: "rgba(255, 255, 255, 0.6)",
+    var layout_light = {
+        plot_bgcolor: "rgba(255, 255, 255, 1)",
+        paper_bgcolor: "rgba(255, 255, 255, 1)",
         xaxis: {
             visible: false
         },
@@ -1653,8 +1654,38 @@ function initChart() {
         },
     };
 
+    var layout_dark = {
+        plot_bgcolor: "rgba(29, 29, 29, 1)",
+        paper_bgcolor: "rgba(29, 29, 29, 1)",
+        xaxis: {
+            visible: false
+        },
+        yaxis: {
+            gridcolor: "rgb(67, 67, 67)"
+        },
+        title: {
+            text: map_show_data,
+            font: {
+                size: 20,
+                color: "rgba(255, 255, 255, 1)"
+            },
+            y: 0.85
+        },
+        height: 300,
+        margin: {
+            l: 30,
+            r: 30,
+            b: 30,
+            t: 90,
+            pad: 4
+        },
+    };
+
     // Display using Plotly
-    Plotly.newPlot("district_chart", data, layout, { displayModeBar: true });
+    if (dark_mode)
+        Plotly.newPlot("district_chart", data, layout_dark, { displayModeBar: true });
+    else
+        Plotly.newPlot("district_chart", data, layout_light, { displayModeBar: true });
 }
 
 function hideSplashScreen()
@@ -1837,4 +1868,115 @@ function refreshMap()
         children[i].setAttribute("fill-opacity", current_district_opacity);
         children[i].setAttribute("stroke-width", current_district_stroke_opacity);
     }
+}
+
+function toggleDarkMap()
+{
+    dark_mode = !dark_mode;
+
+    // Map background
+    var map = iframe.contentWindow.document.getElementById("map_a91c08a299bb6023baf393f504c6fb3e");
+    var map_pip = iframe_pip.contentWindow.document.getElementById("map_a91c08a299bb6023baf393f504c6fb3ee");
+
+    if (map.style.backgroundColor == "rgb(221, 221, 221)")
+    {
+        map.style.backgroundColor = "rgb(0, 0, 0)";
+    }
+    else if (map.style.backgroundColor == "rgb(0, 0, 0)")
+    {
+        map.style.backgroundColor = "rgb(221, 221, 221)";
+    }
+    else
+    {
+        map.style.backgroundColor = "rgb(0, 0, 0)";
+    }
+
+    // Top bar
+    var topbar = document.getElementById("topbar");
+    topbar.classList.remove("w3-white");
+    topbar.classList.add("w3-metro-darken");
+
+    // Top bar - first option
+    var topbar_first = document.getElementById("nakazeni-analyze");
+    topbar_first.style.backgroundColor = "#1d1d1d";
+    topbar_first.onmouseover
+    topbar_first.onmouseover.apply("this.style.backgroundColor='#efefef';");
+    topbar_first.onmouseout.apply("this.style.backgroundColor='white';");
+    topbar_first.onmouseover.apply("this.style.backgroundColor='#434343';");
+    topbar_first.onmouseout.apply("this.style.backgroundColor='#1d1d1d';");
+
+    // Settings window
+    var settings_window = document.getElementById("settings_window");
+    settings_window.classList.remove("w3-white");
+    settings_window.classList.add("w3-metro-darken");
+
+    // Settings window - time window button
+    var time_window_button = document.getElementById("time_window_button");
+    time_window_button.classList.remove("w3-white");
+    time_window_button.classList.add("w3-metro-darken");
+    time_window_button.classList.add("w3-hover-dark-grey");
+
+    // Settings window - time window confirm button
+    var time_window_confirm_button = document.getElementById("time_window_confirm_button");
+    time_window_confirm_button.classList.remove("mdl-button--colored");
+    time_window_confirm_button.classList.add("mdl-button--colored");
+
+    // Settings window - view window button
+    var view_window_button = document.getElementById("view_window_button");
+    view_window_button.classList.remove("w3-white");
+    view_window_button.classList.add("w3-metro-darken");
+    view_window_button.classList.add("w3-hover-dark-grey");
+
+    // Settings window - animation window button
+    var animation_window_button = document.getElementById("animation_window_button");
+    animation_window_button.classList.remove("w3-white");
+    animation_window_button.classList.add("w3-metro-darken");
+    animation_window_button.classList.add("w3-hover-dark-grey");
+
+    // Settings window - animation window start button
+    var animation_window_start_button = document.getElementById("animation_window_start_button");
+    animation_window_start_button.classList.remove("mdl-button--colored");
+    animation_window_start_button.classList.add("mdl-button--colored");
+
+    // Settings window - animation window pause button
+    var animation_window_pause_button = document.getElementById("animation_window_pause_button");
+    animation_window_pause_button.classList.remove("mdl-button--colored");
+    animation_window_pause_button.classList.add("mdl-button--colored");
+
+    // Bottom left window
+    var bottom_left_view = document.getElementById("bottom_left_view");
+    bottom_left_view.classList.remove("w3-white");
+    bottom_left_view.classList.add("w3-metro-darken");
+
+    // Chart window
+    var left_bottom_panel_2 = document.getElementById("left_bottom_panel_2");
+    left_bottom_panel_2.classList.remove("w3-white");
+    left_bottom_panel_2.classList.add("w3-metro-darken");
+
+    // PIP window
+    var right_upper_panel = document.getElementById("right_upper_panel");
+    right_upper_panel.classList.remove("w3-white");
+    right_upper_panel.classList.add("w3-metro-darken");
+
+    // Map PIP background
+    if (map_pip.style.backgroundColor == "rgb(255, 255, 255)")
+    {
+        map_pip.style.backgroundColor = "rgb(29, 29, 29)";
+    }
+    else if (map_pip.style.backgroundColor == "rgb(29, 29, 29)")
+    {
+        map_pip.style.backgroundColor = "rgb(255, 255, 255)";
+    }
+    else
+    {
+        map_pip.style.backgroundColor = "rgb(29, 29, 29)";
+    }
+
+    // Init chart
+    initChart();
+}
+
+function showEasterEgg()
+{
+
 }
