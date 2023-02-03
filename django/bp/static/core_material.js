@@ -280,7 +280,7 @@ async function onClickMap(name, okres_lau, object)
 
     // Edit popup properties
     var popup_element_content = popups[0].children[0];
-    // var popup_wrapper = iframe.contentWindow.document.getElementsByClassName("leaflet-popup-content-wrapper")[0];
+    var popup_wrapper = iframe.contentWindow.document.getElementsByClassName("leaflet-popup-content-wrapper")[0];
     popups[0].style.width = "auto";
     popups[0].style.height = "auto";
     popup_element_content.innerHTML = "";
@@ -309,7 +309,11 @@ async function onClickMap(name, okres_lau, object)
     var popup_hr = document.createElement("hr");
 
     // Edit popup elements
-    // popup_wrapper.style.backgroundColor = "#fbefe5";
+    if (dark_mode)
+    {
+        popup_wrapper.style.backgroundColor = "rgb(29, 29, 29)";
+        popup_wrapper.style.color = "white";
+    }
     icon_1.className = "material-symbols-outlined";
     icon_2.className = "material-symbols-outlined";
     icon_3.className = "material-symbols-outlined";
@@ -1874,103 +1878,344 @@ function toggleDarkMap()
 {
     dark_mode = !dark_mode;
 
-    // Map background
-    var map = iframe.contentWindow.document.getElementById("map_a91c08a299bb6023baf393f504c6fb3e");
-    var map_pip = iframe_pip.contentWindow.document.getElementById("map_a91c08a299bb6023baf393f504c6fb3ee");
+    if (dark_mode)
+    {
+        // Switches
+        var switches = document.getElementsByClassName("mdl-switch__track");
+        
+        for (var i = 0; i < switches.length; i++)
+        {
+            switches[i].style.backgroundColor = "#444444";
+        }
 
-    if (map.style.backgroundColor == "rgb(221, 221, 221)")
-    {
-        map.style.backgroundColor = "rgb(0, 0, 0)";
-    }
-    else if (map.style.backgroundColor == "rgb(0, 0, 0)")
-    {
-        map.style.backgroundColor = "rgb(221, 221, 221)";
+        // Main slider
+        var slider = document.getElementsByClassName("noUi-connects")[0];
+        slider.style.backgroundColor = "#444444";
+
+        // Secondary slider
+        var slider = document.getElementsByClassName("mdl-slider__background-lower")[0];
+        slider.style.backgroundColor = "white";
+
+        // Map background
+        var map = iframe.contentWindow.document.getElementById("map_a91c08a299bb6023baf393f504c6fb3e");
+        var map_pip = iframe_pip.contentWindow.document.getElementById("map_a91c08a299bb6023baf393f504c6fb3ee");
+
+        if (map.style.backgroundColor == "rgb(221, 221, 221)")
+        {
+            map.style.backgroundColor = "rgb(0, 0, 0)";
+        }
+        else if (map.style.backgroundColor == "rgb(0, 0, 0)")
+        {
+            map.style.backgroundColor = "rgb(221, 221, 221)";
+        }
+        else
+        {
+            map.style.backgroundColor = "rgb(0, 0, 0)";
+        }
+
+        // Top bar
+        var topbar = document.getElementById("topbar");
+        topbar.classList.remove("w3-white");
+        topbar.classList.add("w3-metro-darken");
+
+        // Top bar - first option
+        var topbar_first = document.getElementById("nakazeni-analyze");
+        topbar_first.style.backgroundColor = "#1d1d1d";
+        topbar_first.onmouseover = function() {this.style.backgroundColor='#efefef';};
+        topbar_first.onmouseout = function() {this.style.backgroundColor='white';};
+        topbar_first.onmouseover = function() {this.style.backgroundColor='#434343';};
+        topbar_first.onmouseout = function() {this.style.backgroundColor='#1d1d1d';};
+
+        // Top bar - second option
+        var topbar_second = document.getElementById("umrti-analyze");
+        topbar_second.style.backgroundColor = "#1d1d1d";
+        topbar_second.onmouseover = function() {this.style.backgroundColor='#efefef';};
+        topbar_second.onmouseout = function() {this.style.backgroundColor='white';};
+        topbar_second.onmouseover = function() {this.style.backgroundColor='#434343';};
+        topbar_second.onmouseout = function() {this.style.backgroundColor='#1d1d1d';};
+
+        // Top bar - third option
+        var topbar_third = document.getElementById("ockovani-analyze");
+        topbar_third.style.backgroundColor = "#1d1d1d";
+        topbar_third.onmouseover = function() {this.style.backgroundColor='#efefef';};
+        topbar_third.onmouseout = function() {this.style.backgroundColor='white';};
+        topbar_third.onmouseover = function() {this.style.backgroundColor='#434343';};
+        topbar_third.onmouseout = function() {this.style.backgroundColor='#1d1d1d';};
+
+        // Top bar - fourth option
+        var topbar_fourth = document.getElementById("testovani-analyze");
+        topbar_fourth.style.backgroundColor = "#1d1d1d";
+        topbar_fourth.onmouseover = function() {this.style.backgroundColor='#efefef';};
+        topbar_fourth.onmouseout = function() {this.style.backgroundColor='white';};
+        topbar_fourth.onmouseover = function() {this.style.backgroundColor='#434343';};
+        topbar_fourth.onmouseout = function() {this.style.backgroundColor='#1d1d1d';};
+
+        // Warning message
+        var warning_message = document.getElementById("warning_message");
+        warning_message.classList.remove("w3-white");
+        warning_message.classList.add("w3-metro-darken");
+
+        // Settings window
+        var settings_window = document.getElementById("settings_window");
+        settings_window.classList.remove("w3-white");
+        settings_window.classList.add("w3-metro-darken");
+
+        // Settings window - time window button
+        var time_window_button = document.getElementById("time_window_button");
+        time_window_button.classList.remove("w3-white");
+        time_window_button.classList.add("w3-metro-darken");
+        time_window_button.classList.add("w3-hover-dark-grey");
+
+        // Settings window - time window confirm button
+        var time_window_confirm_button = document.getElementById("time_window_confirm_button");
+        time_window_confirm_button.classList.remove("mdl-button--colored");
+        time_window_confirm_button.classList.add("mdl-button--colored");
+
+        // Settings window - view window button
+        var view_window_button = document.getElementById("view_window_button");
+        view_window_button.classList.remove("w3-white");
+        view_window_button.classList.add("w3-metro-darken");
+        view_window_button.classList.add("w3-hover-dark-grey");
+
+        // Settings window - animation window button
+        var animation_window_button = document.getElementById("animation_window_button");
+        animation_window_button.classList.remove("w3-white");
+        animation_window_button.classList.add("w3-metro-darken");
+        animation_window_button.classList.add("w3-hover-dark-grey");
+
+        // Settings window - animation window start button
+        var animation_window_start_button = document.getElementById("animation_window_start_button");
+        animation_window_start_button.classList.remove("mdl-button--colored");
+        animation_window_start_button.classList.add("mdl-button--colored");
+
+        // Settings window - animation window pause button
+        var animation_window_pause_button = document.getElementById("animation_window_pause_button");
+        animation_window_pause_button.classList.remove("mdl-button--colored");
+        animation_window_pause_button.classList.add("mdl-button--colored");
+
+        // Bottom left window
+        var bottom_left_view = document.getElementById("bottom_left_view");
+        bottom_left_view.classList.remove("w3-white");
+        bottom_left_view.classList.add("w3-metro-darken");
+
+        // Chart window
+        var left_bottom_panel_2 = document.getElementById("left_bottom_panel_2");
+        left_bottom_panel_2.classList.remove("w3-white");
+        left_bottom_panel_2.classList.add("w3-metro-darken");
+
+        // PIP window
+        var right_upper_panel = document.getElementById("right_upper_panel");
+        right_upper_panel.classList.remove("w3-white");
+        right_upper_panel.classList.add("w3-metro-darken");
+
+        // Map PIP background
+        if (map_pip.style.backgroundColor == "rgb(255, 255, 255)")
+        {
+            map_pip.style.backgroundColor = "rgb(29, 29, 29)";
+        }
+        else if (map_pip.style.backgroundColor == "rgb(29, 29, 29)")
+        {
+            map_pip.style.backgroundColor = "rgb(255, 255, 255)";
+        }
+        else
+        {
+            map_pip.style.backgroundColor = "rgb(29, 29, 29)";
+        }
+
+        // Splashscreen content
+        var splash = document.getElementById("splashscreen");
+        var contactscreen_content = document.getElementById("contactscreen_content");
+        var splash_content = document.getElementById("splashscreen_content");
+        var splash_content_paragraph = document.getElementById("splashscreen_content_paragraph");
+        splash.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
+        contactscreen.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
+        splash_content_paragraph.style.backgroundColor = "rgb(20, 20, 20)";
+        splash_content.classList.add("w3-metro-darken");
+        contactscreen_content.classList.add("w3-metro-darken");
+
+        // Select inputs
+        var sel1 = document.getElementById("sel1");
+        var sel2 = document.getElementById("sel2");
+        var sel3 = document.getElementById("quantity");
+        var sel4 = document.getElementById("sel3");
+        var sel5 = document.getElementById("sel4");
+        sel1.classList.add("bg-dark");
+        sel1.classList.add("text-white");
+        sel2.classList.add("bg-dark");
+        sel2.classList.add("text-white");
+        sel3.classList.add("bg-dark");
+        sel3.classList.add("text-white");
+        sel4.classList.add("bg-dark");
+        sel4.classList.add("text-white");
+        sel5.classList.add("bg-dark");
+        sel5.classList.add("text-white");
     }
     else
     {
-        map.style.backgroundColor = "rgb(0, 0, 0)";
+        // Switches
+        var switches = document.getElementsByClassName("mdl-switch__track");
+        
+        for (var i = 0; i < switches.length; i++)
+        {
+            switches[i].style.backgroundColor = "#bdbdbd";
+        }
+
+        // Main slider
+        var slider = document.getElementsByClassName("noUi-connects")[0];
+        slider.style.backgroundColor = "white";
+
+        // Secondary slider
+        var slider = document.getElementsByClassName("mdl-slider__background-lower")[0];
+        slider.style.backgroundColor = "#607d8b";
+
+        // Map background
+        var map = iframe.contentWindow.document.getElementById("map_a91c08a299bb6023baf393f504c6fb3e");
+        var map_pip = iframe_pip.contentWindow.document.getElementById("map_a91c08a299bb6023baf393f504c6fb3ee");
+
+        if (map.style.backgroundColor == "rgb(221, 221, 221)")
+        {
+            map.style.backgroundColor = "rgb(0, 0, 0)";
+        }
+        else if (map.style.backgroundColor == "rgb(0, 0, 0)")
+        {
+            map.style.backgroundColor = "rgb(221, 221, 221)";
+        }
+        else
+        {
+            map.style.backgroundColor = "rgb(0, 0, 0)";
+        }
+
+        // Top bar
+        var topbar = document.getElementById("topbar");
+        topbar.classList.add("w3-white");
+        topbar.classList.remove("w3-metro-darken");
+
+        // Top bar - first option
+        var topbar_first = document.getElementById("nakazeni-analyze");
+        topbar_first.style.backgroundColor = "white";
+        topbar_first.onmouseout = function() {this.style.backgroundColor='white';};
+        topbar_first.onmouseover = function() {this.style.backgroundColor='#efefef';};
+
+        // Top bar - second option
+        var topbar_second = document.getElementById("umrti-analyze");
+        topbar_second.style.backgroundColor = "white";
+        topbar_second.onmouseout = function() {this.style.backgroundColor='white';};
+        topbar_second.onmouseover = function() {this.style.backgroundColor='#efefef';};
+
+        // Top bar - third option
+        var topbar_third = document.getElementById("ockovani-analyze");
+        topbar_third.style.backgroundColor = "white";
+        topbar_third.onmouseout = function() {this.style.backgroundColor='white';};
+        topbar_third.onmouseover = function() {this.style.backgroundColor='#efefef';};
+
+        // Top bar - fourth option
+        var topbar_fourth = document.getElementById("testovani-analyze");
+        topbar_fourth.style.backgroundColor = "white";
+        topbar_fourth.onmouseout = function() {this.style.backgroundColor='white';};
+        topbar_fourth.onmouseover = function() {this.style.backgroundColor='#efefef';};
+
+        // Warning message
+        var warning_message = document.getElementById("warning_message");
+        warning_message.classList.add("w3-white");
+        warning_message.classList.remove("w3-metro-darken");
+
+        // Settings window
+        var settings_window = document.getElementById("settings_window");
+        settings_window.classList.add("w3-white");
+        settings_window.classList.remove("w3-metro-darken");
+
+        // Settings window - time window button
+        var time_window_button = document.getElementById("time_window_button");
+        time_window_button.classList.add("w3-white");
+        time_window_button.classList.remove("w3-metro-darken");
+        time_window_button.classList.remove("w3-hover-dark-grey");
+
+        // Settings window - time window confirm button
+        var time_window_confirm_button = document.getElementById("time_window_confirm_button");
+        time_window_confirm_button.classList.remove("mdl-button--colored");
+        // time_window_confirm_button.classList.add("mdl-button--colored");
+
+        // Settings window - view window button
+        var view_window_button = document.getElementById("view_window_button");
+        view_window_button.classList.add("w3-white");
+        view_window_button.classList.remove("w3-metro-darken");
+        view_window_button.classList.remove("w3-hover-dark-grey");
+
+        // Settings window - animation window button
+        var animation_window_button = document.getElementById("animation_window_button");
+        animation_window_button.classList.add("w3-white");
+        animation_window_button.classList.remove("w3-metro-darken");
+        animation_window_button.classList.remove("w3-hover-dark-grey");
+
+        // Settings window - animation window start button
+        var animation_window_start_button = document.getElementById("animation_window_start_button");
+        animation_window_start_button.classList.remove("mdl-button--colored");
+        // animation_window_start_button.classList.add("mdl-button--colored");
+
+        // Settings window - animation window pause button
+        var animation_window_pause_button = document.getElementById("animation_window_pause_button");
+        animation_window_pause_button.classList.remove("mdl-button--colored");
+        // animation_window_pause_button.classList.add("mdl-button--colored");
+
+        // Bottom left window
+        var bottom_left_view = document.getElementById("bottom_left_view");
+        bottom_left_view.classList.add("w3-white");
+        bottom_left_view.classList.remove("w3-metro-darken");
+
+        // Chart window
+        var left_bottom_panel_2 = document.getElementById("left_bottom_panel_2");
+        left_bottom_panel_2.classList.add("w3-white");
+        left_bottom_panel_2.classList.remove("w3-metro-darken");
+
+        // PIP window
+        var right_upper_panel = document.getElementById("right_upper_panel");
+        right_upper_panel.classList.add("w3-white");
+        right_upper_panel.classList.remove("w3-metro-darken");
+
+        // Map PIP background
+        if (map_pip.style.backgroundColor == "rgb(255, 255, 255)")
+        {
+            map_pip.style.backgroundColor = "rgb(29, 29, 29)";
+        }
+        else if (map_pip.style.backgroundColor == "rgb(29, 29, 29)")
+        {
+            map_pip.style.backgroundColor = "rgb(255, 255, 255)";
+        }
+        else
+        {
+            map_pip.style.backgroundColor = "rgb(29, 29, 29)";
+        }
+
+        // Splashscreen content
+        var splash = document.getElementById("splashscreen");
+        var contactscreen_content = document.getElementById("contactscreen_content");
+        var splash_content = document.getElementById("splashscreen_content");
+        var splash_content_paragraph = document.getElementById("splashscreen_content_paragraph");
+        splash.style.backgroundColor = "rgba(255, 255, 255, 0.686)";
+        contactscreen_content.style.backgroundColor = "rgba(255, 255, 255, 0.686)";
+        splash_content_paragraph.style.backgroundColor = "rgb(245, 245, 245)";
+        splash_content.classList.remove("w3-metro-darken");
+        contactscreen_content.classList.remove("w3-metro-darken");
+
+        // Select inputs
+        var sel1 = document.getElementById("sel1");
+        var sel2 = document.getElementById("sel2");
+        var sel3 = document.getElementById("quantity");
+        var sel4 = document.getElementById("sel3");
+        var sel5 = document.getElementById("sel4");
+        sel1.classList.remove("bg-dark");
+        sel1.classList.remove("text-white");
+        sel2.classList.remove("bg-dark");
+        sel2.classList.remove("text-white");
+        sel3.classList.remove("bg-dark");
+        sel3.classList.remove("text-white");
+        sel4.classList.remove("bg-dark");
+        sel4.classList.remove("text-white");
+        sel5.classList.remove("bg-dark");
+        sel5.classList.remove("text-white");
     }
+    
 
-    // Top bar
-    var topbar = document.getElementById("topbar");
-    topbar.classList.remove("w3-white");
-    topbar.classList.add("w3-metro-darken");
-
-    // Top bar - first option
-    var topbar_first = document.getElementById("nakazeni-analyze");
-    topbar_first.style.backgroundColor = "#1d1d1d";
-    topbar_first.onmouseover
-    topbar_first.onmouseover.apply("this.style.backgroundColor='#efefef';");
-    topbar_first.onmouseout.apply("this.style.backgroundColor='white';");
-    topbar_first.onmouseover.apply("this.style.backgroundColor='#434343';");
-    topbar_first.onmouseout.apply("this.style.backgroundColor='#1d1d1d';");
-
-    // Settings window
-    var settings_window = document.getElementById("settings_window");
-    settings_window.classList.remove("w3-white");
-    settings_window.classList.add("w3-metro-darken");
-
-    // Settings window - time window button
-    var time_window_button = document.getElementById("time_window_button");
-    time_window_button.classList.remove("w3-white");
-    time_window_button.classList.add("w3-metro-darken");
-    time_window_button.classList.add("w3-hover-dark-grey");
-
-    // Settings window - time window confirm button
-    var time_window_confirm_button = document.getElementById("time_window_confirm_button");
-    time_window_confirm_button.classList.remove("mdl-button--colored");
-    time_window_confirm_button.classList.add("mdl-button--colored");
-
-    // Settings window - view window button
-    var view_window_button = document.getElementById("view_window_button");
-    view_window_button.classList.remove("w3-white");
-    view_window_button.classList.add("w3-metro-darken");
-    view_window_button.classList.add("w3-hover-dark-grey");
-
-    // Settings window - animation window button
-    var animation_window_button = document.getElementById("animation_window_button");
-    animation_window_button.classList.remove("w3-white");
-    animation_window_button.classList.add("w3-metro-darken");
-    animation_window_button.classList.add("w3-hover-dark-grey");
-
-    // Settings window - animation window start button
-    var animation_window_start_button = document.getElementById("animation_window_start_button");
-    animation_window_start_button.classList.remove("mdl-button--colored");
-    animation_window_start_button.classList.add("mdl-button--colored");
-
-    // Settings window - animation window pause button
-    var animation_window_pause_button = document.getElementById("animation_window_pause_button");
-    animation_window_pause_button.classList.remove("mdl-button--colored");
-    animation_window_pause_button.classList.add("mdl-button--colored");
-
-    // Bottom left window
-    var bottom_left_view = document.getElementById("bottom_left_view");
-    bottom_left_view.classList.remove("w3-white");
-    bottom_left_view.classList.add("w3-metro-darken");
-
-    // Chart window
-    var left_bottom_panel_2 = document.getElementById("left_bottom_panel_2");
-    left_bottom_panel_2.classList.remove("w3-white");
-    left_bottom_panel_2.classList.add("w3-metro-darken");
-
-    // PIP window
-    var right_upper_panel = document.getElementById("right_upper_panel");
-    right_upper_panel.classList.remove("w3-white");
-    right_upper_panel.classList.add("w3-metro-darken");
-
-    // Map PIP background
-    if (map_pip.style.backgroundColor == "rgb(255, 255, 255)")
-    {
-        map_pip.style.backgroundColor = "rgb(29, 29, 29)";
-    }
-    else if (map_pip.style.backgroundColor == "rgb(29, 29, 29)")
-    {
-        map_pip.style.backgroundColor = "rgb(255, 255, 255)";
-    }
-    else
-    {
-        map_pip.style.backgroundColor = "rgb(29, 29, 29)";
-    }
 
     // Init chart
     initChart();
@@ -1979,4 +2224,38 @@ function toggleDarkMap()
 function showEasterEgg()
 {
 
+}
+
+function initDropdownMenu()
+{
+    var menu = document.getElementsByClassName("mdl-menu__container")[0];
+    var menu_content = document.getElementsByClassName("mdl-menu__outline")[0];
+    menu.style.marginRight = "15px";
+    menu.style.marginTop = "30px";
+    menu.style.width = "300px";
+
+    if (dark_mode)
+    {
+        menu_content.style.backgroundColor = "#1d1d1d";
+
+        var items = document.getElementsByClassName("mdl-menu__item");
+        
+        for (var i = 0; i < items.length; i++)
+        {
+            items[i].classList.add("w3-metro-darken");
+        }
+    }
+    else
+    {
+        menu_content.style.backgroundColor = "#ffffff";
+
+        var items = document.getElementsByClassName("mdl-menu__item");
+        
+        for (var i = 0; i < items.length; i++)
+        {
+            items[i].classList.remove("w3-metro-darken");
+        }
+    }
+
+    
 }
