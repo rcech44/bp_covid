@@ -84,6 +84,11 @@ var current_map_opacity = 0.6;
 var current_district_opacity = 0.7;
 var current_district_stroke_opacity = 0.7;
 var dark_mode = false;
+var sheet_orange;
+var sheet_green;
+var sheet_purple;
+var sheet_gray;
+var sheet_default;
 
 // if (new Date().getHours() >= 20)
 // {
@@ -142,6 +147,10 @@ function loadPageComponents() {
     select_2 = document.getElementById("sel2");
     snackbar = document.getElementById("snackbar");
     warning_block = document.getElementById("div_middle_top_part");
+    sheet_orange = document.getElementById("material_css_orange");
+    sheet_green = document.getElementById("material_css_green");
+    sheet_purple = document.getElementById("material_css_purple");
+    sheet_gray = document.getElementById("material_css_gray");
 }
 
 function onResize()
@@ -780,8 +789,9 @@ function updatePage() {
 function selectAnalysis(type) 
 {
     current_analysis = type;
+    analysis_selected = true;
     // selectSliderType(slider_current_type);
-    analyze_fields.forEach((element) => {
+    analyze_fields.forEach(async (element) => {
         // Set colors and other elements according to selected type of analysis
         if (element == type) {
             var topbar = document.getElementById("topbar");
@@ -789,6 +799,11 @@ function selectAnalysis(type)
 
             switch (element) {
                 case 'nakazeni-analyze':
+                    sheet_orange.disabled = false;
+                    await sleep(50);
+                    sheet_green.disabled = true;
+                    sheet_purple.disabled = true;
+                    sheet_gray.disabled = true;
                     document.getElementById("nakazeni-analyze").style.opacity = 1;
                     document.getElementById("nakazeni-analyze").style.borderBottom = "8px orange solid";
                     document.getElementById("nakazeni-analyze").style.fontWeight = "bolder";
@@ -825,6 +840,11 @@ function selectAnalysis(type)
                     // document.getElementById("slider").style.backgroundColor = "#ffffff";
                     break;
                 case 'ockovani-analyze':
+                    sheet_green.disabled = false;
+                    await sleep(50);
+                    sheet_orange.disabled = true;
+                    sheet_purple.disabled = true;
+                    sheet_gray.disabled = true;
                     document.getElementById("nakazeni-analyze").style.opacity = 0.6;
                     document.getElementById("nakazeni-analyze").style.borderBottom = "0px orange solid";
                     document.getElementById("nakazeni-analyze").style.fontWeight = "normal";
@@ -866,6 +886,11 @@ function selectAnalysis(type)
                     // document.getElementById("slider").style.background = "#ffffff";
                     break;
                 case 'umrti-analyze':
+                    sheet_gray.disabled = false;
+                    await sleep(50);
+                    sheet_green.disabled = true;
+                    sheet_orange.disabled = true;
+                    sheet_purple.disabled = true;
                     document.getElementById("nakazeni-analyze").style.opacity = 0.6;
                     document.getElementById("nakazeni-analyze").style.borderBottom = "0px orange solid";
                     document.getElementById("nakazeni-analyze").style.fontWeight = "normal";
@@ -898,6 +923,11 @@ function selectAnalysis(type)
                     // document.getElementById("slider").style.background = "#ffffff";
                     break;
                 case 'testovani-analyze':
+                    sheet_purple.disabled = false;
+                    await sleep(50);
+                    sheet_green.disabled = true;
+                    sheet_orange.disabled = true;
+                    sheet_gray.disabled = true;
                     document.getElementById("nakazeni-analyze").style.opacity = 0.6;
                     document.getElementById("nakazeni-analyze").style.borderBottom = "0px orange solid";
                     document.getElementById("nakazeni-analyze").style.fontWeight = "normal";
@@ -931,13 +961,12 @@ function selectAnalysis(type)
                     // document.getElementById("slider").style.background = "#ffffff";
                     break;
             }
+            if (analysis_selected)
+                selectSliderData(select_2.value);
         }
 
     })
     
-    analysis_selected = true;
-    if (analysis_selected)
-        selectSliderData(select_2.value);
     
     // updatePage();
 }
@@ -1893,8 +1922,11 @@ function toggleDarkMap()
         slider.style.backgroundColor = "#444444";
 
         // Secondary slider
-        var slider = document.getElementsByClassName("mdl-slider__background-lower")[0];
-        slider.style.backgroundColor = "white";
+        // var slider = document.getElementsByClassName("mdl-slider__background-lower")[0];
+        // slider.style.backgroundColor = "white";
+
+        // var slider_high = document.getElementsByClassName("mdl-slider__background-upper")[0];
+        // slider_high.style.backgroundColor = "#444444";
 
         // Map background
         var map = iframe.contentWindow.document.getElementById("map_a91c08a299bb6023baf393f504c6fb3e");
@@ -2065,8 +2097,11 @@ function toggleDarkMap()
         slider.style.backgroundColor = "white";
 
         // Secondary slider
-        var slider = document.getElementsByClassName("mdl-slider__background-lower")[0];
-        slider.style.backgroundColor = "#607d8b";
+        // var slider = document.getElementsByClassName("mdl-slider__background-lower")[0];
+        // slider.style.backgroundColor = "#607d8b";
+
+        // var slider_high = document.getElementsByClassName("mdl-slider__background-upper")[0];
+        // slider_high.style.backgroundColor = "#bbbbbb";
 
         // Map background
         var map = iframe.contentWindow.document.getElementById("map_a91c08a299bb6023baf393f504c6fb3e");
