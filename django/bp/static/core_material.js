@@ -1925,8 +1925,8 @@ function toggleDarkMap()
         // var slider = document.getElementsByClassName("mdl-slider__background-lower")[0];
         // slider.style.backgroundColor = "white";
 
-        // var slider_high = document.getElementsByClassName("mdl-slider__background-upper")[0];
-        // slider_high.style.backgroundColor = "#444444";
+        var slider_high = document.getElementsByClassName("mdl-slider__background-upper")[0];
+        slider_high.style.backgroundColor = "#444444";
 
         // Map background
         var map = iframe.contentWindow.document.getElementById("map_a91c08a299bb6023baf393f504c6fb3e");
@@ -2100,8 +2100,8 @@ function toggleDarkMap()
         // var slider = document.getElementsByClassName("mdl-slider__background-lower")[0];
         // slider.style.backgroundColor = "#607d8b";
 
-        // var slider_high = document.getElementsByClassName("mdl-slider__background-upper")[0];
-        // slider_high.style.backgroundColor = "#bbbbbb";
+        var slider_high = document.getElementsByClassName("mdl-slider__background-upper")[0];
+        slider_high.style.backgroundColor = "#bbbbbb";
 
         // Map background
         var map = iframe.contentWindow.document.getElementById("map_a91c08a299bb6023baf393f504c6fb3e");
