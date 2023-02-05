@@ -2122,7 +2122,7 @@ function toggleDarkMap() {
             var splash_content_paragraph = document.getElementById("splashscreen_content_paragraph");
             splash.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
             changelog.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
-            contactscreen.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
+            contactscreen_content.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
             splash_content_paragraph.style.backgroundColor = "rgb(20, 20, 20)";
             splash_content.classList.add("w3-metro-darken");
             contactscreen_content.classList.add("w3-metro-darken");
@@ -2279,14 +2279,16 @@ function toggleDarkMap() {
             // Splashscreen content
             var splash = document.getElementById("splashscreen");
             var changelog = document.getElementById("changelog");
+            var contactscreen = document.getElementById("contactscreen");
             var contactscreen_content = document.getElementById("contactscreen_content");
             var splash_content = document.getElementById("splashscreen_content");
             var changelog_content = document.getElementById("changelog_content");
             var splash_content_paragraph = document.getElementById("splashscreen_content_paragraph");
-            splash.style.backgroundColor = "rgba(255, 255, 255, 0.686)";
-            changelog.style.backgroundColor = "rgba(255, 255, 255, 0.686)";
-            contactscreen_content.style.backgroundColor = "rgba(255, 255, 255, 0.686)";
-            changelog_content.style.backgroundColor = "rgba(255, 255, 255, 0.686)";
+            splash.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
+            changelog.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
+            contactscreen.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
+            contactscreen_content.style.backgroundColor = "rgba(255, 255, 255, 1)";
+            changelog_content.style.backgroundColor = "rgba(255, 255, 255, 1)";
             splash_content_paragraph.style.backgroundColor = "rgb(245, 245, 245)";
             splash_content.classList.remove("w3-metro-darken");
             contactscreen_content.classList.remove("w3-metro-darken");
