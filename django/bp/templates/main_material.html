@@ -368,15 +368,30 @@
                 </div>
             </div>
             <div id="div_right_upper_part"
-                style="margin-right:15px; right:0; margin-top:75px;margin-bottom:10px;z-index: 1;background-color: rgba(255, 255, 255, 0);overflow: hidden;position: absolute;width:200px;height:fit-content">
+                style="margin-right:15px; right:0; margin-top:75px;margin-bottom:10px;z-index: 1;background-color: rgba(255, 255, 255, 0);overflow: hidden;position: absolute;width:200px;">
                 <div class="w3-card w3-round w3-animate-right" id="right_upper_panel"
-                    style="background-color:rgba(255, 255, 255, 1); margin-bottom:10px;display:none;margin-top:10px;margin-left:10px">
+                    style="background-color:rgba(255, 255, 255, 1); margin-bottom:10px;display:none;margin-top:10px;margin-left:10px;height:310px">
                     <div class="w3-container" style="padding-top:10px;padding-bottom:10px;">
                         <div class="w3-animate-right"
                             style="margin-top:10px;height:200px;margin-bottom:7px;">
                             <div>
+                                <table>
+                                    <tr>
+                                        <td rowspan="2" style="padding-top:7px;padding-right:10px;padding-left:5px">
+                                            <span class="material-symbols-outlined" style="font-size:40px">
+                                                bar_chart
+                                            </span>
+                                        </td>
+                                        <td id="pip_type" style="font-size:16px;padding-top: 3px;font-weight: bold;">Infekce</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="pip_data" style="font-size:12px;padding-bottom:2px">Nové případy</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div>
                                 <iframe id="iframe_pip" src="/../map_pip"
-                                    style="position:absolute; top:0; left:0; bottom:0; right:0; width:100%; height:210px; margin-top:0px;border:none; padding:0;pointer-events: none;"
+                                    style="position:absolute; top:0; left:0; bottom:0; right:0; width:100%; height:210px; margin-top:70px;border:none; padding:0;pointer-events: none;"
                                     title="Iframe Example" onload="onIframePIPLoad()"></iframe>
                             </div>
                         </div>

@@ -352,9 +352,9 @@ async function onClickMap(name, okres_lau, object) {
         // popup_row_4_cell_2.setAttribute("width", "40%");
         // popup_row_1_cell_1.innerHTML = "<b>Okres</b>";
         popup_row_2_cell_0.appendChild(icon_1);
-        popup_row_2_cell_1.innerHTML = "<b>Hodnota</b>";
+        popup_row_2_cell_1.innerHTML = "<b>Počet</b>";
         popup_row_3_cell_0.appendChild(icon_2);
-        popup_row_3_cell_1.innerHTML = "<b>Hodnota / 100 tisíc</b>";
+        popup_row_3_cell_1.innerHTML = "<b>Počet / 100 tisíc</b>";
         popup_row_4_cell_0.appendChild(icon_3);
         popup_row_4_cell_1.innerHTML = "<b>Počet obyvatel</b>";
         popup_row_1_cell_1.setAttribute("id", "text_okres_nazev");
@@ -692,11 +692,11 @@ function updatePage() {
                 if (iframe.contentWindow.document.getElementById("text_okres_nakazeni") != null) {
                     if (selected_100) {
                         iframe.contentWindow.document.getElementById("text_okres_nakazeni_100").innerHTML = okres_value;
-                        iframe.contentWindow.document.getElementById("text_okres_nakazeni").innerHTML = okres_value_second;
+                        iframe.contentWindow.document.getElementById("text_okres_nakazeni").innerHTML = Math.round(okres_value_second);
                     }
                     else {
                         iframe.contentWindow.document.getElementById("text_okres_nakazeni_100").innerHTML = okres_value_second;
-                        iframe.contentWindow.document.getElementById("text_okres_nakazeni").innerHTML = okres_value;
+                        iframe.contentWindow.document.getElementById("text_okres_nakazeni").innerHTML = Math.round(okres_value_second);
                     }
                 }
             }
@@ -1085,6 +1085,8 @@ function loadTimeFrameSlider() {
 
 function selectSliderPIPType(value) {
     try {
+        document.getElementById("pip_type").innerHTML = value;
+
         var select_4 = document.getElementById("sel4");
         select_4.innerHTML = "";
 
@@ -1166,6 +1168,7 @@ function selectSliderPIPType(value) {
                 break;
         }
 
+        document.getElementById("pip_data").innerHTML = document.getElementById("sel4").value;
         updatePage();
     }
     catch (err) {
@@ -1259,6 +1262,7 @@ function selectSliderType(value) {
 }
 
 function selectSliderPIPData(value) {
+    document.getElementById("pip_data").innerHTML = value;
     map_show_data_PIP = value;
     updatePage();
 }
@@ -1975,6 +1979,14 @@ function toggleDarkMap() {
         dark_mode = !dark_mode;
 
         if (dark_mode) {
+
+            // PIP
+            var parent = iframe_pip.contentWindow.document.querySelector("g");
+            var children = parent.children;
+            for (let i = 0; i < 77; i++) {
+                children[i].setAttribute("fill-opacity", 1);
+            }
+
             // Switches
             var switches = document.getElementsByClassName("mdl-switch__track");
 
@@ -2146,6 +2158,14 @@ function toggleDarkMap() {
             sel5.classList.add("text-white");
         }
         else {
+
+            // PIP
+            var parent = iframe_pip.contentWindow.document.querySelector("g");
+            var children = parent.children;
+            for (let i = 0; i < 77; i++) {
+                children[i].setAttribute("fill-opacity", 0.7);
+            }
+
             // Switches
             var switches = document.getElementsByClassName("mdl-switch__track");
 
