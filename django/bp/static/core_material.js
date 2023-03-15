@@ -1001,8 +1001,18 @@ function selectAnalysis(type) {
 function loadTimeFrameSlider() {
     try {
         var today = new Date();
+        var week_ago = new Date();
+        week_ago.setDate(week_ago.getDate() - 7);
+        // if (today.getHours() > 9)
+        // {
+        //     week_ago.setDate(week_ago.getDate() - 7);
+        // }
+        // else
+        // {
+        //     week_ago.setDate(week_ago.getDate() - 6);
+        // }
         var covid_start = new Date("03/01/2020");
-        var difference = today.getTime() - covid_start.getTime();
+        var difference = week_ago.getTime() - covid_start.getTime();
         days_since_covid = difference / (1000 * 3600 * 24);
         slider_values = [];
         for (var i = 0; i < days_since_covid; i++) {
@@ -1026,10 +1036,10 @@ function loadTimeFrameSlider() {
         // Disallow user to get yesterday values if they have not been yet released
         var slider_maximum_day;
         if (today.getHours() >= 10) {
-            slider_maximum_day = valuesForSlider.length - 2;
+            slider_maximum_day = valuesForSlider.length - 8;
         }
         else {
-            slider_maximum_day = valuesForSlider.length - 3;
+            slider_maximum_day = valuesForSlider.length - 9;
         }
 
         noUiSlider.create(valuesSlider, {

@@ -229,7 +229,7 @@ def checkUpToDate():
     url_ockovani = "https://onemocneni-aktualne.mzcr.cz/api/v3/ockovani-geografie?page=1&itemsPerPage=10000&datum%5Bbefore%5D=XYZ&datum%5Bafter%5D=XYZ&apiToken=c54d8c7d54a31d016d8f3c156b98682a"
     datum_string_now = datetime.now().strftime("%Y-%m-%d")
     hour_now = datetime.now().hour
-    datum_string_yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
+    datum_string_yesterday = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
     datum_string_two_days_ago = (datetime.now() - timedelta(days=2)).strftime("%Y-%m-%d")
 
     try:
@@ -344,9 +344,9 @@ def checkUpToDate():
             response = cur.fetchone()
             if response is not None:
                 if response[1] != datum_string_yesterday:
-                    date_today = datetime.strptime(datum_string_now, "%Y-%m-%d")
+                    date_today = datetime.strptime(datum_string_yesterday, "%Y-%m-%d")
                     date_database = datetime.strptime(response[1], "%Y-%m-%d")
-                    delta_days = (date_today - date_database).days - 1
+                    delta_days = (date_today - date_database).days
 
                     # Update database
                     for i in range(delta_days):
@@ -442,7 +442,7 @@ def checkUpToDate():
             response = cur.fetchall()
             start_date = (last_database_date + timedelta(days=1))
             today_date = datetime.now()
-            yesterday_date = datetime.now() - timedelta(days=1)
+            yesterday_date = datetime.now() - timedelta(days=7)
             current_date = start_date
             i = 0
 
@@ -456,7 +456,7 @@ def checkUpToDate():
                 if current_date_text == yesterday_date.strftime('%Y-%m-%d'):
                     if hour_now < 9:
                         break
-                if current_date_text == today_date.strftime('%Y-%m-%d'):
+                if current_date_text == yesterday_date.strftime('%Y-%m-%d'):
                     break
                 i += 1
 
@@ -493,6 +493,7 @@ def checkUpToDate():
             last_database_date_str = response[1]
             start_date = (last_database_date + timedelta(days=1))
             today_date = datetime.now()
+            yesterday_date = datetime.now() - timedelta(days=7)
             current_date = start_date
             i = 0
 
@@ -502,7 +503,7 @@ def checkUpToDate():
                 if current_date_text == yesterday_date.strftime('%Y-%m-%d'):
                     if hour_now < 9:
                         break
-                if current_date_text == today_date.strftime('%Y-%m-%d'):
+                if current_date_text == yesterday_date.strftime('%Y-%m-%d'):
                     break
                 i += 1
 
