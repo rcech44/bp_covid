@@ -442,7 +442,7 @@ def checkUpToDate():
             response = cur.fetchall()
             start_date = (last_database_date + timedelta(days=1))
             today_date = datetime.now()
-            yesterday_date = datetime.now() - timedelta(days=7)
+            yesterday_date = datetime.now() - timedelta(days=6)
             current_date = start_date
             i = 0
 
@@ -493,7 +493,7 @@ def checkUpToDate():
             last_database_date_str = response[1]
             start_date = (last_database_date + timedelta(days=1))
             today_date = datetime.now()
-            yesterday_date = datetime.now() - timedelta(days=7)
+            yesterday_date = datetime.now() - timedelta(days=6)
             current_date = start_date
             i = 0
 
