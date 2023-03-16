@@ -72,7 +72,7 @@ def statistics(request):
 def root(request):
     return redirect('main')
 
-def api_range_days(request, range_from, range_to, type):
+def api_range_days(request, range_from, range_to):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
 
     # https://stackoverflow.com/questions/4581789/how-do-i-get-user-ip-address-in-django
@@ -87,5 +87,7 @@ def api_range_days(request, range_from, range_to, type):
     #     return HttpResponse({}, status=429)
     
     print(f"[REQUEST-API] Accepted incoming request from {ip}")
-    data = getData(range_from, range_to, type)
-    return JsonResponse(data, safe=False)
+    data = getData(range_from, range_to)
+    if data == "error":
+        return HttpResponse({}, status=400)
+    return JsonResponse(data)

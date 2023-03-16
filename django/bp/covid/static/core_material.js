@@ -1403,16 +1403,16 @@ function confirmRangeAnalysis() {
         var url;
         switch (current_analysis) {
             case "nakazeni-analyze":
-                url = "http://127.0.0.1:8000/covid/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max) + "&type=infection";
+                url = "http://127.0.0.1:8000/covid/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
                 break;
             case "ockovani-analyze":
-                url = "http://127.0.0.1:8000/covid/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max) + "&type=vaccination";
+                url = "http://127.0.0.1:8000/covid/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
                 break;
             case "umrti-analyze":
-                url = "http://127.0.0.1:8000/covid/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max) + "&type=deaths";
+                url = "http://127.0.0.1:8000/covid/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
                 break;
             case "testovani-analyze":
-                url = "http://127.0.0.1:8000/covid/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max) + "&type=testing";
+                url = "http://127.0.0.1:8000/covid/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
                 break;
         }
 
@@ -1449,6 +1449,17 @@ function confirmRangeAnalysis() {
                 // Open animation tab
                 showHideAnimationWindow();
             },
+            statusCode: {
+                400: function() {
+                    newErrorToast('Špatný API požadavek');
+                },
+                429: function() {
+                    newToast('Vyčkejte před dalším požadavkem');
+                },
+                500: function() {
+                    newToast('Chyba na straně serveru');
+                }
+              },
             error: function (error) {
                 console.log(error);
                 newToast('Prosím vyčkejte před dalším požadavkem')

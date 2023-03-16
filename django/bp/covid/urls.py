@@ -11,5 +11,5 @@ urlpatterns = [
     path('map/', covid.views.map, name='map'),
     path('map_pip/', covid.views.map_pip, name='map_pip'),
     path('statistics/', covid.views.statistics, name='statistics'),
-    path('api/range/days/from=<str:range_from>&to=<str:range_to>&type=<str:type>', covid.views.api_range_days, name='api_range_days')
+    path('api/range/days/from=<str:range_from>&to=<str:range_to>', covid.views.api_range_days, name='api_range_days')
 ]
