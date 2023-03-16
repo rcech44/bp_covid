@@ -1055,21 +1055,25 @@ function loadTimeFrameSlider() {
         valuesSlider.noUiSlider.on('update', function (values, handle) {
             analysis_changed = true;
             // document.getElementById("unsaved_changes").style.display = "";
+            
             var selected_date = new Date();
             switch (slider_current_type) {
                 case "Den":
                     selected_date.setDate(selected_date.getDate() - (slider_values.length - values[handle]));
                     slider_text_value.innerHTML = "<i>" + (values[1] - values[0]) + " dní</i>";
+                    document.getElementById("mb_usage").innerHTML = "Při potvrzení dojde ke stažení cca " + Math.round(0.1067 * (values[1] - values[0])) + " MB dat";
                     break;
                 case "Týden":
                     selected_date = new Date(covid_start_weeks[values[handle] - 1]);
                     // selected_date.setDate(selected_date.getDate() - (slider_values.length - (values[handle] * 7)));
                     slider_text_value.innerHTML = "<i>" + (values[1] - values[0]) + " týdnů</i>";
+                    document.getElementById("mb_usage").innerHTML = "Při potvrzení dojde ke stažení cca " + Math.round(0.747 * (values[1] - values[0])) + " MB dat";
                     break;
                 case "Měsíc":
                     selected_date = new Date(covid_start_months[values[handle] - 1]);
                     // selected_date.setDate(selected_date.getDate() - (slider_values.length - (values[handle] * 30)));
                     slider_text_value.innerHTML = "<i>" + (values[1] - values[0]) + " měsíců</i>";
+                    document.getElementById("mb_usage").innerHTML = "Při potvrzení dojde ke stažení cca " + Math.round(3.2 * (values[1] - values[0])) + " MB dat";
                     break;
                 case "Rok":
                     break;
@@ -1400,21 +1404,7 @@ function confirmRangeAnalysis() {
         current_time_window_low = value_min;
         current_time_window_high = value_max;
 
-        var url;
-        switch (current_analysis) {
-            case "nakazeni-analyze":
-                url = "http://127.0.0.1:8000/covid/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
-                break;
-            case "ockovani-analyze":
-                url = "http://127.0.0.1:8000/covid/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
-                break;
-            case "umrti-analyze":
-                url = "http://127.0.0.1:8000/covid/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
-                break;
-            case "testovani-analyze":
-                url = "http://127.0.0.1:8000/covid/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
-                break;
-        }
+        var url = "http://127.0.0.1:8000/covid/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
 
         // To calculate the time difference of two dates
         var Difference_In_Time = date2.getTime() - date1.getTime();
@@ -1530,7 +1520,7 @@ function checkboxCovidWaveClick(el) {
         document.getElementsByClassName("noUi-target")[0].style.background = "#ffffff";
     }
     else {
-        document.getElementsByClassName("noUi-target")[0].style.background = "linear-gradient(90deg, rgba(131,255,73,1) 0%, rgba(255,127,117,1) 21%, rgba(221,61,48,1) 30%, rgba(93,255,67,1) 49%, rgba(222,77,66,1) 68%, rgba(255,163,163,1) 100%)";
+        document.getElementsByClassName("noUi-target")[0].style.background = "linear-gradient(90deg, rgba(131,255,73,1) 0%, rgba(255,127,117,1) 21%, rgba(221,61,48,1) 30%, rgba(93,255,67,1) 49%, rgba(222,77,66,1) 68%, rgb(135, 196, 66, 1) 100%)";
     }
 }
 
