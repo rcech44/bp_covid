@@ -252,7 +252,7 @@ def checkUpToDate():
                     # Update database
                     for i in range(delta_days):
                         if i == delta_days - 1:
-                            if hour_now < 9:
+                            if hour_now < 8:
                                 continue
                         update_date = (date_database + timedelta(days=i+1)).strftime("%Y-%m-%d")
                         if update_date not in updated_dates:
@@ -294,49 +294,6 @@ def checkUpToDate():
                         print(f"[DATABASE-UPDATER] Processed infections from {update_date}")
 
             # **********************
-            # UPDATE zakladni_prehled TABLE
-            # **********************
-            cur = conn.cursor()
-            cur.execute('SELECT * FROM zakladni_prehled ORDER BY datum DESC LIMIT 1')
-            response = cur.fetchall()
-            if response is not None:
-                if response[0][1] != datum_string_now:
-                    req = urllib.request.Request(url_prehled)
-                    req.add_header('accept', 'application/json')
-                    response = urllib.request.urlopen(req)
-                    prehled = json.load(response)[0]
-                    if prehled['datum'] == datum_string_now:
-                        cur.execute('INSERT INTO zakladni_prehled (datum, provedene_testy_celkem, potvrzene_pripady_celkem, aktivni_pripady, vyleceni, umrti, aktualne_hospitalizovani, provedene_testy_vcerejsi_den, potvrzene_pripady_vcerejsi_den, provedene_testy_vcerejsi_den_datum, potvrzene_pripady_vcerejsi_den_datum, provedene_antigenni_testy_celkem, provedene_antigenni_testy_vcerejsi_den, provedene_antigenni_testy_vcerejsi_den_datum, vykazana_ockovani_celkem, vykazana_ockovani_vcerejsi_den, vykazana_ockovani_vcerejsi_den_datum, potvrzene_pripady_65_celkem, potvrzene_pripady_65_vcerejsi_den, potvrzene_pripady_65_vcerejsi_den_datum, ockovane_osoby_celkem, ockovane_osoby_vcerejsi_den, ockovane_osoby_vcerejsi_den_datum) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', \
-                            [
-                                prehled['datum'],
-                                prehled['provedene_testy_celkem'],
-                                prehled['potvrzene_pripady_celkem'],
-                                prehled['aktivni_pripady'],
-                                prehled['vyleceni'],
-                                prehled['umrti'],
-                                prehled['aktualne_hospitalizovani'],
-                                prehled['provedene_testy_vcerejsi_den'],
-                                prehled['potvrzene_pripady_vcerejsi_den'],
-                                prehled['provedene_testy_vcerejsi_den_datum'],
-                                prehled['potvrzene_pripady_vcerejsi_den_datum'],
-                                prehled['provedene_antigenni_testy_celkem'],
-                                prehled['provedene_antigenni_testy_vcerejsi_den'],
-                                prehled['provedene_antigenni_testy_vcerejsi_den_datum'],
-                                prehled['vykazana_ockovani_celkem'],
-                                prehled['vykazana_ockovani_vcerejsi_den'],
-                                prehled['vykazana_ockovani_vcerejsi_den_datum'],
-                                prehled['potvrzene_pripady_65_celkem'],
-                                prehled['potvrzene_pripady_65_vcerejsi_den'],
-                                prehled['potvrzene_pripady_65_vcerejsi_den_datum'],
-                                prehled['ockovane_osoby_celkem'],
-                                prehled['ockovane_osoby_vcerejsi_den'],
-                                prehled['ockovane_osoby_vcerejsi_den_datum']
-                            ])
-                        conn.commit()
-                    else:
-                        pass
-            
-            # **********************
             # UPDATE ockovani_datum_okres TABLE
             # **********************
             cur = conn.cursor()
@@ -351,7 +308,7 @@ def checkUpToDate():
                     # Update database
                     for i in range(delta_days):
                         if i == delta_days - 1:
-                            if hour_now < 9:
+                            if hour_now < 8:
                                 continue
                         update_date = (date_database + timedelta(days=i+1)).strftime("%Y-%m-%d")
                         update_date_yesterday = (date_database + timedelta(days=i)).strftime("%Y-%m-%d")
@@ -450,18 +407,19 @@ def checkUpToDate():
             for row in response:
                 okresy[row[2]] = row[3]
 
-            while True:
-                current_date = (start_date + timedelta(days=i))
-                current_date_text = current_date.strftime('%Y-%m-%d')
-                if current_date_text == yesterday_date.strftime('%Y-%m-%d'):
-                    if hour_now < 9:
-                        break
-                if current_date_text == yesterday_date.strftime('%Y-%m-%d'):
-                    break
-                i += 1
+            date_yesterday = datetime.strptime(datum_string_yesterday, "%Y-%m-%d")
+            date_database = datetime.strptime(response[0][1], "%Y-%m-%d")
+            delta_days = (date_yesterday - date_database).days
+            delta = delta_days
 
+            # Update database
+            for i in range(delta_days):
+                if i == delta_days - 1:
+                    if hour_now < 8:
+                        continue
+                
                 # Get data from MZCR
-                url_edit = url_umrti.replace('XYZ', current_date_text)
+                url_edit = url_umrti.replace('XYZ', (date_database + timedelta(days=i+1)).strftime("%Y-%m-%d"))
                 req = urllib.request.Request(url_edit)
                 req.add_header('accept', 'application/json')
                 response = urllib.request.urlopen(req)
@@ -469,18 +427,51 @@ def checkUpToDate():
 
                 # Add blank record to database for each record
                 for okres in okresy:
-                    cur.execute('INSERT INTO umrti_datum_okres (datum, okres, umrti_den, umrti_doposud) VALUES (?, ?, 0, ?)', [current_date_text, okres, okresy[okres]])
+                    cur.execute('INSERT INTO umrti_datum_okres (datum, okres, umrti_den, umrti_doposud) VALUES (?, ?, 0, ?)', [(date_database + timedelta(days=i+1)).strftime("%Y-%m-%d"), okres, okresy[okres]])
                     conn.commit()
 
                 for record in json_okresy:
                     okres = record['okres_lau_kod']
                     okresy[okres] += 1
-                    cur.execute('UPDATE umrti_datum_okres SET umrti_den = umrti_den + 1 WHERE datum = ? AND okres = ?', [current_date_text, okres])
-                    cur.execute('UPDATE umrti_datum_okres SET umrti_doposud = umrti_doposud + 1 WHERE datum = ? AND okres = ?', [current_date_text, okres])
+                    cur.execute('UPDATE umrti_datum_okres SET umrti_den = umrti_den + 1 WHERE datum = ? AND okres = ?', [(date_database + timedelta(days=i+1)).strftime("%Y-%m-%d"), okres])
+                    cur.execute('UPDATE umrti_datum_okres SET umrti_doposud = umrti_doposud + 1 WHERE datum = ? AND okres = ?', [(date_database + timedelta(days=i+1)).strftime("%Y-%m-%d"), okres])
                     conn.commit()
 
                 updated = True
-                print(f"[DATABASE-UPDATER] Processed deaths from {current_date_text}")
+                print(f"[DATABASE-UPDATER] Processed deaths from {(date_database + timedelta(days=i+1)).strftime('%Y-%m-%d')}")
+                
+
+            # while True:
+            #     current_date = (start_date + timedelta(days=i))
+            #     current_date_text = current_date.strftime('%Y-%m-%d')
+            #     if current_date_text == yesterday_date.strftime('%Y-%m-%d'):
+            #         if hour_now < 9:
+            #             break
+            #     if current_date_text == yesterday_date.strftime('%Y-%m-%d'):
+            #         break
+            #     i += 1
+
+            #     # Get data from MZCR
+            #     url_edit = url_umrti.replace('XYZ', current_date_text)
+            #     req = urllib.request.Request(url_edit)
+            #     req.add_header('accept', 'application/json')
+            #     response = urllib.request.urlopen(req)
+            #     json_okresy = json.load(response)
+
+            #     # Add blank record to database for each record
+            #     for okres in okresy:
+            #         cur.execute('INSERT INTO umrti_datum_okres (datum, okres, umrti_den, umrti_doposud) VALUES (?, ?, 0, ?)', [current_date_text, okres, okresy[okres]])
+            #         conn.commit()
+
+            #     for record in json_okresy:
+            #         okres = record['okres_lau_kod']
+            #         okresy[okres] += 1
+            #         cur.execute('UPDATE umrti_datum_okres SET umrti_den = umrti_den + 1 WHERE datum = ? AND okres = ?', [current_date_text, okres])
+            #         cur.execute('UPDATE umrti_datum_okres SET umrti_doposud = umrti_doposud + 1 WHERE datum = ? AND okres = ?', [current_date_text, okres])
+            #         conn.commit()
+
+            #     updated = True
+            #     print(f"[DATABASE-UPDATER] Processed deaths from {current_date_text}")
 
             # **********************
             # UPDATE testovani_datum_okres TABLE
@@ -497,18 +488,19 @@ def checkUpToDate():
             current_date = start_date
             i = 0
 
-            while True:
-                current_date = (start_date + timedelta(days=i))
-                current_date_text = current_date.strftime('%Y-%m-%d')
-                if current_date_text == yesterday_date.strftime('%Y-%m-%d'):
-                    if hour_now < 9:
-                        break
-                if current_date_text == yesterday_date.strftime('%Y-%m-%d'):
-                    break
-                i += 1
+            date_yesterday = datetime.strptime(datum_string_yesterday, "%Y-%m-%d")
+            date_database = last_database_date_str
+            delta_days = (date_yesterday - last_database_date).days
+            delta = delta_days
+
+            # Update database
+            for i in range(delta_days):
+                if i == delta_days - 1:
+                    if hour_now < 8:
+                        continue
 
                 # Get data from MZCR
-                url_edit = url_testovani.replace('XYZ', current_date_text)
+                url_edit = url_testovani.replace('XYZ', (last_database_date + timedelta(days=i+1)).strftime("%Y-%m-%d"))
                 req = urllib.request.Request(url_edit)
                 req.add_header('accept', 'application/json')
                 response = urllib.request.urlopen(req)
@@ -516,11 +508,36 @@ def checkUpToDate():
 
                 # Add blank record to database for each record
                 for okres in json_okresy:
-                    cur.execute('INSERT INTO testovani_datum_okres (datum, okres, prirustek, celkem, prirustek_korekce, celkem_korekce) VALUES (?, ?, ?, ?, ?, ?)', [current_date_text, okres['okres_lau_kod'], okres['prirustkovy_pocet_testu_okres'], okres['kumulativni_pocet_testu_okres'], okres['prirustkovy_pocet_prvnich_testu_okres'], okres['kumulativni_pocet_prvnich_testu_okres'] ])
+                    cur.execute('INSERT INTO testovani_datum_okres (datum, okres, prirustek, celkem, prirustek_korekce, celkem_korekce) VALUES (?, ?, ?, ?, ?, ?)', [(last_database_date + timedelta(days=i+1)).strftime("%Y-%m-%d"), okres['okres_lau_kod'], okres['prirustkovy_pocet_testu_okres'], okres['kumulativni_pocet_testu_okres'], okres['prirustkovy_pocet_prvnich_testu_okres'], okres['kumulativni_pocet_prvnich_testu_okres'] ])
                     conn.commit()
 
                 updated = True
-                print(f"[DATABASE-UPDATER] Processed tests from {current_date_text}")
+                print(f"[DATABASE-UPDATER] Processed tests from {(last_database_date + timedelta(days=i+1)).strftime('%Y-%m-%d')}")
+
+            # while True:
+            #     current_date = (start_date + timedelta(days=i))
+            #     current_date_text = current_date.strftime('%Y-%m-%d')
+            #     if current_date_text == yesterday_date.strftime('%Y-%m-%d'):
+            #         if hour_now < 9:
+            #             break
+            #     if current_date_text == yesterday_date.strftime('%Y-%m-%d'):
+            #         break
+            #     i += 1
+
+            #     # Get data from MZCR
+            #     url_edit = url_testovani.replace('XYZ', current_date_text)
+            #     req = urllib.request.Request(url_edit)
+            #     req.add_header('accept', 'application/json')
+            #     response = urllib.request.urlopen(req)
+            #     json_okresy = json.load(response)
+
+            #     # Add blank record to database for each record
+            #     for okres in json_okresy:
+            #         cur.execute('INSERT INTO testovani_datum_okres (datum, okres, prirustek, celkem, prirustek_korekce, celkem_korekce) VALUES (?, ?, ?, ?, ?, ?)', [current_date_text, okres['okres_lau_kod'], okres['prirustkovy_pocet_testu_okres'], okres['kumulativni_pocet_testu_okres'], okres['prirustkovy_pocet_prvnich_testu_okres'], okres['kumulativni_pocet_prvnich_testu_okres'] ])
+            #         conn.commit()
+
+            #     updated = True
+            #     print(f"[DATABASE-UPDATER] Processed tests from {current_date_text}")
 
     except sqlite3.Error as e:
         print(e)
