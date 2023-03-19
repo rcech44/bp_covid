@@ -683,9 +683,9 @@ function updatePage() {
             analysis_name_min_value = min_value_name;
             analysis_name_max_value = max_value_name;
 
-            current_values.push(okres_value);
-            totalValue += okres_value;
-            if (data_minimum_type == "zero") minimum_day = 0;
+            // current_values.push(okres_value);
+            // totalValue += okres_value;
+            // if (data_minimum_type == "zero") minimum_day = 0;
 
             // Update text if current district is selected
             if (okres_clicked == okres_lau) {
@@ -1433,7 +1433,9 @@ function confirmRangeAnalysis() {
                         slider.setAttribute("max", Difference_In_Days);
                         break;
                 }
-                processGetDataFromSlider(result);
+                new_data = result;
+                updatePage();
+                newToast("Byla aktualizována data.");
                 initChart();
 
                 // Open animation tab
