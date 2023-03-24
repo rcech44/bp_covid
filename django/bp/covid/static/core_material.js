@@ -1522,7 +1522,7 @@ function checkboxCovidWaveClick(el) {
         document.getElementsByClassName("noUi-target")[0].style.background = "#ffffff";
     }
     else {
-        document.getElementsByClassName("noUi-target")[0].style.background = "linear-gradient(90deg, rgba(131,255,73,1) 0%, rgba(255,127,117,1) 21%, rgba(221,61,48,1) 30%, rgba(93,255,67,1) 49%, rgba(222,77,66,1) 68%, rgb(135, 196, 66, 1) 100%)";
+        document.getElementsByClassName("noUi-target")[0].style.background = "linear-gradient(90deg, rgba(255,255,255,1) 0%, rgb(255, 152, 0) 21%, rgba(255, 255, 255,1) 30%, rgb(255, 255, 255) 49%, rgb(255, 152, 0) 68%, rgb(255,255,255) 90%)";
     }
 }
 
@@ -1753,7 +1753,7 @@ function initChart() {
             },
             height: 300,
             margin: {
-                l: 30,
+                l: 40,
                 r: 30,
                 b: 30,
                 t: 90,
@@ -1780,7 +1780,7 @@ function initChart() {
             },
             height: 300,
             margin: {
-                l: 30,
+                l: 40,
                 r: 30,
                 b: 30,
                 t: 90,
