@@ -1044,6 +1044,8 @@ function loadTimeFrameSlider() {
 
         noUiSlider.create(valuesSlider, {
             start: [1, 100],
+            limit: 210,
+            behaviour: 'drag',
             // A linear range from 0 to 15 (16 values)
             range: { min: 0, max: slider_maximum_day },
             connect: [false, true, false],
@@ -2145,6 +2147,8 @@ function toggleDarkMap() {
             var splash_content = document.getElementById("splashscreen_content");
             var changelog_content = document.getElementById("changelog_content");
             var splash_content_paragraph = document.getElementById("splashscreen_content_paragraph");
+            var splash_button1 = document.getElementById("button-hide-splash");
+            var contact_button1 = document.getElementById("button-contact-close");
             splash.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
             changelog.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
             contactscreen_content.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
@@ -2152,6 +2156,10 @@ function toggleDarkMap() {
             splash_content.classList.add("w3-metro-darken");
             contactscreen_content.classList.add("w3-metro-darken");
             changelog_content.classList.add("w3-metro-darken");
+            splash_button1.classList.remove("w3-light-gray");
+            splash_button1.classList.add("w3-gray");
+            contact_button1.classList.remove("w3-light-gray");
+            contact_button1.classList.add("w3-gray");
 
             // Select inputs
             var sel1 = document.getElementById("sel1");
@@ -2317,6 +2325,8 @@ function toggleDarkMap() {
             var splash_content = document.getElementById("splashscreen_content");
             var changelog_content = document.getElementById("changelog_content");
             var splash_content_paragraph = document.getElementById("splashscreen_content_paragraph");
+            var splash_button1 = document.getElementById("button-hide-splash");
+            var contact_button1 = document.getElementById("button-contact-close");
             splash.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
             changelog.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
             contactscreen.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
@@ -2326,6 +2336,10 @@ function toggleDarkMap() {
             splash_content.classList.remove("w3-metro-darken");
             contactscreen_content.classList.remove("w3-metro-darken");
             changelog_content.classList.remove("w3-metro-darken");
+            splash_button1.classList.remove("w3-gray");
+            splash_button1.classList.add("w3-light-gray");
+            contact_button1.classList.remove("w3-gray");
+            contact_button1.classList.add("w3-light-gray");
 
             // Select inputs
             var sel1 = document.getElementById("sel1");
