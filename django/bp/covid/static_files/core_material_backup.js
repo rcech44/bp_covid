@@ -683,20 +683,20 @@ function updatePage() {
             analysis_name_min_value = min_value_name;
             analysis_name_max_value = max_value_name;
 
-            // current_values.push(okres_value);
-            // totalValue += okres_value;
-            // if (data_minimum_type == "zero") minimum_day = 0;
+            current_values.push(okres_value);
+            totalValue += okres_value;
+            if (data_minimum_type == "zero") minimum_day = 0;
 
             // Update text if current district is selected
             if (okres_clicked == okres_lau) {
                 if (iframe.contentWindow.document.getElementById("text_okres_nakazeni") != null) {
                     if (selected_100) {
                         iframe.contentWindow.document.getElementById("text_okres_nakazeni_100").innerHTML = okres_value;
-                        iframe.contentWindow.document.getElementById("text_okres_nakazeni").innerHTML = Math.round(okres_value_second);
+                        iframe.contentWindow.document.getElementById("text_okres_nakazeni").innerHTML = okres_value_second;
                     }
                     else {
                         iframe.contentWindow.document.getElementById("text_okres_nakazeni_100").innerHTML = okres_value_second;
-                        iframe.contentWindow.document.getElementById("text_okres_nakazeni").innerHTML = Math.round(okres_value_second);
+                        iframe.contentWindow.document.getElementById("text_okres_nakazeni").innerHTML = okres_value;
                     }
                 }
             }
@@ -1001,18 +1001,8 @@ function selectAnalysis(type) {
 function loadTimeFrameSlider() {
     try {
         var today = new Date();
-        var week_ago = new Date();
-        week_ago.setDate(week_ago.getDate() - 7);
-        // if (today.getHours() > 9)
-        // {
-        //     week_ago.setDate(week_ago.getDate() - 7);
-        // }
-        // else
-        // {
-        //     week_ago.setDate(week_ago.getDate() - 6);
-        // }
         var covid_start = new Date("03/01/2020");
-        var difference = week_ago.getTime() - covid_start.getTime();
+        var difference = today.getTime() - covid_start.getTime();
         days_since_covid = difference / (1000 * 3600 * 24);
         slider_values = [];
         for (var i = 0; i < days_since_covid; i++) {
@@ -1036,16 +1026,14 @@ function loadTimeFrameSlider() {
         // Disallow user to get yesterday values if they have not been yet released
         var slider_maximum_day;
         if (today.getHours() >= 10) {
-            slider_maximum_day = valuesForSlider.length - 8;
+            slider_maximum_day = valuesForSlider.length - 2;
         }
         else {
-            slider_maximum_day = valuesForSlider.length - 9;
+            slider_maximum_day = valuesForSlider.length - 3;
         }
 
         noUiSlider.create(valuesSlider, {
             start: [1, 100],
-            limit: 200,
-            behaviour: 'drag',
             // A linear range from 0 to 15 (16 values)
             range: { min: 0, max: slider_maximum_day },
             connect: [false, true, false],
@@ -1057,25 +1045,21 @@ function loadTimeFrameSlider() {
         valuesSlider.noUiSlider.on('update', function (values, handle) {
             analysis_changed = true;
             // document.getElementById("unsaved_changes").style.display = "";
-            
             var selected_date = new Date();
             switch (slider_current_type) {
                 case "Den":
                     selected_date.setDate(selected_date.getDate() - (slider_values.length - values[handle]));
                     slider_text_value.innerHTML = "<i>" + (values[1] - values[0]) + " dní</i>";
-                    document.getElementById("mb_usage").innerHTML = "Při potvrzení dojde ke stažení cca " + Math.round(0.1067 * (values[1] - values[0])) + " MB dat";
                     break;
                 case "Týden":
                     selected_date = new Date(covid_start_weeks[values[handle] - 1]);
                     // selected_date.setDate(selected_date.getDate() - (slider_values.length - (values[handle] * 7)));
                     slider_text_value.innerHTML = "<i>" + (values[1] - values[0]) + " týdnů</i>";
-                    document.getElementById("mb_usage").innerHTML = "Při potvrzení dojde ke stažení cca " + Math.round(0.747 * (values[1] - values[0])) + " MB dat";
                     break;
                 case "Měsíc":
                     selected_date = new Date(covid_start_months[values[handle] - 1]);
                     // selected_date.setDate(selected_date.getDate() - (slider_values.length - (values[handle] * 30)));
                     slider_text_value.innerHTML = "<i>" + (values[1] - values[0]) + " měsíců</i>";
-                    document.getElementById("mb_usage").innerHTML = "Při potvrzení dojde ke stažení cca " + Math.round(3.2 * (values[1] - values[0])) + " MB dat";
                     break;
                 case "Rok":
                     break;
@@ -1101,8 +1085,6 @@ function loadTimeFrameSlider() {
 
 function selectSliderPIPType(value) {
     try {
-        document.getElementById("pip_type").innerHTML = value;
-
         var select_4 = document.getElementById("sel4");
         select_4.innerHTML = "";
 
@@ -1184,7 +1166,6 @@ function selectSliderPIPType(value) {
                 break;
         }
 
-        document.getElementById("pip_data").innerHTML = document.getElementById("sel4").value;
         updatePage();
     }
     catch (err) {
@@ -1278,7 +1259,6 @@ function selectSliderType(value) {
 }
 
 function selectSliderPIPData(value) {
-    document.getElementById("pip_data").innerHTML = value;
     map_show_data_PIP = value;
     updatePage();
 }
@@ -1406,7 +1386,21 @@ function confirmRangeAnalysis() {
         current_time_window_low = value_min;
         current_time_window_high = value_max;
 
-        var url = "http://127.0.0.1:8000/covid/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
+        var url;
+        switch (current_analysis) {
+            case "nakazeni-analyze":
+                url = "http://127.0.0.1:8000/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max) + "&type=infection";
+                break;
+            case "ockovani-analyze":
+                url = "http://127.0.0.1:8000/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max) + "&type=vaccination";
+                break;
+            case "umrti-analyze":
+                url = "http://127.0.0.1:8000/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max) + "&type=deaths";
+                break;
+            case "testovani-analyze":
+                url = "http://127.0.0.1:8000/api/range/days/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max) + "&type=testing";
+                break;
+        }
 
         // To calculate the time difference of two dates
         var Difference_In_Time = date2.getTime() - date1.getTime();
@@ -1435,25 +1429,12 @@ function confirmRangeAnalysis() {
                         slider.setAttribute("max", Difference_In_Days);
                         break;
                 }
-                new_data = result;
-                updatePage();
-                newToast("Byla aktualizována data.");
+                processGetDataFromSlider(result);
                 initChart();
 
                 // Open animation tab
                 showHideAnimationWindow();
             },
-            statusCode: {
-                400: function() {
-                    newErrorToast('Špatný API požadavek');
-                },
-                429: function() {
-                    newToast('Vyčkejte před dalším požadavkem');
-                },
-                500: function() {
-                    newToast('Chyba na straně serveru');
-                }
-              },
             error: function (error) {
                 console.log(error);
                 newToast('Prosím vyčkejte před dalším požadavkem')
@@ -1524,7 +1505,8 @@ function checkboxCovidWaveClick(el) {
         document.getElementsByClassName("noUi-target")[0].style.background = "#ffffff";
     }
     else {
-        document.getElementsByClassName("noUi-target")[0].style.background = "linear-gradient(90deg, rgba(255,255,255,1) 0%, rgb(255, 152, 0) 21%, rgb(255, 245, 230) 30%, rgb(255, 245, 230) 49%, rgb(255, 152, 0) 68%, rgb(255, 245, 230) 90%)";    }
+        document.getElementsByClassName("noUi-target")[0].style.background = "linear-gradient(90deg, rgba(131,255,73,1) 0%, rgba(255,127,117,1) 21%, rgba(221,61,48,1) 30%, rgba(93,255,67,1) 49%, rgba(222,77,66,1) 68%, rgba(255,163,163,1) 100%)";
+    }
 }
 
 function changeRecalculation() {
@@ -1683,6 +1665,7 @@ function initChart() {
 
         var xArray = [];
         var yArray = [];
+
         var data_keys = Object.keys(new_data);
         var data_keys_dates = [];
         data_keys.forEach(element => {
@@ -1698,6 +1681,32 @@ function initChart() {
             var v = analysis_name_value;
             yArray.push(new_data[d][o][v]);
         });
+
+        // Old crappy method
+
+        // var val_min = slider_current_values[0];
+        // var val_max = slider_current_values[1];
+        // var no_x_labels = (slider_current_values[1] - slider_current_values[0]) / 7;
+        // if (okres_clicked == "") return;
+
+        // var date_start = addDays(covid_start_string, val_min - 1);
+        // var date_end = addDays(covid_start_string, val_max - 1);
+
+        // var xArray = [];
+        // var yArray = [];
+
+        // for (var i = val_min; i <= val_max; i++) {
+        //     if (i == val_min) xArray.push(getFormattedDateLocal(date_start));
+        //     else if (i == val_max) xArray.push(getFormattedDateLocal(date_end));
+        //     else xArray.push(getFormattedDateLocal(addDays(covid_start_string, i)));
+        // }
+
+        // for (var i = val_min; i < val_max; i++) {
+        //     var d = getFormattedDate(addDays(covid_start_string, i));
+        //     var o = okres_clicked;
+        //     var v = analysis_name_value;
+        //     yArray.push(new_data[d][o][v]);
+        // }
 
         // Define Data
         var data = [{
@@ -1966,14 +1975,6 @@ function toggleDarkMap() {
         dark_mode = !dark_mode;
 
         if (dark_mode) {
-
-            // PIP
-            var parent = iframe_pip.contentWindow.document.querySelector("g");
-            var children = parent.children;
-            for (let i = 0; i < 77; i++) {
-                children[i].setAttribute("fill-opacity", 1);
-            }
-
             // Switches
             var switches = document.getElementsByClassName("mdl-switch__track");
 
@@ -1983,7 +1984,7 @@ function toggleDarkMap() {
 
             // Main slider
             var slider = document.getElementsByClassName("noUi-connects")[0];
-            // slider.style.backgroundColor = "#444444";
+            slider.style.backgroundColor = "#444444";
 
             // Secondary slider
             // var slider = document.getElementsByClassName("mdl-slider__background-lower")[0];
@@ -2114,20 +2115,18 @@ function toggleDarkMap() {
 
             // Splashscreen content
             var splash = document.getElementById("splashscreen");
+            var changelog = document.getElementById("changelog");
             var contactscreen_content = document.getElementById("contactscreen_content");
             var splash_content = document.getElementById("splashscreen_content");
+            var changelog_content = document.getElementById("changelog_content");
             var splash_content_paragraph = document.getElementById("splashscreen_content_paragraph");
-            var splash_button = document.getElementById("button-hide-splash");
-            var contact_button = document.getElementById("button-contact-close");
             splash.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
+            changelog.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
             contactscreen_content.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
             splash_content_paragraph.style.backgroundColor = "rgb(20, 20, 20)";
             splash_content.classList.add("w3-metro-darken");
             contactscreen_content.classList.add("w3-metro-darken");
-            splash_button.classList.add("w3-dark-gray");
-            splash_button.classList.remove("w3-light-gray");
-            contact_button.classList.add("w3-dark-gray");
-            contact_button.classList.remove("w3-light-gray");
+            changelog_content.classList.add("w3-metro-darken");
 
             // Select inputs
             var sel1 = document.getElementById("sel1");
@@ -2147,14 +2146,6 @@ function toggleDarkMap() {
             sel5.classList.add("text-white");
         }
         else {
-
-            // PIP
-            var parent = iframe_pip.contentWindow.document.querySelector("g");
-            var children = parent.children;
-            for (let i = 0; i < 77; i++) {
-                children[i].setAttribute("fill-opacity", 0.7);
-            }
-
             // Switches
             var switches = document.getElementsByClassName("mdl-switch__track");
 
@@ -2164,7 +2155,7 @@ function toggleDarkMap() {
 
             // Main slider
             var slider = document.getElementsByClassName("noUi-connects")[0];
-            // slider.style.backgroundColor = "white";
+            slider.style.backgroundColor = "white";
 
             // Secondary slider
             // var slider = document.getElementsByClassName("mdl-slider__background-lower")[0];
@@ -2287,22 +2278,21 @@ function toggleDarkMap() {
 
             // Splashscreen content
             var splash = document.getElementById("splashscreen");
+            var changelog = document.getElementById("changelog");
             var contactscreen = document.getElementById("contactscreen");
             var contactscreen_content = document.getElementById("contactscreen_content");
             var splash_content = document.getElementById("splashscreen_content");
+            var changelog_content = document.getElementById("changelog_content");
             var splash_content_paragraph = document.getElementById("splashscreen_content_paragraph");
-            var splash_button = document.getElementById("button-hide-splash");
-            var contact_button = document.getElementById("button-contact-close");
             splash.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
+            changelog.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
             contactscreen.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
             contactscreen_content.style.backgroundColor = "rgba(255, 255, 255, 1)";
+            changelog_content.style.backgroundColor = "rgba(255, 255, 255, 1)";
             splash_content_paragraph.style.backgroundColor = "rgb(245, 245, 245)";
             splash_content.classList.remove("w3-metro-darken");
             contactscreen_content.classList.remove("w3-metro-darken");
-            splash_button.classList.remove("w3-dark-gray");
-            splash_button.classList.add("w3-light-gray");
-            contact_button.classList.remove("w3-dark-gray");
-            contact_button.classList.add("w3-light-gray");
+            changelog_content.classList.remove("w3-metro-darken");
 
             // Select inputs
             var sel1 = document.getElementById("sel1");

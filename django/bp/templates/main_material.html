@@ -86,7 +86,7 @@
 
     <!-- Welcome window -->
     <div id="splashscreen"
-        style="position:absolute;top:0;left:0;bottom:0;width:100%;z-index: 99;height:100%;background-color:rgba(0, 0, 0, 0.686);display:none">
+        style="position:absolute;top:0;left:0;bottom:0;width:100%;z-index: 99;height:100%;background-color:rgba(0, 0, 0, 0.686)">
         <div class="w3-card w3-round-large" id="splashscreen_content"
             style="position: fixed;top: 50%;left: 50%;-webkit-transform: translate(-50%, -50%);transform: translate(-50%, -50%);opacity: 1;background-color: white;max-width: 800px;">
             <div style="margin:20px;">
@@ -129,7 +129,7 @@
                     <table style="width:100%">
                         <tr>
                             <td style="width:100%">
-                                <button id="button-hide-splash" class="w3-button w3-block w3-light-gray w3-center"
+                                <button id="button-hide-splash" class="w3-button w3-block w3-light-gray w3-center w3-round-large w3-card"
                                 style="margin-top:10px;font-weight: bolder;" onclick="hideSplashScreen()">Přejít k
                                 aplikaci</button>
                             </td>
@@ -156,69 +156,8 @@
                 </p>
                 
                 <div>
-                    <button id="button-contact-close" class="w3-button w3-block w3-light-gray w3-center"
+                    <button id="button-contact-close" class="w3-button w3-block w3-light-gray w3-center w3-round-large w3-card"
                         style="margin-top:20px;font-weight: bolder;" onclick="hideContactScreen()">Zavřít</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="changelog"
-        style="position:absolute;top:0;left:0;bottom:0;width:100%;z-index: 99;height:100%;background-color:rgba(0, 0, 0, 0.686);display:none">
-        <div class="w3-card w3-round-large" id="changelog_content"
-            style="position: fixed;top: 50%;left: 50%;-webkit-transform: translate(-50%, -50%);transform: translate(-50%, -50%);opacity: 1;background-color: white;">
-            <div style="margin:20px;">
-                <h4 class="w3-center" style="margin-top:10px">Changelog</h2>
-                <hr>
-                <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp w3-white" style="max-width:800px">
-                    <thead>
-                        <tr>
-                            <th class="mdl-data-table__cell--non-numeric">Changes</th>
-                            <th>Version</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody id="changelog_list">
-                        <tr>
-                            <td class="mdl-data-table__cell--non-numeric">
-                                Fixed changelog screen dark mode once again
-                            </td>
-                            <td>1.03</td>
-                            <td>5.2.2023</td>
-                        </tr>
-                        <tr>
-                            <td class="mdl-data-table__cell--non-numeric">
-                                Fixed changelog screen dark mode
-                            </td>
-                            <td>1.02</td>
-                            <td>5.2.2023</td>
-                        </tr>
-                        <tr>
-                            <td class="mdl-data-table__cell--non-numeric">
-                                Added on-screen error messages using snackbar
-                            </td>
-                            <td>1.01</td>
-                            <td>5.2.2023</td>
-                        </tr>
-                        <tr>
-                            <td class="mdl-data-table__cell--non-numeric">
-                                Initial release
-                            </td>
-                            <td>1.0</td>
-                            <td>5.2.2023</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div>
-                    <table style="width:100%">
-                        <tr>
-                            <td style="width:80%">
-                                <button class="w3-button w3-block w3-light-gray w3-center"
-                                style="margin-top:20px;font-weight: bolder;" onclick="$('#changelog').fadeOut(350);">Zpět</button>
-                            </td>
-                        </tr>
-                    </table>
-
                 </div>
             </div>
         </div>
@@ -328,7 +267,6 @@
             for="demo-menu-lower-right">
             <li class="mdl-menu__item" onclick="showSplashScreen()">Úvodní obrazovka</li>
             <li class="mdl-menu__item" onclick="showContactScreen()">Informace o autorovi</li>
-            <li class="mdl-menu__item" onclick="showChangelog()">Seznam změn</li>
         </ul>
     </div>
 
@@ -448,8 +386,8 @@
                                             <select oninput="selectSliderType(this.value)" class="form-control"
                                                 id="sel1" style="margin-top:0px">
                                                 <option>Den</option>
-                                                <option>Týden</option>
-                                                <option>Měsíc</option>
+                                                <!-- <option>Týden</option>
+                                                <option>Měsíc</option> -->
                                             </select>
                                         </td>
                                     </tr>
@@ -480,6 +418,9 @@
                             </table>
                             <div id="mb_usage" class="w3-center" style="margin-top:12px;font-style:italic">
                                 Při potvrzení dojde ke stažení cca xxx MB dat
+                            </div>
+                            <div class="w3-center" style="margin-top:12px; color:red">
+                                <b>Testování:</b> Momentálně lze stáhnout pouze 200 dní kvůli testování dočasného limitovaného serveru 
                             </div>
                             <div class="w3-center">
                                 <button id="time_window_confirm_button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" style="width:100%;font-size:12px;margin-top:15px"
