@@ -21,5 +21,5 @@ import covid.views
 
 urlpatterns = [
     path('covid/', include('covid.urls')),
-    path('admin/', admin.site.urls, name='admin'),
+    # path('admin/', admin.site.urls, name='admin'),
 ]

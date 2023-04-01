@@ -924,8 +924,8 @@ function selectAnalysis(type) {
                         document.getElementsByClassName("noUi-connect")[0].style.background = "#9e9e9e";
                         map_title.innerHTML = "Počty úmrtí";
                         var options = [
-                            "Aktuální celkový počet zemřelých doposud",
-                            "Počet nově zemřelých daný den"
+                            "Počet nově zemřelých daný den",
+                            "Aktuální celkový počet zemřelých doposud"
                         ];
 
                         options.forEach((element) => {
@@ -962,8 +962,8 @@ function selectAnalysis(type) {
                         document.getElementsByClassName("noUi-connect")[0].style.background = "#673ab7";
                         map_title.innerHTML = "Počty otestovaných (PCR)";
                         var options = [
-                            "Aktuální celkový počet otestovaných doposud",
-                            "Počet nově otestovaných daný den"
+                            "Počet nově otestovaných daný den",
+                            "Aktuální celkový počet otestovaných doposud"
                         ];
 
                         options.forEach((element) => {
