@@ -78,6 +78,7 @@ var warning_block;
 var current_map_opacity = 0.6;
 var current_district_opacity = 0.7;
 var current_district_stroke_opacity = 0.7;
+var current_ui_scale = 100;
 var dark_mode = false;
 var sheet_orange;
 var sheet_green;
@@ -1783,6 +1784,12 @@ function initChart() {
 
 function hideSplashScreen() {
     $('#splashscreen').fadeOut(350);
+    setTimeout(
+        function()
+        {
+            newToast("Velikost uživatelského rozhraní si můžete přizpůsobit v záložce Zobrazení v nastavení aplikace", 6000)
+        }, 500
+    );
 }
 
 function showSplashScreen() {
@@ -1854,6 +1861,14 @@ function newToast(text) {
     var snackbarContainer = document.querySelector('#demo-toast-example');
     snackbarContainer.MaterialSnackbar.queuedNotifications_ = [];
     var data = { message: text, timeout: 2500 };
+    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+}
+
+function newToast(text, length) {
+    'use strict';
+    var snackbarContainer = document.querySelector('#demo-toast-example');
+    snackbarContainer.MaterialSnackbar.queuedNotifications_ = [];
+    var data = { message: text, timeout: length };
     snackbarContainer.MaterialSnackbar.showSnackbar(data);
 }
 
@@ -2378,4 +2393,26 @@ function initDropdownMenu() {
         }
     }
 
+}
+
+function decreaseUIScale() 
+{
+    if (current_ui_scale <= 50) {
+        return;
+    }
+    current_ui_scale -= 10;
+    document.body.style.zoom = current_ui_scale + "%";
+    var x = document.getElementById("scale_ui_text");
+    x.innerHTML = current_ui_scale + "%";
+}
+
+function increaseUIScale() 
+{
+    if (current_ui_scale >= 150) {
+        return;
+    }
+    current_ui_scale += 10;
+    document.body.style.zoom = current_ui_scale + "%";
+    var x = document.getElementById("scale_ui_text");
+    x.innerHTML = current_ui_scale + "%";
 }

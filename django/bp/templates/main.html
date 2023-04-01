@@ -279,7 +279,7 @@
 
         <div style="width:100%; height:100%;">
             <div id="div_middle_top_part" style="left:calc(50% - 175px);display:none;margin-top:85px;z-index: 1;overflow: hidden;position: absolute;width:375px;height:100px">
-                <div id="warning_message" class="w3-container w3-round w3-white w3-card" style="width:350px; height:75px;">
+                <div id="warning_message" class="w3-container w3-round-large w3-white w3-card" style="width:350px; height:75px;">
                     <table style="margin-top:15px">
                         <tr>
                             <td style="width:18%"><span class="material-symbols-rounded" style="font-size:40px;margin-top:2px">
@@ -431,9 +431,34 @@
                             <table style="width:100%">
                                 <tr>
                                     <td style="width:65%;padding-top:18px">
-                                        Průhlednost pozadí mapy
+                                        Škálování uživatelského prostředí
                                     </td>
                                     <td style="width:35%;padding-top:18px" align="right">
+                                        <table style="width:100%">
+                                            <tr>
+                                                <td style="width:20%">
+                                                    <button
+                                                    class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect"
+                                                    onclick="decreaseUIScale()"><i class="material-icons">remove</i></button>
+                                                </td>
+                                                <td style="width:60%;text-align:center">
+                                                    <span id="scale_ui_text" style="width:100%">100%
+                                                    </span>
+                                                </td>
+                                                <td style="width:20%">
+                                                    <button
+                                                    class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect"
+                                                    onclick="increaseUIScale()"><i class="material-icons">add</i></button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:65%;padding-top:3px">
+                                        Průhlednost pozadí mapy
+                                    </td>
+                                    <td style="width:35%;padding-top:3px" align="right">
                                         <table style="width:100%">
                                             <tr>
                                                 <td style="width:20%">
