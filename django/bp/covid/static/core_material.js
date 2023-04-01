@@ -2416,3 +2416,13 @@ function increaseUIScale()
     var x = document.getElementById("scale_ui_text");
     x.innerHTML = current_ui_scale + "%";
 }
+
+function dpi()
+{
+    var dpi_x = document.getElementById('dpi').offsetWidth;
+    var dpi_y = document.getElementById('dpi').offsetHeight;
+    var width = (screen.width / dpi_x) * 2.54;
+    var height = (screen.height / dpi_y) * 2.54;
+    console.log("width: " + width);
+    console.log("height: " + height);
+}
