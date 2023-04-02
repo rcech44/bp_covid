@@ -278,6 +278,7 @@ def update_data():
                         print(f"[DATABASE-UPDATER] Successfully downloaded all datasets for {update_date}")
            
     except sqlite3.Error as e:
+        print(f"[DATABASE-UPDATER] There was an error while downloading and saving data, data have not been committed")
         print(e)
 
     if len(updated_dates) != 0:
