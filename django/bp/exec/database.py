@@ -103,6 +103,23 @@ class SQLiteConnector:
         except sqlite3.Error as e:
             print(f"Error while getting data from database: {e}")
 
+    def get_records_day(self, type, day):
+        try:
+            if type == "vaccination":
+                table = "SELECT * FROM ockovani_datum_okres WHERE datum = ?"
+            if type == "death":
+                table = "SELECT * FROM umrti_datum_okres WHERE datum = ?"
+            if type == "infection":
+                table = "SELECT * FROM covid_datum_okres WHERE datum = ?"
+            if type == "pcr_test":
+                table = "SELECT * FROM testovani_datum_okres WHERE datum = ?"
+
+            self.__cursor.execute(table, [day])
+            response = self.__cursor.fetchall()
+            return response
+        except sqlite3.Error as e:
+            print(f"Error while getting data from database: {e}")
+
     def get_orp(self, code):
         try:
             self.__cursor.execute("SELECT cislo_okres FROM orp_okres_ciselnik WHERE cislo_orp = ?", [code])
