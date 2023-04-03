@@ -189,17 +189,18 @@ function initPage() {
         setTimeout(
             function(){
                 $('#splashscreen_before').fadeOut(500);
+                loadDarkModeFromLocalStorage();
             }, 500
         );
-        // loadDarkModeFromLocalStorage();
     }
     catch (err) {
-        try {
-            newErrorToast(err.message);
-        }
-        catch (err) {
-            alert(err.message);
-        }
+        console.log(err);
+        // try {
+        //     newErrorToast(err.message);
+        // }
+        // catch (err) {
+        //     console.log(err);
+        // }
     }
 }
 
@@ -1739,7 +1740,7 @@ function hideSplashScreen() {
             document.getElementById("splashscreen").style.backgroundColor = "rgba(0, 0, 0, 0.686)";
         }, 500
     );
-    loadDarkModeFromLocalStorage();
+    // loadDarkModeFromLocalStorage();
     page_initialized = true;
 }
 
@@ -1966,8 +1967,8 @@ function toggleDarkMap() {
             // var slider = document.getElementsByClassName("mdl-slider__background-lower")[0];
             // slider.style.backgroundColor = "white";
 
-            var slider_high = document.getElementsByClassName("mdl-slider__background-upper")[0];
-            slider_high.style.backgroundColor = "#444444";
+            // var slider_high = document.getElementsByClassName("mdl-slider__background-upper")[0];
+            // slider_high.style.backgroundColor = "#444444";
 
             // Map background
             var map = iframe.contentWindow.document.getElementById("map_a91c08a299bb6023baf393f504c6fb3e");
@@ -2089,26 +2090,29 @@ function toggleDarkMap() {
                 map_pip.style.backgroundColor = "rgb(29, 29, 29)";
             }
 
-            // Splashscreen content
-            var splash = document.getElementById("splashscreen");
-            var contactscreen_content = document.getElementById("contactscreen_content");
-            var splash_content = document.getElementById("splashscreen_content");
-            var splash_content_paragraph = document.getElementById("splashscreen_content_paragraph");
-            var splash_button = document.getElementById("button-hide-splash");
-            var contact_button = document.getElementById("button-contact-close");
-            setTimeout(function()
-            {
-                splash.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
-                contactscreen_content.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
-                splash_content_paragraph.style.backgroundColor = "rgb(20, 20, 20)";
-                splash_content.classList.add("w3-metro-darken");
-                splash_button.classList.add("w3-dark-gray");
-                splash_button.classList.remove("w3-light-gray");
-            }, 500);
-            
-            contactscreen_content.classList.add("w3-metro-darken");
-            contact_button.classList.add("w3-dark-gray");
-            contact_button.classList.remove("w3-light-gray");
+            // if (page_initialized)
+            // {
+                // Splashscreen content
+                var splash = document.getElementById("splashscreen");
+                var contactscreen_content = document.getElementById("contactscreen_content");
+                var splash_content = document.getElementById("splashscreen_content");
+                var splash_content_paragraph = document.getElementById("splashscreen_content_paragraph");
+                var splash_button = document.getElementById("button-hide-splash");
+                var contact_button = document.getElementById("button-contact-close");
+                // setTimeout(function()
+                // {
+                    splash.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
+                    contactscreen_content.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
+                    splash_content_paragraph.style.backgroundColor = "rgb(20, 20, 20)";
+                    splash_content.classList.add("w3-metro-darken");
+                    splash_button.classList.add("w3-dark-gray");
+                    splash_button.classList.remove("w3-light-gray");
+                // }, 500);
+                
+                contactscreen_content.classList.add("w3-metro-darken");
+                contact_button.classList.add("w3-dark-gray");
+                contact_button.classList.remove("w3-light-gray");
+            // }
 
             // Select inputs
             var sel1 = document.getElementById("sel1");
@@ -2153,8 +2157,8 @@ function toggleDarkMap() {
             // var slider = document.getElementsByClassName("mdl-slider__background-lower")[0];
             // slider.style.backgroundColor = "#607d8b";
 
-            var slider_high = document.getElementsByClassName("mdl-slider__background-upper")[0];
-            slider_high.style.backgroundColor = "#bbbbbb";
+            // var slider_high = document.getElementsByClassName("mdl-slider__background-upper")[0];
+            // slider_high.style.backgroundColor = "#bbbbbb";
 
             // Map background
             var map = iframe.contentWindow.document.getElementById("map_a91c08a299bb6023baf393f504c6fb3e");
@@ -2268,24 +2272,27 @@ function toggleDarkMap() {
                 map_pip.style.backgroundColor = "rgb(29, 29, 29)";
             }
 
-            // Splashscreen content
-            var splash = document.getElementById("splashscreen");
-            var contactscreen = document.getElementById("contactscreen");
-            var contactscreen_content = document.getElementById("contactscreen_content");
-            var splash_content = document.getElementById("splashscreen_content");
-            var splash_content_paragraph = document.getElementById("splashscreen_content_paragraph");
-            var splash_button = document.getElementById("button-hide-splash");
-            var contact_button = document.getElementById("button-contact-close");
-            splash.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
-            contactscreen.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
-            contactscreen_content.style.backgroundColor = "rgba(255, 255, 255, 1)";
-            splash_content_paragraph.style.backgroundColor = "rgb(245, 245, 245)";
-            splash_content.classList.remove("w3-metro-darken");
-            contactscreen_content.classList.remove("w3-metro-darken");
-            splash_button.classList.remove("w3-dark-gray");
-            splash_button.classList.add("w3-light-gray");
-            contact_button.classList.remove("w3-dark-gray");
-            contact_button.classList.add("w3-light-gray");
+            // if (page_initialized)
+            // {
+                // Splashscreen content
+                var splash = document.getElementById("splashscreen");
+                var contactscreen = document.getElementById("contactscreen");
+                var contactscreen_content = document.getElementById("contactscreen_content");
+                var splash_content = document.getElementById("splashscreen_content");
+                var splash_content_paragraph = document.getElementById("splashscreen_content_paragraph");
+                var splash_button = document.getElementById("button-hide-splash");
+                var contact_button = document.getElementById("button-contact-close");
+                splash.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
+                contactscreen.style.backgroundColor = "rgba(0, 0, 0, 0.686)";
+                contactscreen_content.style.backgroundColor = "rgba(255, 255, 255, 1)";
+                splash_content_paragraph.style.backgroundColor = "rgb(245, 245, 245)";
+                splash_content.classList.remove("w3-metro-darken");
+                contactscreen_content.classList.remove("w3-metro-darken");
+                splash_button.classList.remove("w3-dark-gray");
+                splash_button.classList.add("w3-light-gray");
+                contact_button.classList.remove("w3-dark-gray");
+                contact_button.classList.add("w3-light-gray");
+            // }
 
             // Select inputs
             var sel1 = document.getElementById("sel1");
@@ -2311,12 +2318,13 @@ function toggleDarkMap() {
         initChart();
     }
     catch (err) {
-        try {
-            newErrorToast(err.message);
-        }
-        catch (err) {
-            alert(err.message);
-        }
+        console.log(err);
+        // try {
+        //     newErrorToast(err.message);
+        // }
+        // catch (err) {
+        //     console.log(err);
+        // }
     }
 }
 
