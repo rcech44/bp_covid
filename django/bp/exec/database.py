@@ -16,7 +16,7 @@ class SQLiteConnector:
             print(f"Error connecting to database: {e}")
             return None
         
-    def insert_commit_record(self, type, record):
+    def insert_record(self, type, record):
         try:
             if type == "infection":
                 self.__cursor.execute('INSERT INTO covid_datum_okres (datum, okres, nove_pripady, aktivni_pripady, nove_pripady_7, nove_pripady_14, nove_pripady_65_vek) VALUES (?, ?, ?, ?, ?, ?, ?)', \
@@ -140,5 +140,7 @@ class SQLiteConnector:
     def close(self):
         try:
             self.__conn.close()
+            self.__cursor = None
+            self.__conn = None
         except sqlite3.Error as e:
             print(f"Error while closing database: {e}")

@@ -113,7 +113,7 @@ def update_data():
                                 "nove_pripady_14": infections_day_results[district]['nove_pripady_14'],
                                 "nove_pripady_65_vek": infections_day_results[district]['nove_pripady_65_vek'],
                             }
-                            db.insert_commit_record("infection", day_result)
+                            db.insert_record("infection", day_result)
 
                         # **********************
                         # UPDATE VACCINATIONS
@@ -197,7 +197,7 @@ def update_data():
                                 'davka_celkem_den': vaccinations_day_results[district]['davka_celkem_den'], 
                                 'davka_celkem_doposud': vaccinations_day_results[district]['davka_celkem_doposud']
                             }
-                            db.insert_commit_record("vaccination", day_result)
+                            db.insert_record("vaccination", day_result)
                         
 
                         # **********************
@@ -233,7 +233,7 @@ def update_data():
                                 "umrti_den": deaths_day_results[district]['umrti_den'],
                                 "umrti_doposud": deaths_day_results[district]['umrti_doposud']
                             }
-                            db.insert_commit_record("death", day_result)
+                            db.insert_record("death", day_result)
 
 
                         # **********************
@@ -271,7 +271,7 @@ def update_data():
                                 "prirustek_korekce": pcr_testing_day_results[district]['prirustek_korekce'],
                                 "celkem_korekce": pcr_testing_day_results[district]['celkem_korekce']
                             }
-                            db.insert_commit_record("pcr_test", day_result)
+                            db.insert_record("pcr_test", day_result)
 
                         updated = True
                         db.commit()
