@@ -89,6 +89,7 @@ var sheet_default;
 
 // Initialize and modify webpage on startup
 function onIframeLoad() {
+    loadUIScaleFromLocalStorage();
     loadPageComponents();
     loadTimeFrameSlider();
     initPage();
@@ -185,7 +186,12 @@ function initPage() {
         setMapOpacity();
         document.getElementById("button-hide-splash").disabled = false;
         document.getElementById("button-hide-splash").innerHTML = "Přejít k aplikaci";
-        // loadSettingsFromLocalStorage();
+        setTimeout(
+            function(){
+                $('#splashscreen_before').fadeOut(500);
+            }, 500
+        );
+        // loadDarkModeFromLocalStorage();
     }
     catch (err) {
         try {
@@ -1732,7 +1738,7 @@ function hideSplashScreen() {
             newToast("Velikost uživatelského rozhraní si můžete přizpůsobit v záložce Zobrazení v nastavení aplikace", 6000)
         }, 500
     );
-    loadSettingsFromLocalStorage();
+    loadDarkModeFromLocalStorage();
     page_initialized = true;
 }
 
@@ -2389,7 +2395,7 @@ function increaseUIScale() {
     localStorage.setItem("uiscale", current_ui_scale);
 }
 
-function loadSettingsFromLocalStorage()
+function loadDarkModeFromLocalStorage()
 {
     try
     {
@@ -2432,7 +2438,32 @@ function loadSettingsFromLocalStorage()
 
 }
 
-function saveSettingsToLocalStorage()
+function loadUIScaleFromLocalStorage()
 {
-
+    try
+    {
+        var storage_uiscale = localStorage.getItem("uiscale");
+        if (storage_uiscale)
+        {
+            if (page_initialized == false)
+            {
+                current_ui_scale = parseInt(storage_uiscale);
+                if (current_ui_scale > 100)
+                {
+                    iframe_pip.contentWindow.map_a91c08a299bb6023baf393f504c6fb3ee.setZoom(5);
+                }
+                document.body.style.zoom = current_ui_scale + "%";
+                var x = document.getElementById("scale_ui_text");
+                x.innerHTML = current_ui_scale + "%";
+            }
+        }
+        else
+        {
+            localStorage.setItem("uiscale", 100);
+        }
+    }
+    catch (err)
+    {
+        console.log(err);
+    }
 }
