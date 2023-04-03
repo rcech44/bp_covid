@@ -1735,7 +1735,8 @@ function hideSplashScreen() {
     $('#splashscreen').fadeOut(350);
     setTimeout(
         function () {
-            newToast("Velikost uživatelského rozhraní si můžete přizpůsobit v záložce Zobrazení v nastavení aplikace", 6000)
+            newToast("Velikost uživatelského rozhraní si můžete přizpůsobit v záložce Zobrazení v nastavení aplikace", 6000);
+            document.getElementById("splashscreen").style.backgroundColor = "rgba(0, 0, 0, 0.686)";
         }, 500
     );
     loadDarkModeFromLocalStorage();
@@ -2400,7 +2401,6 @@ function loadDarkModeFromLocalStorage()
     try
     {
         var storage_darkmode = localStorage.getItem("darkmode");
-        var storage_uiscale = localStorage.getItem("uiscale");
         if (storage_darkmode)
         {
             if (storage_darkmode == "true" && page_initialized == false)
@@ -2411,24 +2411,6 @@ function loadDarkModeFromLocalStorage()
         else
         {
             localStorage.setItem("darkmode", "false");
-        }
-        if (storage_uiscale)
-        {
-            if (page_initialized == false)
-            {
-                current_ui_scale = parseInt(storage_uiscale);
-                if (current_ui_scale > 100)
-                {
-                    iframe_pip.contentWindow.map_a91c08a299bb6023baf393f504c6fb3ee.setZoom(5);
-                }
-                document.body.style.zoom = current_ui_scale + "%";
-                var x = document.getElementById("scale_ui_text");
-                x.innerHTML = current_ui_scale + "%";
-            }
-        }
-        else
-        {
-            localStorage.setItem("uiscale", 100);
         }
     }
     catch (err)
