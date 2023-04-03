@@ -2385,7 +2385,9 @@ function decreaseUIScale() {
     current_ui_scale -= 10;
     document.body.style.zoom = current_ui_scale + "%";
     var x = document.getElementById("scale_ui_text");
+    var y = document.getElementById("right_bottom_container");
     x.innerHTML = current_ui_scale + "%";
+    y.style.zoom = 100 / current_ui_scale;
     localStorage.setItem("uiscale", current_ui_scale);
 }
 
@@ -2400,7 +2402,9 @@ function increaseUIScale() {
     current_ui_scale += 10;
     document.body.style.zoom = current_ui_scale + "%";
     var x = document.getElementById("scale_ui_text");
+    var y = document.getElementById("right_bottom_container");
     x.innerHTML = current_ui_scale + "%";
+    y.style.zoom = 100 / current_ui_scale;
     localStorage.setItem("uiscale", current_ui_scale);
 }
 
@@ -2444,6 +2448,8 @@ function loadUIScaleFromLocalStorage()
                 }
                 document.body.style.zoom = current_ui_scale + "%";
                 var x = document.getElementById("scale_ui_text");
+                var y = document.getElementById("right_bottom_container");
+                y.style.zoom = 100 / current_ui_scale;
                 x.innerHTML = current_ui_scale + "%";
             }
         }
