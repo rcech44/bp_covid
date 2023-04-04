@@ -779,6 +779,27 @@ function updatePage() {
 
 // Select type of analysis (infected, recovered...)
 function selectAnalysis(type) {
+    var infected_opacity = 0.6;
+    var infected_borderBottom = "0px orange solid";
+    var infected_fontWeight = "normal";
+
+    var vaccination_opacity = 0.6;
+    var vaccination_borderBottom = "0px green solid";
+    var vaccination_fontWeight = "normal";
+
+    var deaths_opacity = 0.6;
+    var deaths_borderBottom = "0px gray solid";
+    var deaths_fontWeight = "normal";
+
+    var testing_opacity = 0.6;
+    var testing_borderBottom = "0px purple solid";
+    var testing_fontWeight = "normal";
+
+    var options;
+    var selectAnalysis_maptitle;
+    var selectAnalysis_datasetdate;
+    var selectAnalysis_sliderColor;
+
     try {
         current_analysis = type;
         analysis_selected = true;
@@ -796,40 +817,19 @@ function selectAnalysis(type) {
                         sheet_green.disabled = true;
                         sheet_purple.disabled = true;
                         sheet_gray.disabled = true;
-                        document.getElementById("nakazeni-analyze").style.opacity = 1;
-                        document.getElementById("nakazeni-analyze").style.borderBottom = "8px orange solid";
-                        document.getElementById("nakazeni-analyze").style.fontWeight = "bolder";
-                        // document.getElementById("nakazeni-analyze").style.fontSize = "22px";
-                        document.getElementById("nakazeni-analyze").style.backgroundColor = "transparent";
-                        document.getElementById("ockovani-analyze").style.opacity = 0.6;
-                        document.getElementById("ockovani-analyze").style.borderBottom = "0px green solid";
-                        document.getElementById("ockovani-analyze").style.fontWeight = "normal";
-                        document.getElementById("umrti-analyze").style.opacity = 0.6;
-                        document.getElementById("umrti-analyze").style.borderBottom = "0px gray solid";
-                        document.getElementById("umrti-analyze").style.fontWeight = "normal";
-                        document.getElementById("testovani-analyze").style.opacity = 0.6;
-                        document.getElementById("testovani-analyze").style.borderBottom = "0px purple solid";
-                        document.getElementById("testovani-analyze").style.fontWeight = "normal";
-                        document.getElementsByClassName("noUi-connect")[0].style.background = "#ff9800";
-                        map_title.innerHTML = "Počty nakažených";
-                        var options = [
+                        infected_opacity = 1;
+                        infected_borderBottom = "8px orange solid";
+                        infected_fontWeight = "bolder";
+                        selectAnalysis_maptitle = "Počty nakažených";
+                        selectAnalysis_sliderColor = "#ff9800";
+                        options = [
                             "Nové případy",
                             "Nové případy za poslední týden",
                             "Nové případy za poslední dva týdny",
                             "Nové případy lidí starších 65 let"
                         ];
-
-                        options.forEach((element) => {
-                            var opt = document.createElement('option');
-                            opt.value = opt.innerHTML = element;
-                            select_2.appendChild(opt);
-                        }
-                        );
                         current_analysis_color = "#ff9800";
-                        // document.getElementById("analysis-text-name").innerHTML = "<b>Dataset:</b> Nakažení";
-                        document.getElementById("analysis-text-datefrom").innerHTML = "1.3.2020";
-                        // document.getElementById("slider").style.accentColor = "#ff9800";
-                        // document.getElementById("slider").style.backgroundColor = "#ffffff";
+                        selectAnalysis_datasetdate = "1.3.2020";
                         break;
                     case 'ockovani-analyze':
                         sheet_green.disabled = false;
@@ -837,22 +837,12 @@ function selectAnalysis(type) {
                         sheet_orange.disabled = true;
                         sheet_purple.disabled = true;
                         sheet_gray.disabled = true;
-                        document.getElementById("nakazeni-analyze").style.opacity = 0.6;
-                        document.getElementById("nakazeni-analyze").style.borderBottom = "0px orange solid";
-                        document.getElementById("nakazeni-analyze").style.fontWeight = "normal";
-                        document.getElementById("ockovani-analyze").style.opacity = 1;
-                        document.getElementById("ockovani-analyze").style.borderBottom = "8px green solid";
-                        document.getElementById("ockovani-analyze").style.fontWeight = "bolder";
-                        document.getElementById("umrti-analyze").style.opacity = 0.6;
-                        document.getElementById("umrti-analyze").style.borderBottom = "0px gray solid";
-                        document.getElementById("umrti-analyze").style.fontWeight = "normal";
-                        document.getElementById("testovani-analyze").style.opacity = 0.6;
-                        document.getElementById("testovani-analyze").style.borderBottom = "0px purple solid";
-                        document.getElementById("testovani-analyze").style.fontWeight = "normal";
-                        document.getElementsByClassName("noUi-connect")[0].style.background = "#4caf50";
-                        map_title.innerHTML = "Počty naočkovaných";
-
-                        var options = [
+                        vaccination_opacity = 1;
+                        vaccination_borderBottom = "8px green solid";
+                        vaccination_fontWeight = "bolder";
+                        selectAnalysis_maptitle = "Počty naočkovaných";
+                        selectAnalysis_sliderColor = "#4caf50";
+                        options = [
                             "Všechny dávky tento den",
                             "Všechny dávky doposud",
                             "První dávka tento den",
@@ -864,95 +854,71 @@ function selectAnalysis(type) {
                             "Čtvrtá dávka tento den",
                             "Čtvrtá dávka doposud"
                         ];
-
-                        options.forEach((element) => {
-                            var opt = document.createElement('option');
-                            opt.value = opt.innerHTML = element;
-                            select_2.appendChild(opt);
-                        }
-                        );
                         current_analysis_color = "#4caf50";
-                        // document.getElementById("analysis-text-name").innerHTML = "<b>Dataset:</b> Očkování";
-                        document.getElementById("analysis-text-datefrom").innerHTML = "27.12.2020";
-                        // document.getElementById("slider").style.accentColor = "#4caf50";
-                        // document.getElementById("slider").style.background = "#ffffff";
+                        selectAnalysis_maptitle = "27.12.2020";
                         break;
                     case 'umrti-analyze':
                         sheet_gray.disabled = false;
                         await sleep(50);
-                        sheet_green.disabled = true;
                         sheet_orange.disabled = true;
+                        sheet_green.disabled = true;
                         sheet_purple.disabled = true;
-                        document.getElementById("nakazeni-analyze").style.opacity = 0.6;
-                        document.getElementById("nakazeni-analyze").style.borderBottom = "0px orange solid";
-                        document.getElementById("nakazeni-analyze").style.fontWeight = "normal";
-                        document.getElementById("ockovani-analyze").style.opacity = 0.6;
-                        document.getElementById("ockovani-analyze").style.borderBottom = "0px green solid";
-                        document.getElementById("ockovani-analyze").style.fontWeight = "normal";
-                        document.getElementById("umrti-analyze").style.opacity = 1;
-                        document.getElementById("umrti-analyze").style.borderBottom = "8px gray solid";
-                        document.getElementById("umrti-analyze").style.fontWeight = "bolder";
-                        document.getElementById("testovani-analyze").style.opacity = 0.6;
-                        document.getElementById("testovani-analyze").style.borderBottom = "0px purple solid";
-                        document.getElementById("testovani-analyze").style.fontWeight = "normal";
-                        document.getElementsByClassName("noUi-connect")[0].style.background = "#9e9e9e";
+                        deaths_opacity = 1;
+                        deaths_borderBottom = "8px gray solid";
+                        deaths_fontWeight = "bolder";
+                        selectAnalysis_sliderColor = "#9e9e9e";
                         map_title.innerHTML = "Počty úmrtí";
                         var options = [
                             "Počet nově zemřelých daný den",
                             "Aktuální celkový počet zemřelých doposud"
                         ];
-
-                        options.forEach((element) => {
-                            var opt = document.createElement('option');
-                            opt.value = opt.innerHTML = element;
-                            select_2.appendChild(opt);
-                        }
-                        );
                         current_analysis_color = "#9e9e9e";
-                        // document.getElementById("analysis-text-name").innerHTML = "<b>Dataset:</b> Úmrtí";
-                        document.getElementById("analysis-text-datefrom").innerHTML = "22.3.2020";
-                        // document.getElementById("slider").style.accentColor = "#616161";
-                        // document.getElementById("slider").style.background = "#ffffff";
+                        selectAnalysis_maptitle = "22.3.2020";
                         break;
                     case 'testovani-analyze':
                         sheet_purple.disabled = false;
                         await sleep(50);
-                        sheet_green.disabled = true;
                         sheet_orange.disabled = true;
+                        sheet_green.disabled = true;
                         sheet_gray.disabled = true;
-                        document.getElementById("nakazeni-analyze").style.opacity = 0.6;
-                        document.getElementById("nakazeni-analyze").style.borderBottom = "0px orange solid";
-                        document.getElementById("nakazeni-analyze").style.fontWeight = "normal";
-                        document.getElementById("ockovani-analyze").style.opacity = 0.6;
-                        document.getElementById("ockovani-analyze").style.borderBottom = "0px green solid";
-                        document.getElementById("ockovani-analyze").style.fontWeight = "normal";
-                        document.getElementById("umrti-analyze").style.opacity = 0.6;
-                        document.getElementById("umrti-analyze").style.borderBottom = "0px gray solid";
-                        document.getElementById("umrti-analyze").style.fontWeight = "normal";
-                        document.getElementById("testovani-analyze").style.opacity = 1;
-                        document.getElementById("testovani-analyze").style.borderBottom = "8px purple solid";
-                        document.getElementById("testovani-analyze").style.fontWeight = "bolder";
-
-                        document.getElementsByClassName("noUi-connect")[0].style.background = "#673ab7";
-                        map_title.innerHTML = "Počty otestovaných (PCR)";
+                        testing_opacity = 1;
+                        testing_borderBottom = "8px purple solid";
+                        testing_fontWeight = "bolder";
+                        selectAnalysis_sliderColor = "#673ab7";
+                        selectAnalysis_maptitle = "Počty otestovaných (PCR)";
                         var options = [
                             "Počet nově otestovaných daný den",
                             "Aktuální celkový počet otestovaných doposud"
                         ];
-
-                        options.forEach((element) => {
-                            var opt = document.createElement('option');
-                            opt.value = opt.innerHTML = element;
-                            select_2.appendChild(opt);
-                        }
-                        );
                         current_analysis_color = "#673ab7";
-                        // document.getElementById("analysis-text-name").innerHTML = "<b>Dataset:</b> PCR testování";
-                        document.getElementById("analysis-text-datefrom").innerHTML = "1.8.2020";
-                        // document.getElementById("slider").style.accentColor = "#616161";
-                        // document.getElementById("slider").style.background = "#ffffff";
+                        selectAnalysis_datasetdate = "1.8.2020";
                         break;
                 }
+
+                // new code
+                document.getElementById("nakazeni-analyze").style.opacity = infected_opacity;
+                document.getElementById("nakazeni-analyze").style.borderBottom = infected_borderBottom;
+                document.getElementById("nakazeni-analyze").style.fontWeight = infected_fontWeight;
+                document.getElementById("ockovani-analyze").style.opacity = vaccination_opacity;
+                document.getElementById("ockovani-analyze").style.borderBottom = vaccination_borderBottom;
+                document.getElementById("ockovani-analyze").style.fontWeight = vaccination_fontWeight;
+                document.getElementById("umrti-analyze").style.opacity = deaths_opacity;
+                document.getElementById("umrti-analyze").style.borderBottom = deaths_borderBottom;
+                document.getElementById("umrti-analyze").style.fontWeight = deaths_fontWeight;
+                document.getElementById("testovani-analyze").style.opacity = testing_opacity;
+                document.getElementById("testovani-analyze").style.borderBottom = testing_borderBottom;
+                document.getElementById("testovani-analyze").style.fontWeight = testing_fontWeight;
+                document.getElementsByClassName("noUi-connect")[0].style.background = selectAnalysis_sliderColor;
+                document.getElementById("analysis-text-datefrom").innerHTML = selectAnalysis_datasetdate
+                map_title.innerHTML = selectAnalysis_maptitle;
+
+                options.forEach((element) => {
+                    var opt = document.createElement('option');
+                    opt.value = opt.innerHTML = element;
+                    select_2.appendChild(opt);
+                }
+                );
+
                 if (analysis_selected)
                     selectSliderData(select_2.value);
             }
