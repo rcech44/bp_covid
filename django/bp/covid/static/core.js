@@ -1049,6 +1049,7 @@ function loadTimeFrameSlider() {
             var selected_date_text = getFormattedDateLocal(selected_date);
             snapValues[handle].innerHTML = "<b>" + selected_date_text + "</b>";
             slider_current_values[handle] = values[handle];
+            stopAnimation();
         });
         document.getElementsByClassName("noUi-target")[0].style.background = "#ffffff";
         document.getElementsByClassName("noUi-connect")[0].style.background = "#7a9fb1";
