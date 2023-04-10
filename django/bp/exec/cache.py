@@ -40,29 +40,12 @@ def load_cache(update_dates):
             ################################
 
             celkem_pripady = 20
-            max_nove_pripady = 0
-            max_nove_pripady_sto_tisic = 0
-            max_aktivni_pripady = 0
-            max_aktivni_pripady_sto_tisic = 0
+            cached_data['max_nove_pripady'] = cached_data['max_nove_pripady_sto_tisic'] = cached_data['max_aktivni_pripady'] = cached_data['max_aktivni_pripady_sto_tisic'] = 0
+
             for date in all_requested_dates:
                 response = db.get_records_day("infection", date)
                 cached_data[date]['celkem_pripady'] = celkem_pripady
-                nove_pocet = 0
-                nove_max = 0
-                nove_min = 999999
-                nove_max_sto_tisic = 0
-                nove_min_sto_tisic = 999999
-                aktivni_pocet = 0
-                aktivni_max = 0
-                aktivni_min = 999999
-                aktivni_max_sto_tisic = 0
-                aktivni_min_sto_tisic = 999999
-                max_nove_7 = 0
-                max_nove_7_sto_tisic = 0
-                max_nove_14 = 0
-                max_nove_14_sto_tisic = 0
-                max_nove_65 = 0
-                max_nove_65_sto_tisic = 0
+                nove_pocet = cached_data[date]['max_nove'] = cached_data[date]['max_nove_sto_tisic'] = aktivni_pocet = cached_data[date]['max_aktivni'] = cached_data[date]['max_aktivni_sto_tisic'] = cached_data[date]['max_nove_7'] = cached_data[date]['max_nove_7_sto_tisic'] = cached_data[date]['max_nove_14'] = cached_data[date]['max_nove_14_sto_tisic'] = cached_data[date]['max_nove_65'] = cached_data[date]['max_nove_65_sto_tisic'] = 0
                 for okres in response:
                     if okres[2] is not None:
                         cached_data[date][okres[2]] = {}
@@ -73,145 +56,46 @@ def load_cache(update_dates):
                         cached_data[date][okres[2]]['nove_pripady_65'] = okres[7]
                         cached_data[date][okres[2]]['nove_pripady_sto_tisic'] = okres[3] / (pocet_obyvatel[okres[2]] / 100000)
                         cached_data[date][okres[2]]['aktivni_pripady_sto_tisic'] = okres[4] / (pocet_obyvatel[okres[2]] / 100000)
-
-                        # New
                         cached_data[date][okres[2]]['nove_pripady_7_sto_tisic'] = okres[5] / (pocet_obyvatel[okres[2]] / 100000)
                         cached_data[date][okres[2]]['nove_pripady_14_sto_tisic'] = okres[6] / (pocet_obyvatel[okres[2]] / 100000)
                         cached_data[date][okres[2]]['nove_pripady_65_sto_tisic'] = okres[7] / (pocet_obyvatel[okres[2]] / 100000)
 
                         nove_pocet += okres[3]
                         aktivni_pocet += okres[4]
-                        nove_max =                      max(nove_max, cached_data[date][okres[2]]['nove_pripady'])
-                        nove_max_sto_tisic =            max(nove_max_sto_tisic, cached_data[date][okres[2]]['nove_pripady_sto_tisic'])
-                        aktivni_max =                   max(aktivni_max, cached_data[date][okres[2]]['aktivni_pripady'])
-                        aktivni_max_sto_tisic =         max(aktivni_max_sto_tisic, cached_data[date][okres[2]]['aktivni_pripady_sto_tisic'])
 
-                        # New
-                        max_nove_7 =                    max(max_nove_7, cached_data[date][okres[2]]['nove_pripady_7'])
-                        max_nove_14 =                   max(max_nove_14, cached_data[date][okres[2]]['nove_pripady_14'])
-                        max_nove_65 =                   max(max_nove_65, cached_data[date][okres[2]]['nove_pripady_65'])
-                        max_nove_7_sto_tisic =          max(max_nove_7_sto_tisic, cached_data[date][okres[2]]['nove_pripady_7_sto_tisic'])
-                        max_nove_14_sto_tisic =         max(max_nove_14_sto_tisic, cached_data[date][okres[2]]['nove_pripady_14_sto_tisic'])
-                        max_nove_65_sto_tisic =         max(max_nove_65_sto_tisic, cached_data[date][okres[2]]['nove_pripady_65_sto_tisic'])
-
-                        max_nove_pripady =              max(max_nove_pripady, cached_data[date][okres[2]]['nove_pripady'])
-                        max_nove_pripady_sto_tisic =    max(max_nove_pripady_sto_tisic, cached_data[date][okres[2]]['nove_pripady_sto_tisic'])
-                        max_aktivni_pripady =           max(max_aktivni_pripady, cached_data[date][okres[2]]['aktivni_pripady'])
-                        max_aktivni_pripady_sto_tisic = max(max_aktivni_pripady_sto_tisic, cached_data[date][okres[2]]['aktivni_pripady_sto_tisic'])
+                        cached_data[date]['max_nove'] =                 max(cached_data[date]['max_nove'], cached_data[date][okres[2]]['nove_pripady'])
+                        cached_data[date]['max_nove_sto_tisic'] =       max(cached_data[date]['max_nove_sto_tisic'], cached_data[date][okres[2]]['nove_pripady_sto_tisic'])
+                        cached_data[date]['max_aktivni'] =              max(cached_data[date]['max_aktivni'], cached_data[date][okres[2]]['aktivni_pripady'])
+                        cached_data[date]['max_aktivni_sto_tisic'] =    max(cached_data[date]['max_aktivni_sto_tisic'], cached_data[date][okres[2]]['aktivni_pripady_sto_tisic'])
+                        cached_data[date]['max_nove_7'] =               max(cached_data[date]['max_nove_7'], cached_data[date][okres[2]]['nove_pripady_7'])
+                        cached_data[date]['max_nove_14'] =              max(cached_data[date]['max_nove_14'], cached_data[date][okres[2]]['nove_pripady_14'])
+                        cached_data[date]['max_nove_65'] =              max(cached_data[date]['max_nove_65'], cached_data[date][okres[2]]['nove_pripady_65'])
+                        cached_data[date]['max_nove_7_sto_tisic'] =     max(cached_data[date]['max_nove_7_sto_tisic'], cached_data[date][okres[2]]['nove_pripady_7_sto_tisic'])
+                        cached_data[date]['max_nove_14_sto_tisic'] =    max(cached_data[date]['max_nove_14_sto_tisic'], cached_data[date][okres[2]]['nove_pripady_14_sto_tisic'])
+                        cached_data[date]['max_nove_65_sto_tisic'] =    max(cached_data[date]['max_nove_65_sto_tisic'], cached_data[date][okres[2]]['nove_pripady_65_sto_tisic'])
+                        cached_data['max_nove_pripady'] =               max(cached_data['max_nove_pripady'], cached_data[date][okres[2]]['nove_pripady'])
+                        cached_data['max_nove_pripady_sto_tisic'] =     max(cached_data['max_nove_pripady_sto_tisic'], cached_data[date][okres[2]]['nove_pripady_sto_tisic'])
+                        cached_data['max_aktivni_pripady'] =            max(cached_data['max_aktivni_pripady'], cached_data[date][okres[2]]['aktivni_pripady'])
+                        cached_data['max_aktivni_pripady_sto_tisic'] =  max(cached_data['max_aktivni_pripady_sto_tisic'], cached_data[date][okres[2]]['aktivni_pripady_sto_tisic'])
                     else:
                         nove_pocet += okres[3] 
-                cached_data[date]['max_aktivni'] = aktivni_max
-                cached_data[date]['min_aktivni'] = aktivni_min
-                cached_data[date]['max_nove'] = nove_max
-                cached_data[date]['min_nove'] = nove_min
-                cached_data[date]['max_aktivni_sto_tisic'] = aktivni_max_sto_tisic
-                cached_data[date]['min_aktivni_sto_tisic'] = aktivni_min_sto_tisic
-                cached_data[date]['max_nove_sto_tisic'] = nove_max_sto_tisic
-                cached_data[date]['min_nove_sto_tisic'] = nove_min_sto_tisic
-                cached_data[date]['nove_celkovy_pocet'] = nove_pocet
-                cached_data[date]['aktivni_celkovy_pocet'] = aktivni_pocet
-
-                # New
-                cached_data[date]['max_nove_7'] = max_nove_7
-                cached_data[date]['max_nove_7_sto_tisic'] = max_nove_7_sto_tisic
-                cached_data[date]['max_nove_14'] = max_nove_14
-                cached_data[date]['max_nove_14_sto_tisic'] = max_nove_14_sto_tisic
-                cached_data[date]['max_nove_65'] = max_nove_65
-                cached_data[date]['max_nove_65_sto_tisic'] = max_nove_65_sto_tisic
 
                 celkem_pripady += nove_pocet
                 cached_data[date]['celkem_pripady'] = celkem_pripady
-                cached_data['max_nove_pripady'] = max_nove_pripady
-                cached_data['max_nove_pripady_sto_tisic'] = max_nove_pripady_sto_tisic
-                cached_data['max_aktivni_pripady'] = max_aktivni_pripady
-                cached_data['max_aktivni_pripady_sto_tisic'] = max_aktivni_pripady_sto_tisic
 
                 
             ################################
             # Download vaccinations
             ################################
                 
-            davka_2_doposud = 0
-            absolute_celkem = 0
-            okres_absolute_celkem = 0
-
-            max_celkem_den = 0
-            max_celkem_doposud = 0
-            max_celkem_den_sto_tisic = 0
-            max_celkem_doposud_sto_tisic = 0
-
-            max_celkem_davka_1_den = 0
-            max_celkem_davka_1_doposud = 0
-            max_celkem_davka_1_den_sto_tisic = 0
-            max_celkem_davka_1_doposud_sto_tisic = 0
-
-            max_celkem_davka_2_den = 0
-            max_celkem_davka_2_doposud = 0
-            max_celkem_davka_2_den_sto_tisic = 0
-            max_celkem_davka_2_doposud_sto_tisic = 0
-
-            max_celkem_davka_3_den = 0
-            max_celkem_davka_3_doposud = 0
-            max_celkem_davka_3_den_sto_tisic = 0
-            max_celkem_davka_3_doposud_sto_tisic = 0
-
-            max_celkem_davka_4_den = 0
-            max_celkem_davka_4_doposud = 0
-            max_celkem_davka_4_den_sto_tisic = 0
-            max_celkem_davka_4_doposud_sto_tisic = 0
+            davka_2_doposud = absolute_celkem = okres_absolute_celkem = cached_data['okres_absolute_max'] = cached_data['max_celkem_davka_1_den'] = cached_data['max_celkem_davka_2_den'] = cached_data['max_celkem_davka_3_den'] = cached_data['max_celkem_davka_4_den'] = cached_data['max_celkem_den'] = cached_data['max_celkem_davka_1_doposud'] = cached_data['max_celkem_davka_2_doposud'] = cached_data['max_celkem_davka_3_doposud'] = cached_data['max_celkem_davka_4_doposud'] = cached_data['max_celkem_doposud'] = cached_data['max_celkem_davka_1_den_sto_tisic'] = cached_data['max_celkem_davka_2_den_sto_tisic'] = cached_data['max_celkem_davka_3_den_sto_tisic'] = cached_data['max_celkem_davka_4_den_sto_tisic'] = cached_data['max_celkem_den_sto_tisic'] = cached_data['max_celkem_davka_1_doposud_sto_tisic'] = cached_data['max_celkem_davka_2_doposud_sto_tisic'] = cached_data['max_celkem_davka_3_doposud_sto_tisic'] = cached_data['max_celkem_davka_4_doposud_sto_tisic'] = cached_data['max_celkem_doposud_sto_tisic'] = 0
 
             for date in all_requested_dates:
                 response = db.get_records_day("vaccination", date)
-                davka_1_max = 0
-                davka_1_min = 9999999
-                davka_2_max = 0
-                davka_2_min = 9999999
-                davka_3_max = 0
-                davka_3_min = 9999999
-                davka_4_max = 0
-                davka_4_min = 9999999
-
-                davka_1_max_sto_tisic = 0
-                davka_1_min_sto_tisic = 9999999
-                davka_2_max_sto_tisic = 0
-                davka_2_min_sto_tisic = 9999999
-                davka_3_max_sto_tisic = 0
-                davka_3_min_sto_tisic = 9999999
-                davka_4_max_sto_tisic = 0
-                davka_4_min_sto_tisic = 9999999
-
-                davka_1_doposud_max = 0
-                davka_1_doposud_min = 9999999
-                davka_2_doposud_max = 0
-                davka_2_doposud_min = 9999999
-                davka_3_doposud_max = 0
-                davka_3_doposud_min = 9999999
-                davka_4_doposud_max = 0
-                davka_4_doposud_min = 9999999
-
-                davka_1_doposud_max_sto_tisic = 0
-                davka_1_doposud_min_sto_tisic = 9999999
-                davka_2_doposud_max_sto_tisic = 0
-                davka_2_doposud_min_sto_tisic = 9999999
-                davka_3_doposud_max_sto_tisic = 0
-                davka_3_doposud_min_sto_tisic = 9999999
-                davka_4_doposud_max_sto_tisic = 0
-                davka_4_doposud_min_sto_tisic = 9999999
-
-                davka_celkem_den_max = 0 
-                davka_celkem_den_min = 9999999 
-                davka_celkem_den_max_sto_tisic = 0 
-                davka_celkem_den_min_sto_tisic = 9999999 
-                davka_celkem_doposud_max = 0 
-                davka_celkem_doposud_min = 9999999 
-                davka_celkem_doposud_max_sto_tisic = 0 
-                davka_celkem_doposud_min_sto_tisic = 9999999 
-                celkem_den = 0
-                celkem_doposud = 0
+                cached_data[date]['davka_1_max'] = cached_data[date]['davka_2_max'] = cached_data[date]['davka_3_max'] = cached_data[date]['davka_4_max'] = cached_data[date]['davka_1_max_sto_tisic'] = cached_data[date]['davka_2_max_sto_tisic'] = cached_data[date]['davka_3_max_sto_tisic'] = cached_data[date]['davka_4_max_sto_tisic'] = cached_data[date]['davka_1_doposud_max'] = cached_data[date]['davka_2_doposud_max'] = cached_data[date]['davka_3_doposud_max'] = cached_data[date]['davka_4_doposud_max'] = cached_data[date]['davka_1_doposud_max_sto_tisic'] = cached_data[date]['davka_2_doposud_max_sto_tisic'] = cached_data[date]['davka_3_doposud_max_sto_tisic'] = cached_data[date]['davka_4_doposud_max_sto_tisic'] = cached_data[date]['davka_celkem_den_max'] = cached_data[date]['davka_celkem_den_max_sto_tisic'] = cached_data[date]['davka_celkem_doposud_max'] = cached_data[date]['davka_celkem_doposud_max_sto_tisic'] = celkem_den = celkem_doposud = 0
                 for okres in response:
                     if okres[2] is not None:
                         # Process data and get 100 thousand count
-                        # cached_data[date][okres[2]] = {}
                         cached_data[date][okres[2]]['davka_1_den'] = okres[3]
                         cached_data[date][okres[2]]['davka_1_den_sto_tisic'] = okres[3] / (pocet_obyvatel[okres[2]] / 100000)
                         cached_data[date][okres[2]]['davka_1_doposud'] = okres[4]
@@ -238,100 +122,48 @@ def load_cache(update_dates):
                         cached_data[date][okres[2]]['davka_celkem_doposud_sto_tisic'] = okres[12] / (pocet_obyvatel[okres[2]] / 100000)
 
                         # Get minimums and maximums
-                        davka_1_max =                               max(davka_1_max, cached_data[date][okres[2]]['davka_1_den'])
-                        davka_2_max =                               max(davka_2_max, cached_data[date][okres[2]]['davka_2_den'])
-                        davka_3_max =                               max(davka_3_max, cached_data[date][okres[2]]['davka_3_den'])
-                        davka_4_max =                               max(davka_4_max, cached_data[date][okres[2]]['davka_4_den'])
+                        cached_data[date]['davka_1_max'] =                              max(cached_data[date]['davka_1_max'], cached_data[date][okres[2]]['davka_1_den'])
+                        cached_data[date]['davka_2_max'] =                              max(cached_data[date]['davka_2_max'], cached_data[date][okres[2]]['davka_2_den'])
+                        cached_data[date]['davka_3_max'] =                              max(cached_data[date]['davka_3_max'], cached_data[date][okres[2]]['davka_3_den'])
+                        cached_data[date]['davka_4_max'] =                              max(cached_data[date]['davka_4_max'], cached_data[date][okres[2]]['davka_4_den'])
+                        cached_data[date]['davka_1_max_sto_tisic'] =                    max(cached_data[date]['davka_1_max_sto_tisic'], cached_data[date][okres[2]]['davka_1_den_sto_tisic'])
+                        cached_data[date]['davka_2_max_sto_tisic'] =                    max(cached_data[date]['davka_2_max_sto_tisic'], cached_data[date][okres[2]]['davka_2_den_sto_tisic'])
+                        cached_data[date]['davka_3_max_sto_tisic'] =                    max(cached_data[date]['davka_3_max_sto_tisic'], cached_data[date][okres[2]]['davka_3_den_sto_tisic'])
+                        cached_data[date]['davka_4_max_sto_tisic'] =                    max(cached_data[date]['davka_4_max_sto_tisic'], cached_data[date][okres[2]]['davka_4_den_sto_tisic'])
+                        cached_data[date]['davka_1_doposud_max'] =                      max(cached_data[date]['davka_1_doposud_max'], cached_data[date][okres[2]]['davka_1_doposud'])
+                        cached_data[date]['davka_2_doposud_max'] =                      max(cached_data[date]['davka_2_doposud_max'], cached_data[date][okres[2]]['davka_2_doposud'])
+                        cached_data[date]['davka_3_doposud_max'] =                      max(cached_data[date]['davka_3_doposud_max'], cached_data[date][okres[2]]['davka_3_doposud'])
+                        cached_data[date]['davka_4_doposud_max'] =                      max(cached_data[date]['davka_4_doposud_max'], cached_data[date][okres[2]]['davka_4_doposud'])
+                        cached_data[date]['davka_1_doposud_max_sto_tisic'] =            max(cached_data[date]['davka_1_doposud_max_sto_tisic'], cached_data[date][okres[2]]['davka_1_doposud_sto_tisic'])
+                        cached_data[date]['davka_2_doposud_max_sto_tisic'] =            max(cached_data[date]['davka_2_doposud_max_sto_tisic'], cached_data[date][okres[2]]['davka_2_doposud_sto_tisic'])
+                        cached_data[date]['davka_3_doposud_max_sto_tisic'] =            max(cached_data[date]['davka_3_doposud_max_sto_tisic'], cached_data[date][okres[2]]['davka_3_doposud_sto_tisic'])
+                        cached_data[date]['davka_4_doposud_max_sto_tisic'] =            max(cached_data[date]['davka_4_doposud_max_sto_tisic'], cached_data[date][okres[2]]['davka_4_doposud_sto_tisic'])
+                        cached_data[date]['davka_celkem_den_max'] =                     max(cached_data[date]['davka_celkem_den_max'], cached_data[date][okres[2]]['davka_celkem_den'])
+                        cached_data[date]['davka_celkem_den_max_sto_tisic'] =           max(cached_data[date]['davka_celkem_den_max_sto_tisic'], cached_data[date][okres[2]]['davka_celkem_den_sto_tisic'])
+                        cached_data[date]['davka_celkem_doposud_max'] =                 max(cached_data[date]['davka_celkem_doposud_max'], cached_data[date][okres[2]]['davka_celkem_doposud'])
+                        cached_data[date]['davka_celkem_doposud_max_sto_tisic'] =       max(cached_data[date]['davka_celkem_doposud_max_sto_tisic'], cached_data[date][okres[2]]['davka_celkem_doposud_sto_tisic'])
+                        cached_data['okres_absolute_max'] =                             max(cached_data['okres_absolute_max'], cached_data[date][okres[2]]['davka_celkem_doposud'])
+                        cached_data['max_celkem_davka_1_den'] =                         max(cached_data['max_celkem_davka_1_den'], cached_data[date][okres[2]]['davka_1_den'])
+                        cached_data['max_celkem_davka_2_den'] =                         max(cached_data['max_celkem_davka_2_den'], cached_data[date][okres[2]]['davka_2_den'])
+                        cached_data['max_celkem_davka_3_den'] =                         max(cached_data['max_celkem_davka_3_den'], cached_data[date][okres[2]]['davka_3_den'])
+                        cached_data['max_celkem_davka_4_den'] =                         max(cached_data['max_celkem_davka_4_den'], cached_data[date][okres[2]]['davka_4_den'])
+                        cached_data['max_celkem_den'] =                                 max(cached_data['max_celkem_den'], cached_data[date][okres[2]]['davka_celkem_den'])
+                        cached_data['max_celkem_davka_1_doposud'] =                     max(cached_data['max_celkem_davka_1_doposud'], cached_data[date][okres[2]]['davka_1_doposud'])
+                        cached_data['max_celkem_davka_2_doposud'] =                     max(cached_data['max_celkem_davka_2_doposud'], cached_data[date][okres[2]]['davka_2_doposud'])
+                        cached_data['max_celkem_davka_3_doposud'] =                     max(cached_data['max_celkem_davka_3_doposud'], cached_data[date][okres[2]]['davka_3_doposud'])
+                        cached_data['max_celkem_davka_4_doposud'] =                     max(cached_data['max_celkem_davka_4_doposud'], cached_data[date][okres[2]]['davka_4_doposud'])
+                        cached_data['max_celkem_doposud'] =                             max(cached_data['max_celkem_doposud'], cached_data[date][okres[2]]['davka_celkem_doposud'])
+                        cached_data['max_celkem_davka_1_den_sto_tisic'] =               max(cached_data['max_celkem_davka_1_den_sto_tisic'], cached_data[date][okres[2]]['davka_1_den_sto_tisic'])
+                        cached_data['max_celkem_davka_2_den_sto_tisic'] =               max(cached_data['max_celkem_davka_2_den_sto_tisic'], cached_data[date][okres[2]]['davka_2_den_sto_tisic'])
+                        cached_data['max_celkem_davka_3_den_sto_tisic'] =               max(cached_data['max_celkem_davka_3_den_sto_tisic'], cached_data[date][okres[2]]['davka_3_den_sto_tisic'])
+                        cached_data['max_celkem_davka_4_den_sto_tisic'] =               max(cached_data['max_celkem_davka_4_den_sto_tisic'], cached_data[date][okres[2]]['davka_4_den_sto_tisic'])
+                        cached_data['max_celkem_den_sto_tisic'] =                       max(cached_data['max_celkem_den_sto_tisic'], cached_data[date][okres[2]]['davka_celkem_den_sto_tisic'])
+                        cached_data['max_celkem_davka_1_doposud_sto_tisic'] =           max(cached_data['max_celkem_davka_1_doposud_sto_tisic'], cached_data[date][okres[2]]['davka_1_doposud_sto_tisic'])
+                        cached_data['max_celkem_davka_2_doposud_sto_tisic'] =           max(cached_data['max_celkem_davka_2_doposud_sto_tisic'], cached_data[date][okres[2]]['davka_2_doposud_sto_tisic'])
+                        cached_data['max_celkem_davka_3_doposud_sto_tisic'] =           max(cached_data['max_celkem_davka_3_doposud_sto_tisic'], cached_data[date][okres[2]]['davka_3_doposud_sto_tisic'])
+                        cached_data['max_celkem_davka_4_doposud_sto_tisic'] =           max(cached_data['max_celkem_davka_4_doposud_sto_tisic'], cached_data[date][okres[2]]['davka_4_doposud_sto_tisic'])
+                        cached_data['max_celkem_doposud_sto_tisic'] =                   max(cached_data['max_celkem_doposud_sto_tisic'], cached_data[date][okres[2]]['davka_celkem_doposud_sto_tisic'])
 
-                        davka_1_max_sto_tisic =                     max(davka_1_max_sto_tisic, cached_data[date][okres[2]]['davka_1_den_sto_tisic'])
-                        davka_2_max_sto_tisic =                     max(davka_2_max_sto_tisic, cached_data[date][okres[2]]['davka_2_den_sto_tisic'])
-                        davka_3_max_sto_tisic =                     max(davka_3_max_sto_tisic, cached_data[date][okres[2]]['davka_3_den_sto_tisic'])
-                        davka_4_max_sto_tisic =                     max(davka_4_max_sto_tisic, cached_data[date][okres[2]]['davka_4_den_sto_tisic'])
-
-                        davka_1_doposud_max =                       max(davka_1_doposud_max, cached_data[date][okres[2]]['davka_1_doposud'])
-                        davka_2_doposud_max =                       max(davka_2_doposud_max, cached_data[date][okres[2]]['davka_2_doposud'])
-                        davka_3_doposud_max =                       max(davka_3_doposud_max, cached_data[date][okres[2]]['davka_3_doposud'])
-                        davka_4_doposud_max =                       max(davka_4_doposud_max, cached_data[date][okres[2]]['davka_4_doposud'])
-
-                        davka_1_doposud_max_sto_tisic =             max(davka_1_doposud_max_sto_tisic, cached_data[date][okres[2]]['davka_1_doposud_sto_tisic'])
-                        davka_2_doposud_max_sto_tisic =             max(davka_2_doposud_max_sto_tisic, cached_data[date][okres[2]]['davka_2_doposud_sto_tisic'])
-                        davka_3_doposud_max_sto_tisic =             max(davka_3_doposud_max_sto_tisic, cached_data[date][okres[2]]['davka_3_doposud_sto_tisic'])
-                        davka_4_doposud_max_sto_tisic =             max(davka_4_doposud_max_sto_tisic, cached_data[date][okres[2]]['davka_4_doposud_sto_tisic'])
-                        
-                        davka_celkem_den_max =                      max(davka_celkem_den_max, cached_data[date][okres[2]]['davka_celkem_den'])
-                        davka_celkem_den_max_sto_tisic =            max(davka_celkem_den_max_sto_tisic, cached_data[date][okres[2]]['davka_celkem_den_sto_tisic'])
-                        davka_celkem_doposud_max =                  max(davka_celkem_doposud_max, cached_data[date][okres[2]]['davka_celkem_doposud'])
-                        davka_celkem_doposud_max_sto_tisic =        max(davka_celkem_doposud_max_sto_tisic, cached_data[date][okres[2]]['davka_celkem_doposud_sto_tisic'])
-                        okres_absolute_celkem =                     max(okres_absolute_celkem, cached_data[date][okres[2]]['davka_celkem_doposud'])
-
-                        max_celkem_davka_1_den =                    max(max_celkem_davka_1_den, cached_data[date][okres[2]]['davka_1_den'])
-                        max_celkem_davka_2_den =                    max(max_celkem_davka_2_den, cached_data[date][okres[2]]['davka_2_den'])
-                        max_celkem_davka_3_den =                    max(max_celkem_davka_3_den, cached_data[date][okres[2]]['davka_3_den'])
-                        max_celkem_davka_4_den =                    max(max_celkem_davka_4_den, cached_data[date][okres[2]]['davka_4_den'])
-                        max_celkem_den =                            max(max_celkem_den, cached_data[date][okres[2]]['davka_celkem_den'])
-
-                        max_celkem_davka_1_doposud =                max(max_celkem_davka_1_doposud, cached_data[date][okres[2]]['davka_1_doposud'])
-                        max_celkem_davka_2_doposud =                max(max_celkem_davka_2_doposud, cached_data[date][okres[2]]['davka_2_doposud'])
-                        max_celkem_davka_3_doposud =                max(max_celkem_davka_3_doposud, cached_data[date][okres[2]]['davka_3_doposud'])
-                        max_celkem_davka_4_doposud =                max(max_celkem_davka_4_doposud, cached_data[date][okres[2]]['davka_4_doposud'])
-                        max_celkem_doposud =                        max(max_celkem_doposud, cached_data[date][okres[2]]['davka_celkem_doposud'])
-
-                        max_celkem_davka_1_den_sto_tisic =          max(max_celkem_davka_1_den_sto_tisic, cached_data[date][okres[2]]['davka_1_den_sto_tisic'])
-                        max_celkem_davka_2_den_sto_tisic =          max(max_celkem_davka_2_den_sto_tisic, cached_data[date][okres[2]]['davka_2_den_sto_tisic'])
-                        max_celkem_davka_3_den_sto_tisic =          max(max_celkem_davka_3_den_sto_tisic, cached_data[date][okres[2]]['davka_3_den_sto_tisic'])
-                        max_celkem_davka_4_den_sto_tisic =          max(max_celkem_davka_4_den_sto_tisic, cached_data[date][okres[2]]['davka_4_den_sto_tisic'])
-                        max_celkem_den_sto_tisic =                  max(max_celkem_den_sto_tisic, cached_data[date][okres[2]]['davka_celkem_den_sto_tisic'])
-
-                        max_celkem_davka_1_doposud_sto_tisic =      max(max_celkem_davka_1_doposud_sto_tisic, cached_data[date][okres[2]]['davka_1_doposud_sto_tisic'])
-                        max_celkem_davka_2_doposud_sto_tisic =      max(max_celkem_davka_2_doposud_sto_tisic, cached_data[date][okres[2]]['davka_2_doposud_sto_tisic'])
-                        max_celkem_davka_3_doposud_sto_tisic =      max(max_celkem_davka_3_doposud_sto_tisic, cached_data[date][okres[2]]['davka_3_doposud_sto_tisic'])
-                        max_celkem_davka_4_doposud_sto_tisic =      max(max_celkem_davka_4_doposud_sto_tisic, cached_data[date][okres[2]]['davka_4_doposud_sto_tisic'])
-                        max_celkem_doposud_sto_tisic =              max(max_celkem_doposud_sto_tisic, cached_data[date][okres[2]]['davka_celkem_doposud_sto_tisic'])
-
-                cached_data[date]['davka_1_max'] = davka_1_max
-                cached_data[date]['davka_1_min'] = davka_1_min
-                cached_data[date]['davka_2_max'] = davka_2_max
-                cached_data[date]['davka_2_min'] = davka_2_min
-                cached_data[date]['davka_3_max'] = davka_3_max
-                cached_data[date]['davka_3_min'] = davka_3_min
-                cached_data[date]['davka_4_max'] = davka_4_max
-                cached_data[date]['davka_4_min'] = davka_4_min
-
-                cached_data[date]['davka_1_max_sto_tisic'] = davka_1_max_sto_tisic
-                cached_data[date]['davka_1_min_sto_tisic'] = davka_1_min_sto_tisic
-                cached_data[date]['davka_2_max_sto_tisic'] = davka_2_max_sto_tisic
-                cached_data[date]['davka_2_min_sto_tisic'] = davka_2_min_sto_tisic
-                cached_data[date]['davka_3_max_sto_tisic'] = davka_3_max_sto_tisic
-                cached_data[date]['davka_3_min_sto_tisic'] = davka_3_min_sto_tisic
-                cached_data[date]['davka_4_max_sto_tisic'] = davka_4_max_sto_tisic
-                cached_data[date]['davka_4_min_sto_tisic'] = davka_4_min_sto_tisic
-
-                cached_data[date]['davka_1_doposud_max'] = davka_1_doposud_max
-                cached_data[date]['davka_1_doposud_min'] = davka_1_doposud_min
-                cached_data[date]['davka_2_doposud_max'] = davka_2_doposud_max
-                cached_data[date]['davka_2_doposud_min'] = davka_2_doposud_min
-                cached_data[date]['davka_3_doposud_max'] = davka_3_doposud_max
-                cached_data[date]['davka_3_doposud_min'] = davka_3_doposud_min
-                cached_data[date]['davka_4_doposud_max'] = davka_4_doposud_max
-                cached_data[date]['davka_4_doposud_min'] = davka_4_doposud_min
-
-                cached_data[date]['davka_1_doposud_max_sto_tisic'] = davka_1_doposud_max_sto_tisic
-                cached_data[date]['davka_1_doposud_min_sto_tisic'] = davka_1_doposud_min_sto_tisic
-                cached_data[date]['davka_2_doposud_max_sto_tisic'] = davka_2_doposud_max_sto_tisic
-                cached_data[date]['davka_2_doposud_min_sto_tisic'] = davka_2_doposud_min_sto_tisic
-                cached_data[date]['davka_3_doposud_max_sto_tisic'] = davka_3_doposud_max_sto_tisic
-                cached_data[date]['davka_3_doposud_min_sto_tisic'] = davka_3_doposud_min_sto_tisic
-                cached_data[date]['davka_4_doposud_max_sto_tisic'] = davka_4_doposud_max_sto_tisic
-                cached_data[date]['davka_4_doposud_min_sto_tisic'] = davka_4_doposud_min_sto_tisic
-
-                cached_data[date]['davka_celkem_den_max'] = davka_celkem_den_max
-                cached_data[date]['davka_celkem_den_min'] = davka_celkem_den_min
-                cached_data[date]['davka_celkem_den_max_sto_tisic'] = davka_celkem_den_max_sto_tisic
-                cached_data[date]['davka_celkem_den_min_sto_tisic'] = davka_celkem_den_min_sto_tisic
-                cached_data[date]['davka_celkem_doposud_max'] = davka_celkem_doposud_max
-                cached_data[date]['davka_celkem_doposud_min'] = davka_celkem_doposud_min
-                cached_data[date]['davka_celkem_doposud_max_sto_tisic'] = davka_celkem_doposud_max_sto_tisic
-                cached_data[date]['davka_celkem_doposud_min_sto_tisic'] = davka_celkem_doposud_min_sto_tisic
                 cached_data[date]['davka_celkem_den'] = celkem_den
                 cached_data[date]['davka_celkem_doposud'] = celkem_doposud
                 cached_data[date]['davka_2_doposud'] = davka_2_doposud
@@ -339,59 +171,16 @@ def load_cache(update_dates):
             cached_data['absolute_celkem'] = absolute_celkem
             cached_data['okres_absolute_max'] = okres_absolute_celkem
 
-            cached_data['max_celkem_den'] = max_celkem_den
-            cached_data['max_celkem_doposud'] = max_celkem_doposud
-            cached_data['max_celkem_den_sto_tisic'] = max_celkem_den_sto_tisic
-            cached_data['max_celkem_doposud_sto_tisic'] = max_celkem_doposud_sto_tisic
-
-            cached_data['max_celkem_davka_1_den'] = max_celkem_davka_1_den
-            cached_data['max_celkem_davka_1_doposud'] = max_celkem_davka_1_doposud
-            cached_data['max_celkem_davka_1_den_sto_tisic'] = max_celkem_davka_1_den_sto_tisic
-            cached_data['max_celkem_davka_1_doposud_sto_tisic'] = max_celkem_davka_1_doposud_sto_tisic
-
-            cached_data['max_celkem_davka_2_den'] = max_celkem_davka_2_den
-            cached_data['max_celkem_davka_2_doposud'] = max_celkem_davka_2_doposud
-            cached_data['max_celkem_davka_2_den_sto_tisic'] = max_celkem_davka_2_den_sto_tisic
-            cached_data['max_celkem_davka_2_doposud_sto_tisic'] = max_celkem_davka_2_doposud_sto_tisic
-
-            cached_data['max_celkem_davka_3_den'] = max_celkem_davka_3_den
-            cached_data['max_celkem_davka_3_doposud'] = max_celkem_davka_3_doposud
-            cached_data['max_celkem_davka_3_den_sto_tisic'] = max_celkem_davka_3_den_sto_tisic
-            cached_data['max_celkem_davka_3_doposud_sto_tisic'] = max_celkem_davka_3_doposud_sto_tisic
-
-            cached_data['max_celkem_davka_4_den'] = max_celkem_davka_4_den
-            cached_data['max_celkem_davka_4_doposud'] = max_celkem_davka_4_doposud
-            cached_data['max_celkem_davka_4_den_sto_tisic'] = max_celkem_davka_4_den_sto_tisic
-            cached_data['max_celkem_davka_4_doposud_sto_tisic'] = max_celkem_davka_4_doposud_sto_tisic
-
             ################################
             # Download deaths
             ################################
 
-            celkem_doposud = 0
-            celkem_min_den_rozsah = 999999
-            celkem_max_den_rozsah = 0
-            celkem_min_den_sto_tisic_rozsah = 999999
-            celkem_max_den_sto_tisic_rozsah = 0
-            celkem_min_doposud_rozsah = 999999
-            celkem_max_doposud_rozsah = 0
-            celkem_min_doposud_sto_tisic_rozsah = 999999
-            celkem_max_doposud_sto_tisic_rozsah = 0
+            celkem_doposud = cached_data['celkem_max_den'] = cached_data['celkem_max_sto_tisic_den'] = cached_data['celkem_max_doposud'] = cached_data['celkem_max_sto_tisic_doposud'] = 0
             for date in all_requested_dates:
                 response = db.get_records_day("death", date)
-                cached_data[date]['celkem_umrti'] = 0
-                celkem_den = 0
-                max_umrti = 0
-                min_umrti = 9999999
-                max_umrti_sto_tisic = 0
-                min_umrti_sto_tisic = 9999999
-                max_umrti_doposud = 0
-                min_umrti_doposud = 9999999
-                max_umrti_doposud_sto_tisic = 0
-                min_umrti_doposud_sto_tisic = 9999999
+                cached_data[date]['celkem_umrti'] = celkem_den = cached_data[date]['max_umrti_den'] = cached_data[date]['max_umrti_den_sto_tisic'] = cached_data[date]['max_umrti_doposud'] = cached_data[date]['max_umrti_doposud_sto_tisic'] = 0
                 for okres in response:
                     if okres[2] is not None:
-                        # cached_data[date][okres[2]] = {}
                         celkem_den += okres[3]
                         celkem_doposud += okres[3]
                         cached_data[date][okres[2]]['umrti_den'] = okres[3]
@@ -399,96 +188,34 @@ def load_cache(update_dates):
                         cached_data[date][okres[2]]['umrti_den_sto_tisic'] = okres[3] / (pocet_obyvatel[okres[2]] / 100000)
                         cached_data[date][okres[2]]['umrti_doposud_sto_tisic'] = okres[4] / (pocet_obyvatel[okres[2]] / 100000)
                         
-                        max_umrti =                             max(max_umrti, cached_data[date][okres[2]]['umrti_den'])
-                        max_umrti_sto_tisic =                   max(max_umrti_sto_tisic, cached_data[date][okres[2]]['umrti_den_sto_tisic'])
-                        max_umrti_doposud =                     max(max_umrti_doposud, cached_data[date][okres[2]]['umrti_doposud'])
-                        max_umrti_doposud_sto_tisic =           max(max_umrti_doposud_sto_tisic, cached_data[date][okres[2]]['umrti_doposud_sto_tisic'])
+                        cached_data[date]['max_umrti_den'] =                            max(cached_data[date]['max_umrti_den'], cached_data[date][okres[2]]['umrti_den'])
+                        cached_data[date]['max_umrti_den_sto_tisic'] =                  max(cached_data[date]['max_umrti_den_sto_tisic'], cached_data[date][okres[2]]['umrti_den_sto_tisic'])
+                        cached_data[date]['max_umrti_doposud'] =                        max(cached_data[date]['max_umrti_doposud'], cached_data[date][okres[2]]['umrti_doposud'])
+                        cached_data[date]['max_umrti_doposud_sto_tisic'] =              max(cached_data[date]['max_umrti_doposud_sto_tisic'], cached_data[date][okres[2]]['umrti_doposud_sto_tisic'])
+                        cached_data['celkem_max_den'] =                                 max(cached_data['celkem_max_den'], cached_data[date][okres[2]]['umrti_den'])
+                        cached_data['celkem_max_sto_tisic_den'] =                       max(cached_data['celkem_max_sto_tisic_den'], cached_data[date][okres[2]]['umrti_den_sto_tisic'])
+                        cached_data['celkem_max_doposud'] =                             max(cached_data['celkem_max_doposud'], cached_data[date][okres[2]]['umrti_doposud'])
+                        cached_data['celkem_max_sto_tisic_doposud'] =                   max(cached_data['celkem_max_sto_tisic_doposud'], cached_data[date][okres[2]]['umrti_doposud_sto_tisic'])
 
-                        celkem_max_den_rozsah =                 max(celkem_max_den_rozsah, cached_data[date][okres[2]]['umrti_den'])
-                        celkem_max_den_sto_tisic_rozsah =       max(celkem_max_den_sto_tisic_rozsah, cached_data[date][okres[2]]['umrti_den_sto_tisic'])
-                        celkem_max_doposud_rozsah =             max(celkem_max_doposud_rozsah, cached_data[date][okres[2]]['umrti_doposud'])
-                        celkem_max_doposud_sto_tisic_rozsah =   max(celkem_max_doposud_sto_tisic_rozsah, cached_data[date][okres[2]]['umrti_doposud_sto_tisic'])
-
-                cached_data[date]['max_umrti_den'] = max_umrti
-                cached_data[date]['min_umrti_den'] = min_umrti
-                cached_data[date]['max_umrti_den_sto_tisic'] = max_umrti_sto_tisic
-                cached_data[date]['min_umrti_den_sto_tisic'] = min_umrti_sto_tisic
-                cached_data[date]['max_umrti_doposud'] = max_umrti_doposud
-                cached_data[date]['min_umrti_doposud'] = min_umrti_doposud
-                cached_data[date]['max_umrti_doposud_sto_tisic'] = max_umrti_doposud_sto_tisic
-                cached_data[date]['min_umrti_doposud_sto_tisic'] = min_umrti_doposud_sto_tisic
                 cached_data[date]['celkem_den'] = celkem_den
                 cached_data[date]['celkem_doposud'] = celkem_doposud
             
             cached_data['celkem_doposud'] = celkem_doposud
-            cached_data['celkem_min_den'] = celkem_min_den_rozsah
-            cached_data['celkem_max_den'] = celkem_max_den_rozsah
-            cached_data['celkem_min_sto_tisic_den'] = celkem_min_den_sto_tisic_rozsah
-            cached_data['celkem_max_sto_tisic_den'] = celkem_max_den_sto_tisic_rozsah
-            cached_data['celkem_min_doposud'] = celkem_min_doposud_rozsah
-            cached_data['celkem_max_doposud'] = celkem_max_doposud_rozsah
-            cached_data['celkem_min_sto_tisic_doposud'] = celkem_min_doposud_sto_tisic_rozsah
-            cached_data['celkem_max_sto_tisic_doposud'] = celkem_max_doposud_sto_tisic_rozsah
 
             ################################
             # Download testing infromation
             ################################
 
-            celkem_doposud = 0
-
-            rozsah_max_prirustek = 0
-            rozsah_min_prirustek = 9999999
-            rozsah_max_prirustek_sto_tisic = 0
-            rozsah_min_prirustek_sto_tisic = 9999999
-
-            rozsah_max_celkem = 0
-            rozsah_min_celkem = 9999999
-            rozsah_max_celkem_sto_tisic = 0
-            rozsah_min_celkem_sto_tisic = 9999999
-
-            rozsah_max_prirustek_korekce = 0
-            rozsah_min_prirustek_korekce = 9999999
-            rozsah_max_prirustek_korekce_sto_tisic = 0
-            rozsah_min_prirustek_korekce_sto_tisic = 9999999
-
-            rozsah_max_celkem_korekce = 0
-            rozsah_min_celkem_korekce = 9999999
-            rozsah_max_celkem_korekce_sto_tisic = 0
-            rozsah_min_celkem_korekce_sto_tisic = 9999999
+            celkem_doposud = cached_data['rozsah_max_prirustek'] = cached_data['rozsah_max_prirustek_sto_tisic'] = cached_data['rozsah_max_celkem'] = cached_data['rozsah_max_celkem_sto_tisic'] = cached_data['rozsah_max_prirustek_korekce'] = cached_data['rozsah_max_prirustek_korekce_sto_tisic'] = cached_data['rozsah_max_celkem_korekce'] = cached_data['rozsah_max_celkem_korekce_sto_tisic'] = 0
 
             for date in all_requested_dates:
                 response = db.get_records_day("pcr_test", date)
 
-                cached_data[date]['celkem_testovani'] = 0
-                celkem_den_prirustek = 0
-                celkem_den_celkem = 0
-
-                max_den = 0
-                min_den = 9999999
-                max_den_sto_tisic = 0
-                min_den_sto_tisic = 9999999
-
-                celkem_max_den = 0
-                celkem_min_den = 9999999
-                celkem_max_den_sto_tisic = 0
-                celkem_min_den_sto_tisic = 9999999
-
-                max_korekce_den = 0
-                min_korekce_den = 9999999
-                max_korekce_den_sto_tisic = 0
-                min_korekce_den_sto_tisic = 9999999
-
-                celkem_max_korekce_den = 0
-                celkem_min_korekce_den = 9999999
-                celkem_max_korekce_den_sto_tisic = 0
-                celkem_min_korekce_den_sto_tisic = 9999999
+                cached_data[date]['celkem_testovani'] = celkem_den_prirustek = celkem_den_celkem = cached_data[date]['max_den'] = cached_data[date]['max_den_sto_tisic'] = cached_data[date]['celkem_max_den'] = cached_data[date]['celkem_max_den_sto_tisic'] = cached_data[date]['max_korekce_den'] = cached_data[date]['max_korekce_den_sto_tisic'] = cached_data[date]['celkem_max_korekce_den'] = cached_data[date]['celkem_max_korekce_den_sto_tisic'] = 0
 
                 for okres in response:
                     if okres[2] is not None:
-                        prirustek = 0
-                        celkem = 0
-                        prirustek_korekce = 0
-                        celkem_korekce = 0
+                        prirustek = celkem = prirustek_korekce = celkem_korekce = 0
                         if okres[3] is not None: prirustek = okres[3]
                         if okres[4] is not None: celkem = okres[4]
                         if okres[5] is not None: prirustek_korekce = okres[5]
@@ -497,7 +224,6 @@ def load_cache(update_dates):
                         celkem_den_prirustek += prirustek
                         celkem_den_celkem += okres[4]
                         celkem_doposud += prirustek
-                        # cached_data[date][okres[2]] = {}
                         cached_data[date][okres[2]]['prirustek'] = prirustek
                         cached_data[date][okres[2]]['celkem'] = celkem
                         cached_data[date][okres[2]]['prirustek_sto_tisic'] = prirustek / (pocet_obyvatel[okres[2]] / 100000)
@@ -507,73 +233,27 @@ def load_cache(update_dates):
                         cached_data[date][okres[2]]['prirustek_korekce_sto_tisic'] = prirustek_korekce / (pocet_obyvatel[okres[2]] / 100000)
                         cached_data[date][okres[2]]['celkem_korekce_sto_tisic'] = celkem_korekce / (pocet_obyvatel[okres[2]] / 100000)
                         
-                        max_den =                           max(max_den, prirustek)
-                        max_den_sto_tisic =                 max(max_den_sto_tisic, cached_data[date][okres[2]]['prirustek_sto_tisic'])
-
-                        celkem_max_den =                    max(celkem_max_den, celkem)
-                        celkem_max_den_sto_tisic =          max(celkem_max_den_sto_tisic, cached_data[date][okres[2]]['celkem_sto_tisic'])
-
-                        max_korekce_den =                   max(max_korekce_den, prirustek_korekce)
-                        max_korekce_den_sto_tisic =         max(max_korekce_den_sto_tisic, cached_data[date][okres[2]]['prirustek_korekce_sto_tisic'])
-                        
-                        celkem_max_korekce_den =            max(celkem_max_korekce_den, celkem_korekce)
-                        celkem_max_korekce_den_sto_tisic =  max(celkem_max_korekce_den_sto_tisic, cached_data[date][okres[2]]['celkem_korekce_sto_tisic'])
+                        cached_data[date]['max_den'] =                              max(cached_data[date]['max_den'], prirustek)
+                        cached_data[date]['max_den_sto_tisic'] =                    max(cached_data[date]['max_den_sto_tisic'], cached_data[date][okres[2]]['prirustek_sto_tisic'])
+                        cached_data[date]['celkem_max_den'] =                       max(cached_data[date]['celkem_max_den'], celkem)
+                        cached_data[date]['celkem_max_den_sto_tisic'] =             max(cached_data[date]['celkem_max_den_sto_tisic'], cached_data[date][okres[2]]['celkem_sto_tisic'])
+                        cached_data[date]['max_korekce_den'] =                      max(cached_data[date]['max_korekce_den'], prirustek_korekce)
+                        cached_data[date]['max_korekce_den_sto_tisic'] =            max(cached_data[date]['max_korekce_den_sto_tisic'], cached_data[date][okres[2]]['prirustek_korekce_sto_tisic'])
+                        cached_data[date]['celkem_max_korekce_den'] =               max(cached_data[date]['celkem_max_korekce_den'], celkem_korekce)
+                        cached_data[date]['celkem_max_korekce_den_sto_tisic'] =     max(cached_data[date]['celkem_max_korekce_den_sto_tisic'], cached_data[date][okres[2]]['celkem_korekce_sto_tisic'])
+                        cached_data['rozsah_max_prirustek'] =                       max(cached_data['rozsah_max_prirustek'], prirustek)
+                        cached_data['rozsah_max_prirustek_sto_tisic'] =             max(cached_data['rozsah_max_prirustek_sto_tisic'], cached_data[date][okres[2]]['prirustek_sto_tisic'])
+                        cached_data['rozsah_max_celkem'] =                          max(cached_data['rozsah_max_celkem'], celkem)
+                        cached_data['rozsah_max_celkem_sto_tisic'] =                max(cached_data['rozsah_max_celkem_sto_tisic'], cached_data[date][okres[2]]['celkem_sto_tisic'])
+                        cached_data['rozsah_max_prirustek_korekce'] =               max(cached_data['rozsah_max_prirustek_korekce'], cached_data[date][okres[2]]['prirustek_korekce_sto_tisic'])
+                        cached_data['rozsah_max_prirustek_korekce_sto_tisic'] =     max(cached_data['rozsah_max_prirustek_korekce_sto_tisic'], prirustek_korekce)
+                        cached_data['rozsah_max_celkem_korekce'] =                  max(cached_data['rozsah_max_celkem_korekce'], celkem_korekce)
+                        cached_data['rozsah_max_celkem_korekce_sto_tisic'] =        max(cached_data['rozsah_max_celkem_korekce'], cached_data[date][okres[2]]['celkem_korekce_sto_tisic'])
 
                 cached_data[date]['celkem_prirustek_den'] = celkem_den_prirustek
                 cached_data[date]['celkem_celkem_den'] = celkem_den_celkem
-                cached_data[date]['max_den'] = max_den
-                cached_data[date]['min_den'] = min_den
-                cached_data[date]['max_den_sto_tisic'] = max_den_sto_tisic
-                cached_data[date]['min_den_sto_tisic'] = min_den_sto_tisic
-
-                cached_data[date]['celkem_max_den'] = celkem_max_den
-                cached_data[date]['celkem_min_den'] = celkem_min_den
-                cached_data[date]['celkem_max_den_sto_tisic'] = celkem_max_den_sto_tisic
-                cached_data[date]['celkem_min_den_sto_tisic'] = celkem_min_den_sto_tisic
-
-                cached_data[date]['max_korekce_den'] = max_korekce_den
-                cached_data[date]['min_korekce_den'] = min_korekce_den
-                cached_data[date]['max_korekce_den_sto_tisic'] = max_korekce_den_sto_tisic
-                cached_data[date]['min_korekce_den_sto_tisic'] = min_korekce_den_sto_tisic
-
-                cached_data[date]['celkem_max_korekce_den'] = celkem_max_korekce_den
-                cached_data[date]['celkem_min_korekce_den'] = celkem_min_korekce_den
-                cached_data[date]['celkem_max_korekce_den_sto_tisic'] = celkem_max_korekce_den_sto_tisic
-                cached_data[date]['celkem_min_korekce_den_sto_tisic'] = celkem_min_korekce_den_sto_tisic
-
-                rozsah_max_prirustek =                      max(max_den, rozsah_max_prirustek)
-                rozsah_max_prirustek_sto_tisic =            max(max_den_sto_tisic, rozsah_max_prirustek_sto_tisic)
-
-                rozsah_max_celkem =                         max(celkem_max_den, rozsah_max_celkem)
-                rozsah_max_celkem_sto_tisic =               max(celkem_max_den_sto_tisic, rozsah_max_celkem_sto_tisic)
-
-                rozsah_max_prirustek_korekce =              max(max_korekce_den, rozsah_max_prirustek_korekce)
-                rozsah_max_prirustek_korekce_sto_tisic =    max(max_korekce_den_sto_tisic, rozsah_max_prirustek_korekce_sto_tisic)
-
-                rozsah_max_celkem_korekce =                 max(celkem_max_korekce_den, rozsah_max_celkem_korekce)
-                rozsah_max_celkem_korekce_sto_tisic =       max(celkem_max_korekce_den_sto_tisic, rozsah_max_celkem_korekce_sto_tisic)
             
             cached_data['celkem_doposud'] = celkem_doposud
-
-            cached_data['rozsah_max_prirustek'] = rozsah_max_prirustek
-            cached_data['rozsah_min_prirustek'] = rozsah_min_prirustek
-            cached_data['rozsah_max_prirustek_sto_tisic'] = rozsah_max_prirustek_sto_tisic
-            cached_data['rozsah_min_prirustek_sto_tisic'] = rozsah_min_prirustek_sto_tisic
-
-            cached_data['rozsah_max_celkem'] = rozsah_max_celkem
-            cached_data['rozsah_min_celkem'] = rozsah_min_celkem
-            cached_data['rozsah_max_celkem_sto_tisic'] = rozsah_max_celkem_sto_tisic
-            cached_data['rozsah_min_celkem_sto_tisic'] = rozsah_min_celkem_sto_tisic
-
-            cached_data['rozsah_max_prirustek_korekce'] = rozsah_max_prirustek_korekce
-            cached_data['rozsah_min_prirustek_korekce'] = rozsah_min_prirustek_korekce
-            cached_data['rozsah_max_prirustek_korekce_sto_tisic'] = rozsah_max_prirustek_korekce_sto_tisic
-            cached_data['rozsah_min_prirustek_korekce_sto_tisic'] = rozsah_min_prirustek_korekce_sto_tisic
-
-            cached_data['rozsah_max_celkem_korekce'] = rozsah_max_celkem_korekce
-            cached_data['rozsah_min_celkem_korekce'] = rozsah_min_celkem_korekce
-            cached_data['rozsah_max_celkem_korekce_sto_tisic'] = rozsah_max_celkem_korekce_sto_tisic
-            cached_data['rozsah_min_celkem_korekce_sto_tisic'] = rozsah_min_celkem_korekce_sto_tisic
 
             # print('[CACHE] Cache is updated (' + str(get_deep_size(cached_data)) + ' bytes)')
             print('[CACHE] Cache is updated')

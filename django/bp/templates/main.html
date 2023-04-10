@@ -320,7 +320,7 @@
                                         <td style="width:60%;text-align: left;padding-top: 10px;">Části časového okna
                                         </td>
                                         <td style="width:40%;padding-top: 10px;">
-                                            <select oninput="selectSliderType(this.value)" class="form-control"
+                                            <select oninput="selectTimeComponent(this.value)" class="form-control"
                                                 id="sel1" style="margin-top:0px">
                                                 <option>Den</option>
                                                 <option>Týden</option>
@@ -361,7 +361,7 @@
                             </div>
                             <div class="w3-center">
                                 <button id="time_window_confirm_button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" style="width:100%;font-size:12px;margin-top:15px"
-                                    onclick="confirmRangeAnalysis()"><b>Potvrdit</b></button>
+                                    onclick="confirmAnalysis()"><b>Potvrdit</b></button>
                             </div>
                         </div>
                         <div id="view_window" style="display:none;padding-bottom:5px;padding-left:16px;padding-right:16px">
@@ -524,7 +524,7 @@
                                     <tr>
                                         <td style="width:20%">Dataset:</td>
                                         <td style="width:80%">
-                                            <select oninput="selectSliderPIPType(this.value)" class="form-control"
+                                            <select oninput="selectDatasetPIP(this.value)" class="form-control"
                                                 id="sel3" style="margin-top:0px">
                                                 <option>Infekce</option>
                                                 <option>Očkování</option>
@@ -536,7 +536,7 @@
                                     <tr>
                                         <td style="width:20%;padding-top:5px">Typ dat:</td>
                                         <td style="width:80%;padding-top:5px">
-                                            <select oninput="selectSliderPIPData(this.value)" class="form-control"
+                                            <select oninput="selectDataFromDatasetPIP(this.value)" class="form-control"
                                                 id="sel4" style="margin-top:0px">
                                                 <option>Nové případy</option>
                                                 <option>Nové případy za poslední týden</option>
@@ -557,7 +557,7 @@
                                         Typ dat
                                     </td>
                                     <td colspan="2" style="width:75%;padding-top:20px;">
-                                        <select oninput="selectSliderData(this.value)" class="form-control" id="sel2">
+                                        <select oninput="selectDataFromDataset(this.value)" class="form-control" id="sel2">
                                         </select>
                                     </td>
                                 </tr>
@@ -575,7 +575,7 @@
                             <table style="width:100%;margin-bottom:10px">
                                 <tr>
                                     <td style="width:5%"><button style="width:10px" class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect"
-                                            onclick="sliderDateChange(-1)">
+                                            onclick="changeDayInDataset(-1)">
                                             <i class="material-icons">chevron_left</i></button></td>
                                     <td style="width:90%" class="w3-center">
                                         <input id="slider" class="mdl-slider mdl-js-slider " type="range" min="1" max="30" value="1"
@@ -583,7 +583,7 @@
                                     </td>
                                     <td style="width:5%"><button
                                             class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect"
-                                            onclick="sliderDateChange(1)"><i class="material-icons">chevron_right</i></button></td>
+                                            onclick="changeDayInDataset(1)"><i class="material-icons">chevron_right</i></button></td>
                                 </tr>
                             </table>
                             <table style="width:100%">
