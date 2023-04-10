@@ -1,20 +1,26 @@
 import sqlite3
 
 class SQLiteConnector:
+    _instance = None
+
     def __init__(self):
-        self.__conn = None
-        self.__cursor = None
         pass
+
+    def __new__(cls):
+        if cls._instance is None:
+            try:
+                cls._instance = super().__new__(cls)
+                conn = sqlite3.connect('sql/database.sqlite', check_same_thread=False)
+                cls.__conn = conn
+                cls.__cursor = cls.__conn.cursor()
+                cls.__conn.execute("PRAGMA read_committed = true;");
+            except sqlite3.Error as e:
+                print(f"Error connecting to database: {e}")
+                return None
+        return cls._instance
     
-    def connect(self):
-        try:
-            conn = sqlite3.connect('sql/database.sqlite')
-            self.__conn = conn
-            self.__cursor = self.__conn.cursor()
-            return conn
-        except sqlite3.Error as e:
-            print(f"Error connecting to database: {e}")
-            return None
+    def get_connection(self):
+        return self.__conn
         
     def insert_record(self, type, record):
         try:

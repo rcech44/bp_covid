@@ -32,7 +32,7 @@ def load_cache(update_dates):
 
     # Download all data
     try:
-        with db.connect() as conn:
+        with db.get_connection() as conn:
             # cur = conn.cursor()
 
             ################################

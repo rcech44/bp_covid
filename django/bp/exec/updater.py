@@ -36,7 +36,7 @@ def update_data():
     db = SQLiteConnector()
 
     try:
-        with db.connect() as conn:
+        with db.get_connection() as conn:
 
             latest_date = db.get_date_of_latest_record(None)
             if latest_date is not None:
