@@ -82,6 +82,7 @@ def load_cache(update_dates):
 
                 celkem_pripady += nove_pocet
                 cached_data[date]['celkem_pripady'] = celkem_pripady
+                cached_data[date]['nove_celkovy_pocet'] = nove_pocet
 
                 
             ################################

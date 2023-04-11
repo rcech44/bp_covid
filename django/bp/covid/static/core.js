@@ -1,9 +1,9 @@
-var element_slider, element_slider_text, summary_nakazeni, summary_vyleceni, summary_umrti, summary_obyvatel, okres_nazev, okres_kod, okres_nakazeni, okres_nakazeni_sto_tisic, okres_celkem_nakazeni, okres_celkem_vyleceni, okres_datum, nakazenych, element_map_info_1, element_map_info_2, element_map_info_3, map_date, element_map_title, slider_current_selected_date, element_time_window_slider_text, slider_values, days_since_covid, text_current_data_sto_tisic, text_current_data, element_iframe, element_iframe_pip, element_dataset_data_option, snackbar, analysis_name_value, analysis_name_min_value, analysis_name_max_value, current_analysis_color, element_css_orange, element_css_green, element_css_purple, element_css_gray, sheet_default, element_nouislider, current_time_window_low, current_time_window_high, element_window_warning;
+var topbar_ripple, element_scale_rectangle, element_scale_min, element_scale_max, element_map_opacity_text, element_district_opacity_text, element_district_stroke_text, element_slider, element_slider_text, summary_nakazeni, summary_vyleceni, summary_umrti, summary_obyvatel, okres_nazev, okres_kod, okres_nakazeni, okres_nakazeni_sto_tisic, okres_celkem_nakazeni, okres_celkem_vyleceni, okres_datum, nakazenych, element_map_info_1, element_map_info_2, element_map_info_3, map_date, element_map_title, slider_current_selected_date, element_time_window_slider_text, slider_values, days_since_covid, text_current_data_sto_tisic, text_current_data, element_iframe, element_iframe_pip, element_dataset_data_option, snackbar, analysis_name_value, analysis_name_min_value, analysis_name_max_value, current_analysis_color, element_css_orange, element_css_green, element_css_purple, element_css_gray, sheet_default, element_nouislider, current_time_window_low, current_time_window_high, element_window_warning;
 
 // Constants
-const analyze_fields = ["nakazeni-analyze", "ockovani-analyze", "umrti-analyze", "testovani-analyze"];
 const okresy_names = JSON.parse(okresy_nazvy);
 const okresy_pocet_obyvatel = JSON.parse(pocet_obyvatel);
+const analyze_fields = ["nakazeni-analyze", "ockovani-analyze", "umrti-analyze", "testovani-analyze"];
 const covid_start = new Date("03/01/2020");
 const covid_start_string = "03/01/2020";
 const vaccination_start = new Date("12/27/2020");
@@ -82,6 +82,13 @@ function loadPageComponents() {
     element_css_purple = document.getElementById("material_css_purple");
     element_css_gray = document.getElementById("material_css_gray");
     element_nouislider = document.getElementById('values-slider');
+    topbar_ripple = document.getElementById('ripple_effect');
+    element_map_opacity_text = document.getElementById('map_opacity_text');
+    element_district_opacity_text = document.getElementById('district_opacity_text');
+    element_district_stroke_text = document.getElementById('district_stroke_opacity_text');
+    element_scale_rectangle = document.getElementById('scale_rectangle');
+    element_scale_min = document.getElementById('scale_min');
+    element_scale_max = document.getElementById('scale_max');
 }
 
 // Handle window resizing
@@ -124,10 +131,12 @@ function initPage() {
             layer_district[i].setAttribute("stroke-width", 0.7);
             layer_district[i].setAttribute("name", okresy_names[i][1]);
             layer_district[i].setAttribute("okres_lau", okresy_names[i][0]);
-            layer_district[i].addEventListener('click', function () {
-                onClickMap(this.getAttribute('name'), this.getAttribute('okres_lau'), this);
-                current_district_clicked_object = i;
-            });
+            layer_district[i].addEventListener('click', function () 
+                {
+                    onClickMap(this.getAttribute('name'), this.getAttribute('okres_lau'), this);
+                    current_district_clicked_object = i;
+                }
+            );
         }
 
         // Other settings
@@ -177,10 +186,12 @@ function initPIP() {
             layer_district[i].setAttribute("stroke-width", 0.7);
             layer_district[i].setAttribute("name", okresy_names[i][1]);
             layer_district[i].setAttribute("okres_lau", okresy_names[i][0]);
-            layer_district[i].addEventListener('click', function () {
-                onClickMap(this.getAttribute('name'), this.getAttribute('okres_lau'), this);
-                current_district_clicked_object = i;
-            });
+            layer_district[i].addEventListener('click', function () 
+                {
+                    onClickMap(this.getAttribute('name'), this.getAttribute('okres_lau'), this);
+                    current_district_clicked_object = i;
+                }
+            );
         }
     }
     catch (err_inner) {
@@ -301,7 +312,7 @@ async function onClickMap(name, okres_lau, object) {
         popup_row_1_cell_1.innerHTML = name;
         popup_row_2_cell_2.innerHTML = okres_lau;
         popup_row_3_cell_2.innerHTML = " ";
-        popup_row_4_cell_2.innerHTML = okresy_pocet_obyvatel[okres_lau].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        popup_row_4_cell_2.innerHTML = numberWithCommas(okresy_pocet_obyvatel[okres_lau]);
 
         // Add elements into popup
         popup_row_1.appendChild(popup_row_1_cell_1);
@@ -395,19 +406,16 @@ function changeAnimationSpeed(value) {
 }
 
 // Add comma separator into number
-// inspired by: https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
 function numberWithCommas(x) {
-    if (x != null)
-        return Math.round(parseFloat(x)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    else
-        return 0;
+    var num = parseFloat(x);
+    var roundedNum = Math.round(num);
+    return roundedNum.toLocaleString("en-US");
 }
 
 // Function to add days to given date
 function addDays(date, days) {
     var ms = new Date(date).getTime() + (86400000 * days);
-    var result = new Date(ms);
-    return result;
+    return new Date(ms);
 }
 
 // Helper function to calculate color into hex value
@@ -464,20 +472,9 @@ function updatePage() {
         }
 
         // Init needed variables
-        var okres_value;
-        var okres_value_PIP;
-        var maximum_day;
-        var maximum_day_PIP;
-        var selected_date = new Date();
-        var value_name;
-        var value_name_second;
-        var max_value_name;
-        var min_value_name;
-        var value_name_PIP;
-        var max_value_name_PIP;
-        var skip_normal_map;
-        var skip_pip_map;
+        var okres_value, okres_value_PIP, maximum_day, maximum_day_PIP, value_name, value_name_second, max_value_name, min_value_name, value_name_PIP, max_value_name_PIP, skip_normal_map, skip_pip_map;
         var selected_100 = false;
+        var selected_date = new Date();
 
         // Get main slider starting date
         switch (current_time_window_fragment) {
@@ -540,10 +537,10 @@ function updatePage() {
         }
 
         // Map district updating - go through all districts
-        var parent = element_iframe.contentWindow.document.querySelector("g");
-        var children = parent.children;
-        var parent_pip = element_iframe_pip.contentWindow.document.querySelector("g");
-        var children_pip = parent_pip.children;
+        var layer = element_iframe.contentWindow.document.querySelector("g");
+        var districts = layer.children;
+        var layer_pip = element_iframe_pip.contentWindow.document.querySelector("g");
+        var districts_pip = layer_pip.children;
 
         // Get needed keys according to current settings - from data_analysis_types.js
         if (current_100k_recalculation) {
@@ -580,7 +577,7 @@ function updatePage() {
             skip_pip_map = false;
 
             // Get district LAU code
-            var okres_lau = children[i].getAttribute('okres_lau');
+            var okres_lau = districts[i].getAttribute('okres_lau');
 
             // Get needed values that are required for later computations and set some texts on page according to selected data
             if (current_max_recalculation) {
@@ -656,17 +653,17 @@ function updatePage() {
             }
 
             // Draw scale rectangle
-            document.getElementById("scale_rectangle").style.background = "linear-gradient(90deg, rgba(" + color2[0] + "," + color2[1] + "," + color2[2] + ",1) 0%, rgba(" + color1[0] + "," + color1[1] + "," + color1[2] + ",1) 100%)";
-            document.getElementById("scale_min").innerHTML = numberWithCommas(0);
-            document.getElementById("scale_max").innerHTML = numberWithCommas(maximum_day);
+            element_scale_rectangle.style.background = "linear-gradient(90deg, rgba(" + color2[0] + "," + color2[1] + "," + color2[2] + ",1) 0%, rgba(" + color1[0] + "," + color1[1] + "," + color1[2] + ",1) 100%)";
+            element_scale_min.innerHTML = "0";
+            element_scale_max.innerHTML = numberWithCommas(maximum_day);
 
             // Set white color if value is zero
             if (maximum_day == 0) {
-                children[i].setAttribute("fill", "#FFFFFF");
+                districts[i].setAttribute("fill", "#FFFFFF");
                 skip_normal_map = true;
             }
             if (maximum_day_PIP == 0) {
-                children_pip[i].setAttribute("fill", "#FFFFFF");
+                districts_pip[i].setAttribute("fill", "#FFFFFF");
                 skip_pip_map = true;
             }
 
@@ -674,22 +671,26 @@ function updatePage() {
             if (!skip_pip_map) {
                 var percentage_pip = (okres_value_PIP) / maximum_day_PIP;
                 var inverted_percentage_pip = 1 - percentage_pip;
-                var rgb_PIP = [Math.round(color1_PIP[0] * percentage_pip + color2_PIP[0] * inverted_percentage_pip),
-                Math.round(color1_PIP[1] * percentage_pip + color2_PIP[1] * inverted_percentage_pip),
-                Math.round(color1_PIP[2] * percentage_pip + color2_PIP[2] * inverted_percentage_pip)];
+                var rgb_PIP = [
+                    Math.round(color1_PIP[0] * percentage_pip + color2_PIP[0] * inverted_percentage_pip),
+                    Math.round(color1_PIP[1] * percentage_pip + color2_PIP[1] * inverted_percentage_pip),
+                    Math.round(color1_PIP[2] * percentage_pip + color2_PIP[2] * inverted_percentage_pip)
+                ];
                 var color_string_PIP = "#" + colorToHexValue(rgb_PIP[0]) + colorToHexValue(rgb_PIP[1]) + colorToHexValue(rgb_PIP[2]);
-                children_pip[i].setAttribute("fill", color_string_PIP);
+                districts_pip[i].setAttribute("fill", color_string_PIP);
             }
 
             // Calculate and set color to districts
             if (!skip_normal_map) {
                 var percentage = (okres_value) / maximum_day;
                 var inverted_percentage = 1 - percentage;
-                var rgb = [Math.round(color1[0] * percentage + color2[0] * inverted_percentage),
-                Math.round(color1[1] * percentage + color2[1] * inverted_percentage),
-                Math.round(color1[2] * percentage + color2[2] * inverted_percentage)];
+                var rgb = [
+                    Math.round(color1[0] * percentage + color2[0] * inverted_percentage),
+                    Math.round(color1[1] * percentage + color2[1] * inverted_percentage),
+                    Math.round(color1[2] * percentage + color2[2] * inverted_percentage)
+                ];
                 var color_string = "#" + colorToHexValue(rgb[0]) + colorToHexValue(rgb[1]) + colorToHexValue(rgb[2]);
-                children[i].setAttribute("fill", color_string);
+                districts[i].setAttribute("fill", color_string);
             }
         }
 
@@ -1603,7 +1604,7 @@ function generateWeeksMonths() {
     var current = covid_start_week, today = new Date();
     today.setHours(0, 0, 0, 0);
     while (true) {
-        if (today.getTime() <= current.getTime())
+        if ((today.getTime() - current.getTime()) <= 604800000)
             break;
         var text = getFormattedDate(current);
         covid_start_weeks.push(text);
@@ -1613,7 +1614,7 @@ function generateWeeksMonths() {
     // Generate months
     current = covid_start_month;
     while (true) {
-        if (today.getTime() <= current.getTime())
+        if ((today.getTime() - current.getTime()) <= 604800000)
             break;
         var text = getFormattedDate(current);
         covid_start_months.push(text);
@@ -1643,34 +1644,32 @@ function createError() {
 
 // Show new error toast
 function newErrorToast(text) {
-    'use strict';
-    var snackbarContainer = document.querySelector('#error-toast-example');
+    var element_toast = document.querySelector('#error_toast');
+    element_toast.MaterialSnackbar.queuedNotifications_ = [];
     var data = { message: "Internal error: " + text, timeout: 5000 };
-    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+    element_toast.MaterialSnackbar.showSnackbar(data);
 }
 
 // Show new toast
 function newToast(text) {
-    'use strict';
-    var snackbarContainer = document.querySelector('#demo-toast-example');
-    snackbarContainer.MaterialSnackbar.queuedNotifications_ = [];
+    var element_toast = document.querySelector('#toast');
+    element_toast.MaterialSnackbar.queuedNotifications_ = [];
     var data = { message: text, timeout: 2500 };
-    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+    element_toast.MaterialSnackbar.showSnackbar(data);
 }
 
 // Show new toast
 function newToast(text, length) {
-    'use strict';
-    var snackbarContainer = document.querySelector('#demo-toast-example');
-    snackbarContainer.MaterialSnackbar.queuedNotifications_ = [];
+    var element_toast = document.querySelector('#toast');
+    element_toast.MaterialSnackbar.queuedNotifications_ = [];
     var data = { message: text, timeout: length };
-    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+    element_toast.MaterialSnackbar.showSnackbar(data);
 }
 
 // Set map opacity
 function setMapOpacity() {
-    const collection = element_iframe.contentWindow.document.getElementsByClassName("leaflet-tile-pane");
-    collection[0].style.opacity = 0.6;
+    var layer = element_iframe.contentWindow.document.getElementsByClassName("leaflet-tile-pane");
+    layer[0].style.opacity = 0.6;
 }
 
 // Decrease map opacity
@@ -1679,8 +1678,7 @@ function decreaseMapOpacity() {
         return;
     }
     current_map_opacity -= 0.1;
-    var x = document.getElementById("map_opacity_text");
-    x.innerHTML = (current_map_opacity * 100).toFixed(0) + "%";
+    element_map_opacity_text.innerHTML = (current_map_opacity * 100).toFixed(0) + "%";
     var tiles_layer = element_iframe.contentWindow.document.getElementsByClassName("leaflet-tile-pane")[0];
     tiles_layer.style.opacity = current_map_opacity;
     localStorage.setItem("maptransparency", current_map_opacity);
@@ -1692,38 +1690,38 @@ function increaseMapOpacity() {
         return;
     }
     current_map_opacity += 0.1;
-    var x = document.getElementById("map_opacity_text");
-    x.innerHTML = (current_map_opacity * 100).toFixed(0) + "%";
+    element_map_opacity_text.innerHTML = (current_map_opacity * 100).toFixed(0) + "%";
     var tiles_layer = element_iframe.contentWindow.document.getElementsByClassName("leaflet-tile-pane")[0];
     tiles_layer.style.opacity = current_map_opacity;
     localStorage.setItem("maptransparency", current_map_opacity);
 }
 
 // Create ripple effect on element
-// inspired by: https://css-tricks.com/how-to-recreate-the-ripple-effect-of-material-design-buttons/
 function createRipple(ripple_type, element_id) {
-    const button = document.getElementById("ripple_effect");
 
+    // Get element and dimensions
     var element = document.getElementById(element_id);
-    var element_dims = element.getBoundingClientRect();
+    var element_dimensions = element.getBoundingClientRect();
 
-    const circle = document.createElement("span");
-    const diameter = Math.max(button.clientWidth, button.clientHeight);
-    const radius = diameter / 2;
+    // Create circle
+    var ripple_circle = document.createElement("span");
+    var radius = topbar_ripple.clientWidth / 2;
+    ripple_circle.style.width = ripple_circle.style.height = topbar_ripple.clientWidth + "px";
+    ripple_circle.style.left = element_dimensions.x + 40 - topbar_ripple.offsetLeft - radius + "px";
+    ripple_circle.style.top = element_dimensions.y + 23 - topbar_ripple.offsetTop - radius + "px";
 
-    circle.style.width = circle.style.height = `${diameter}px`;
-    circle.style.left = `${element_dims.x + 40 - button.offsetLeft - radius}px`;
-    circle.style.top = `${element_dims.y + 23 - button.offsetTop - radius}px`;
-    circle.style.zIndex = 1;
-    circle.classList.add(ripple_type);
+    // Add given color
+    ripple_circle.classList.add("ripple_base");
+    ripple_circle.classList.add(ripple_type);
 
-    const ripple = button.getElementsByClassName(ripple_type)[0];
-
+    // Remove old ripple
+    var ripple = topbar_ripple.getElementsByClassName("ripple_base")[0];
     if (ripple) {
         ripple.remove();
     }
 
-    button.appendChild(circle);
+    // Add new ripple
+    topbar_ripple.appendChild(ripple_circle);
 }
 
 // Increase district opacity
@@ -1732,8 +1730,7 @@ function increaseDistrictOpacity() {
         return;
     }
     current_district_opacity += 0.1;
-    var x = document.getElementById("district_opacity_text");
-    x.innerHTML = (current_district_opacity * 100).toFixed(0) + "%";
+    element_district_opacity_text.innerHTML = (current_district_opacity * 100).toFixed(0) + "%";
     refreshMap();
 }
 
@@ -1743,8 +1740,7 @@ function decreaseDistrictOpacity() {
         return;
     }
     current_district_opacity -= 0.1;
-    var x = document.getElementById("district_opacity_text");
-    x.innerHTML = (current_district_opacity * 100).toFixed(0) + "%";
+    element_district_opacity_text.innerHTML = (current_district_opacity * 100).toFixed(0) + "%";
     refreshMap();
 }
 
@@ -1754,8 +1750,7 @@ function increaseDistrictStrokeOpacity() {
         return;
     }
     current_district_stroke_opacity += 0.1;
-    var x = document.getElementById("district_stroke_opacity_text");
-    x.innerHTML = (current_district_stroke_opacity * 100).toFixed(0) + "%";
+    element_district_stroke_text.innerHTML = (current_district_stroke_opacity * 100).toFixed(0) + "%";
     refreshMap();
 }
 
@@ -1765,18 +1760,17 @@ function decreaseDistrictStrokeOpacity() {
         return;
     }
     current_district_stroke_opacity -= 0.1;
-    var x = document.getElementById("district_stroke_opacity_text");
-    x.innerHTML = (current_district_stroke_opacity * 100).toFixed(0) + "%";
+    element_district_stroke_text.innerHTML = (current_district_stroke_opacity * 100).toFixed(0) + "%";
     refreshMap();
 }
 
 // Helper function that refreshes map after theme switch
 function refreshMap() {
-    var parent = element_iframe.contentWindow.document.querySelector("g");
-    var children = parent.children;
+    var layer = element_iframe.contentWindow.document.querySelector("g");
+    var districts = layer.children;
     for (let i = 0; i < 77; i++) {
-        children[i].setAttribute("fill-opacity", current_district_opacity);
-        children[i].setAttribute("stroke-width", current_district_stroke_opacity);
+        districts[i].setAttribute("fill-opacity", current_district_opacity);
+        districts[i].setAttribute("stroke-width", current_district_stroke_opacity);
     }
 }
 
@@ -1788,10 +1782,10 @@ function toggleDarkMap() {
         if (current_dark_mode) {
 
             // PIP
-            var parent = element_iframe_pip.contentWindow.document.querySelector("g");
-            var children = parent.children;
+            var layer = element_iframe_pip.contentWindow.document.querySelector("g");
+            var districts = layer.children;
             for (let i = 0; i < 77; i++) {
-                children[i].setAttribute("fill-opacity", 1);
+                districts[i].setAttribute("fill-opacity", 1);
             }
 
             // Switches
@@ -1959,10 +1953,10 @@ function toggleDarkMap() {
         else {
 
             // PIP
-            var parent = element_iframe_pip.contentWindow.document.querySelector("g");
-            var children = parent.children;
+            var layer = element_iframe_pip.contentWindow.document.querySelector("g");
+            var districts = layer.children;
             for (let i = 0; i < 77; i++) {
-                children[i].setAttribute("fill-opacity", 0.7);
+                districts[i].setAttribute("fill-opacity", 0.7);
             }
 
             // Switches
@@ -2134,11 +2128,6 @@ function toggleDarkMap() {
             console.log(err_inner);
         }
     }
-}
-
-// ???
-function showEasterEgg() {
-
 }
 
 // Dropdown menu handler
