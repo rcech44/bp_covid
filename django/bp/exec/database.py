@@ -10,10 +10,10 @@ class SQLiteConnector:
         if cls._instance is None:
             try:
                 cls._instance = super().__new__(cls)
-                conn = sqlite3.connect('sql/database.sqlite', check_same_thread=False)
-                cls.__conn = conn
-                cls.__cursor = cls.__conn.cursor()
-                cls.__conn.execute("PRAGMA read_committed = true;");
+                sqlite3.connect('sql/database.sqlite', check_same_thread=False)
+                cls._instance.__conn = sqlite3.connect('sql/database.sqlite', check_same_thread=False)
+                cls._instance.__cursor = cls._instance.__conn.cursor()
+                cls._instance.__conn.execute("PRAGMA read_committed = true;");
             except sqlite3.Error as e:
                 print(f"Error connecting to database: {e}")
                 return None

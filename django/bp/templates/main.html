@@ -22,6 +22,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-metro.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-flat.css">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script type="text/javascript" src="{% static 'data_analysis_types.js' %}" charset="utf-8"></script>
     <script type="text/javascript" src="{% static 'okresy_data.js' %}" charset="utf-8"></script>
@@ -62,13 +63,11 @@
         <button class="mdl-snackbar__action" type="button"></button>
     </div>
 
-    <div id="dpi" style="height: 1in; width: 1in; left: 100%; position: fixed; top: 100%;"></div>
-
     <!-- Welcome window -->
     <div id="splashscreen"
         style="position:absolute;top:0;left:0;bottom:0;width:100%;z-index: 99;height:100%;background-color:rgba(0, 0, 0, 0.686);backdrop-filter: blur(20px);">
         <div class="w3-card w3-round-large" id="splashscreen_content"
-            style="position: fixed;top: 50%;left: 50%;-webkit-transform: translate(-50%, -50%);transform: translate(-50%, -50%);opacity: 1;background-color: white;max-width: 800px;">
+            style="position: fixed;top: 50%;left: 50%;-webkit-transform: translate(-50%, -50%);transform: translate(-50%, -50%);opacity: 1;background-color: white;max-width: 1200dpx;">
             <div style="margin:20px;">
                 <img src="{% static 'pictures/vsb_long_katedra.png' %}"
                     style="display: block;margin-left: auto;margin-right: auto;width: 60%">
@@ -401,7 +400,7 @@
                                                 <td style="width:20%">
                                                     <button
                                                     class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect"
-                                                    onclick="decreaseMapOpacity()"><i class="material-icons">remove</i></button>
+                                                    onclick="changeMapOpacity(-0.1)"><i class="material-icons">remove</i></button>
                                                 </td>
                                                 <td style="width:60%;text-align:center">
                                                     <span id="map_opacity_text" style="width:100%">60%
@@ -410,7 +409,7 @@
                                                 <td style="width:20%">
                                                     <button
                                                     class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect"
-                                                    onclick="increaseMapOpacity()"><i class="material-icons">add</i></button>
+                                                    onclick="changeMapOpacity(0.1)"><i class="material-icons">add</i></button>
                                                 </td>
                                             </tr>
                                         </table>
@@ -426,7 +425,7 @@
                                                 <td style="width:20%">
                                                     <button
                                                     class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect"
-                                                    onclick="decreaseDistrictOpacity()"><i class="material-icons">remove</i></button>
+                                                    onclick="changeDistrictOpacity(-0.1)"><i class="material-icons">remove</i></button>
                                                 </td>
                                                 <td style="width:60%;text-align:center">
                                                     <span id="district_opacity_text" style="width:100%">70%
@@ -435,7 +434,7 @@
                                                 <td style="width:20%">
                                                     <button
                                                     class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect"
-                                                    onclick="increaseDistrictOpacity()"><i class="material-icons">add</i></button>
+                                                    onclick="changeDistrictOpacity(0.1)"><i class="material-icons">add</i></button>
                                                 </td>
                                             </tr>
                                         </table>
@@ -451,7 +450,7 @@
                                                 <td style="width:20%">
                                                     <button
                                                     class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect"
-                                                    onclick="decreaseDistrictStrokeOpacity()"><i class="material-icons">remove</i></button>
+                                                    onclick="changeDistrictStrokeOpacity(-0.1)"><i class="material-icons">remove</i></button>
                                                 </td>
                                                 <td style="width:60%;text-align:center">
                                                     <span id="district_stroke_opacity_text" style="width:100%">70%
@@ -460,7 +459,7 @@
                                                 <td style="width:20%">
                                                     <button
                                                     class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect"
-                                                    onclick="increaseDistrictStrokeOpacity()"><i class="material-icons">add</i></button>
+                                                    onclick="changeDistrictStrokeOpacity(0.1)"><i class="material-icons">add</i></button>
                                                 </td>
                                             </tr>
                                         </table>

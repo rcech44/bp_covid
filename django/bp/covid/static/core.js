@@ -28,6 +28,7 @@ var map_enabled = false;
 var covid_start_weeks = [];
 var covid_start_months = [];
 var page_initialized = false;
+var showed_ui_resize_message = false;
 var main_slider_range_max = (new Date().getTime() - covid_start.getTime()) / (1000 * 3600 * 24);
 
 // Map settings
@@ -89,12 +90,18 @@ function loadPageComponents() {
     element_scale_rectangle = document.getElementById('scale_rectangle');
     element_scale_min = document.getElementById('scale_min');
     element_scale_max = document.getElementById('scale_max');
+
 }
 
 // Handle window resizing
 function onResize() {
     if (window.innerWidth <= 1150) {
         element_map_title.style.display = "none";
+        if (!showed_ui_resize_message)
+        {
+            showed_ui_resize_message = true;
+            newToast("Na malých obrazovkách je doporučeno zmenšit škálování uživatelského prostředí", 4000);
+        }
     }
     else {
         element_map_title.style.display = "";
@@ -140,7 +147,7 @@ function initPage() {
         }
 
         // Other settings
-        setMapOpacity();
+        setInitialMapOpacity();
         document.getElementById("button-hide-splash").disabled = false;
         document.getElementById("button-hide-splash").innerHTML = "Přejít k aplikaci";
         element_iframe.contentWindow.document.getElementsByClassName("leaflet-popup-pane")[0].hidden = "true";
@@ -1667,33 +1674,49 @@ function newToast(text, length) {
 }
 
 // Set map opacity
-function setMapOpacity() {
+function setInitialMapOpacity() {
     var layer = element_iframe.contentWindow.document.getElementsByClassName("leaflet-tile-pane");
     layer[0].style.opacity = 0.6;
 }
 
-// Decrease map opacity
-function decreaseMapOpacity() {
-    if (current_map_opacity < 0.1) {
-        return;
-    }
-    current_map_opacity -= 0.1;
+// Change map opacity by value
+function changeMapOpacity(value) {
+
+    // Check if value is too small or big
+    if ((current_map_opacity + value) < 0 || (current_map_opacity + value) > 1) return;
+    current_map_opacity += value;
+
+    // Apply and refresh
     element_map_opacity_text.innerHTML = (current_map_opacity * 100).toFixed(0) + "%";
     var tiles_layer = element_iframe.contentWindow.document.getElementsByClassName("leaflet-tile-pane")[0];
     tiles_layer.style.opacity = current_map_opacity;
+
+    // Save value into local storage
     localStorage.setItem("maptransparency", current_map_opacity);
 }
 
-// Increase map opacity
-function increaseMapOpacity() {
-    if (current_map_opacity > 0.9) {
-        return;
-    }
-    current_map_opacity += 0.1;
-    element_map_opacity_text.innerHTML = (current_map_opacity * 100).toFixed(0) + "%";
-    var tiles_layer = element_iframe.contentWindow.document.getElementsByClassName("leaflet-tile-pane")[0];
-    tiles_layer.style.opacity = current_map_opacity;
-    localStorage.setItem("maptransparency", current_map_opacity);
+// Change district opacity by value
+function changeDistrictOpacity(value) {
+
+    // Check if value is too small or big
+    if ((current_district_opacity + value) < 0 || (current_district_opacity + value) > 1) return;
+    current_district_opacity += value;
+
+    // Apply and refresh
+    element_district_opacity_text.innerHTML = (current_district_opacity * 100).toFixed(0) + "%";
+    refreshMap();
+}
+
+// Change district stroke by value
+function changeDistrictStrokeOpacity(value) {
+
+    // Check if value is too small or big
+    if ((current_district_stroke_opacity + value) < 0 || (current_district_stroke_opacity + value) > 1) return;
+    current_district_stroke_opacity += value;
+
+    // Apply and refresh
+    element_district_stroke_text.innerHTML = (current_district_stroke_opacity * 100).toFixed(0) + "%";
+    refreshMap();
 }
 
 // Create ripple effect on element
@@ -1722,46 +1745,6 @@ function createRipple(ripple_type, element_id) {
 
     // Add new ripple
     topbar_ripple.appendChild(ripple_circle);
-}
-
-// Increase district opacity
-function increaseDistrictOpacity() {
-    if (current_district_opacity > 0.9) {
-        return;
-    }
-    current_district_opacity += 0.1;
-    element_district_opacity_text.innerHTML = (current_district_opacity * 100).toFixed(0) + "%";
-    refreshMap();
-}
-
-// Decrease district opacity
-function decreaseDistrictOpacity() {
-    if (current_district_opacity < 0.1) {
-        return;
-    }
-    current_district_opacity -= 0.1;
-    element_district_opacity_text.innerHTML = (current_district_opacity * 100).toFixed(0) + "%";
-    refreshMap();
-}
-
-// Increase district stroke opacity
-function increaseDistrictStrokeOpacity() {
-    if (current_district_stroke_opacity > 0.9) {
-        return;
-    }
-    current_district_stroke_opacity += 0.1;
-    element_district_stroke_text.innerHTML = (current_district_stroke_opacity * 100).toFixed(0) + "%";
-    refreshMap();
-}
-
-// Decrease district stroke opacity
-function decreaseDistrictStrokeOpacity() {
-    if (current_district_stroke_opacity < 0.1) {
-        return;
-    }
-    current_district_stroke_opacity -= 0.1;
-    element_district_stroke_text.innerHTML = (current_district_stroke_opacity * 100).toFixed(0) + "%";
-    refreshMap();
 }
 
 // Helper function that refreshes map after theme switch
