@@ -9,7 +9,7 @@ from exec.cache import *
 loaded_cache = False
 
 def main(request):
-    update_data()
+    Updater.update_data()
     return render(request, 'main.html', {'data_covid': {}})
 
 def map(request):
@@ -22,20 +22,20 @@ def root(request):
     return redirect('main')
 
 def api_range_days(request, range_from, range_to):
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    x_forwarded_for_header = request.META.get('HTTP_X_FORWARDED_FOR')
 
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
+    if x_forwarded_for_header:
+        ip = x_forwarded_for_header.split(',')[0]
     else:
         ip = request.META.get('REMOTE_ADDR')
 
-    # if ip_allow_request(ip) == False:
+    # if ClientAPI.allow_request(ip) == False:
     #     print(f"[REQUEST-API] Declined incoming request from {ip}")
     #     # Return 429 - Too many requests
     #     return HttpResponse({}, status=429)
     
     print(f"[REQUEST-API] Accepted incoming request from {ip}")
-    data = getData(range_from, range_to)
+    data = ClientAPI.get_data(range_from, range_to)
     if data == "error":
         return HttpResponse({}, status=400)
     return JsonResponse(data)

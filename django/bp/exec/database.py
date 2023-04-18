@@ -1,6 +1,6 @@
 import sqlite3
 
-class SQLiteConnector:
+class SQLiteDatabase:
     _instance = None
 
     def __init__(self):

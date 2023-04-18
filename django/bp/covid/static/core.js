@@ -30,6 +30,7 @@ var covid_start_months = [];
 var page_initialized = false;
 var showed_ui_resize_message = false;
 var main_slider_range_max = (new Date().getTime() - covid_start.getTime()) / (1000 * 3600 * 24);
+var page_initialized = false;
 
 // Map settings
 var current_district_clicked = "";
@@ -97,7 +98,7 @@ function loadPageComponents() {
 function onResize() {
     if (window.innerWidth <= 1150) {
         element_map_title.style.display = "none";
-        if (!showed_ui_resize_message)
+        if (!showed_ui_resize_message && page_initialized)
         {
             showed_ui_resize_message = true;
             newToast("Na malých obrazovkách je doporučeno zmenšit škálování uživatelského prostředí", 4000);
@@ -155,6 +156,7 @@ function initPage() {
             function(){
                 $('#splashscreen_before').fadeOut(500);
                 loadDarkModeFromLocalStorage();
+                page_initialized = true;
             }, 500
         );
     }
