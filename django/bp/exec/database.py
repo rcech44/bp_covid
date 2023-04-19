@@ -29,8 +29,8 @@ class SQLiteDatabase:
                 [
                     record['date'],
                     record['district'],
-                    record['nove_pripady'],
-                    record['aktivni_pripady'],
+                    record['infections_new'],
+                    record['infections_active'],
                     record['nove_pripady_7'],
                     record['nove_pripady_14'],
                     record['nove_pripady_65_vek'],

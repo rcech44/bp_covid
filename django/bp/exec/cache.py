@@ -49,7 +49,7 @@ class Cache:
         result_values = result.values()
 
         # Maximum - infections
-        max_values['max_nove_pripady'] =                        max(float(d['max_nove']) for d in result_values)
+        max_values['infections_new_max_total'] =                        max(float(d['infections_new_max']) for d in result_values)
         max_values['max_nove_pripady_sto_tisic'] =              max(float(d['max_nove_sto_tisic']) for d in result_values)
         max_values['max_nove_pripady_7'] =                      max(float(d['max_nove_7']) for d in result_values)
         max_values['max_nove_pripady_7_sto_tisic'] =            max(float(d['max_nove_7_sto_tisic']) for d in result_values)
@@ -141,22 +141,22 @@ class Cache:
                 # Download infections
                 ################################
 
-                self.__data['max_nove_pripady'] = self.__data['max_nove_pripady_sto_tisic'] = self.__data['max_aktivni_pripady'] = self.__data['max_aktivni_pripady_sto_tisic'] = 0
+                self.__data['infections_new_max_total'] = self.__data['max_nove_pripady_sto_tisic'] = self.__data['infections_active_max_total'] = self.__data['infections_active_100k_max_total'] = 0
 
                 for date in all_requested_dates:
                     response = db.get_records_day("infection", date)
                     self.__data[date]['celkem_pripady'] = celkem_pripady
-                    nove_pocet = self.__data[date]['max_nove'] = self.__data[date]['max_nove_sto_tisic'] = aktivni_pocet = self.__data[date]['max_aktivni'] = self.__data[date]['max_aktivni_sto_tisic'] = self.__data[date]['max_nove_7'] = self.__data[date]['max_nove_7_sto_tisic'] = self.__data[date]['max_nove_14'] = self.__data[date]['max_nove_14_sto_tisic'] = self.__data[date]['max_nove_65'] = self.__data[date]['max_nove_65_sto_tisic'] = 0
+                    nove_pocet = self.__data[date]['infections_new_max'] = self.__data[date]['max_nove_sto_tisic'] = aktivni_pocet = self.__data[date]['infections_active_max'] = self.__data[date]['infections_active_100k_max'] = self.__data[date]['max_nove_7'] = self.__data[date]['max_nove_7_sto_tisic'] = self.__data[date]['max_nove_14'] = self.__data[date]['max_nove_14_sto_tisic'] = self.__data[date]['max_nove_65'] = self.__data[date]['max_nove_65_sto_tisic'] = 0
                     for okres in response:
                         if okres[2] is not None:
                             self.__data[date][okres[2]] = {}
-                            self.__data[date][okres[2]]['nove_pripady'] = okres[3]
-                            self.__data[date][okres[2]]['aktivni_pripady'] = okres[4]
+                            self.__data[date][okres[2]]['infections_new'] = okres[3]
+                            self.__data[date][okres[2]]['infections_active'] = okres[4]
                             self.__data[date][okres[2]]['nove_pripady_7'] = okres[5]
                             self.__data[date][okres[2]]['nove_pripady_14'] = okres[6]
                             self.__data[date][okres[2]]['nove_pripady_65'] = okres[7]
                             self.__data[date][okres[2]]['nove_pripady_sto_tisic'] = okres[3] / (self._population[okres[2]] / 100000)
-                            self.__data[date][okres[2]]['aktivni_pripady_sto_tisic'] = okres[4] / (self._population[okres[2]] / 100000)
+                            self.__data[date][okres[2]]['infections_active_100k'] = okres[4] / (self._population[okres[2]] / 100000)
                             self.__data[date][okres[2]]['nove_pripady_7_sto_tisic'] = okres[5] / (self._population[okres[2]] / 100000)
                             self.__data[date][okres[2]]['nove_pripady_14_sto_tisic'] = okres[6] / (self._population[okres[2]] / 100000)
                             self.__data[date][okres[2]]['nove_pripady_65_sto_tisic'] = okres[7] / (self._population[okres[2]] / 100000)
@@ -164,20 +164,20 @@ class Cache:
                             nove_pocet += okres[3]
                             aktivni_pocet += okres[4]
 
-                            self.__data[date]['max_nove'] =                 max(self.__data[date]['max_nove'], self.__data[date][okres[2]]['nove_pripady'])
+                            self.__data[date]['infections_new_max'] =                 max(self.__data[date]['infections_new_max'], self.__data[date][okres[2]]['infections_new'])
                             self.__data[date]['max_nove_sto_tisic'] =       max(self.__data[date]['max_nove_sto_tisic'], self.__data[date][okres[2]]['nove_pripady_sto_tisic'])
-                            self.__data[date]['max_aktivni'] =              max(self.__data[date]['max_aktivni'], self.__data[date][okres[2]]['aktivni_pripady'])
-                            self.__data[date]['max_aktivni_sto_tisic'] =    max(self.__data[date]['max_aktivni_sto_tisic'], self.__data[date][okres[2]]['aktivni_pripady_sto_tisic'])
+                            self.__data[date]['infections_active_max'] =              max(self.__data[date]['infections_active_max'], self.__data[date][okres[2]]['infections_active'])
+                            self.__data[date]['infections_active_100k_max'] =    max(self.__data[date]['infections_active_100k_max'], self.__data[date][okres[2]]['infections_active_100k'])
                             self.__data[date]['max_nove_7'] =               max(self.__data[date]['max_nove_7'], self.__data[date][okres[2]]['nove_pripady_7'])
                             self.__data[date]['max_nove_14'] =              max(self.__data[date]['max_nove_14'], self.__data[date][okres[2]]['nove_pripady_14'])
                             self.__data[date]['max_nove_65'] =              max(self.__data[date]['max_nove_65'], self.__data[date][okres[2]]['nove_pripady_65'])
                             self.__data[date]['max_nove_7_sto_tisic'] =     max(self.__data[date]['max_nove_7_sto_tisic'], self.__data[date][okres[2]]['nove_pripady_7_sto_tisic'])
                             self.__data[date]['max_nove_14_sto_tisic'] =    max(self.__data[date]['max_nove_14_sto_tisic'], self.__data[date][okres[2]]['nove_pripady_14_sto_tisic'])
                             self.__data[date]['max_nove_65_sto_tisic'] =    max(self.__data[date]['max_nove_65_sto_tisic'], self.__data[date][okres[2]]['nove_pripady_65_sto_tisic'])
-                            self.__data['max_nove_pripady'] =               max(self.__data['max_nove_pripady'], self.__data[date][okres[2]]['nove_pripady'])
+                            self.__data['infections_new_max_total'] =               max(self.__data['infections_new_max_total'], self.__data[date][okres[2]]['infections_new'])
                             self.__data['max_nove_pripady_sto_tisic'] =     max(self.__data['max_nove_pripady_sto_tisic'], self.__data[date][okres[2]]['nove_pripady_sto_tisic'])
-                            self.__data['max_aktivni_pripady'] =            max(self.__data['max_aktivni_pripady'], self.__data[date][okres[2]]['aktivni_pripady'])
-                            self.__data['max_aktivni_pripady_sto_tisic'] =  max(self.__data['max_aktivni_pripady_sto_tisic'], self.__data[date][okres[2]]['aktivni_pripady_sto_tisic'])
+                            self.__data['infections_active_max_total'] =            max(self.__data['infections_active_max_total'], self.__data[date][okres[2]]['infections_active'])
+                            self.__data['infections_active_100k_max_total'] =  max(self.__data['infections_active_100k_max_total'], self.__data[date][okres[2]]['infections_active_100k'])
                         else:
                             nove_pocet += okres[3] 
 

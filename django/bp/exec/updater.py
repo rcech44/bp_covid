@@ -77,16 +77,16 @@ class Updater:
                             # Initialize districts dictionary
                             for district in infections_day_results:
                                 infections_day_results[district] = {}
-                                infections_day_results[district]['nove_pripady'] = 0
-                                infections_day_results[district]['aktivni_pripady'] = 0
+                                infections_day_results[district]['infections_new'] = 0
+                                infections_day_results[district]['infections_active'] = 0
                                 infections_day_results[district]['nove_pripady_7'] = 0
                                 infections_day_results[district]['nove_pripady_14'] = 0
                                 infections_day_results[district]['nove_pripady_65_vek'] = 0
 
                             # Initialize empty district
                             infections_day_results["none"] = {}
-                            infections_day_results["none"]['nove_pripady'] = 0
-                            infections_day_results["none"]['aktivni_pripady'] = 0
+                            infections_day_results["none"]['infections_new'] = 0
+                            infections_day_results["none"]['infections_active'] = 0
                             infections_day_results["none"]['nove_pripady_7'] = 0
                             infections_day_results["none"]['nove_pripady_14'] = 0
                             infections_day_results["none"]['nove_pripady_65_vek'] = 0
@@ -94,8 +94,8 @@ class Updater:
                             # Go through all districts for day
                             for town in towns:
                                 town_name = town['okres_lau_kod'] if town['okres_lau_kod'] != None else "none"
-                                infections_day_results[town_name]['nove_pripady'] += town['nove_pripady']
-                                infections_day_results[town_name]['aktivni_pripady'] += town['aktivni_pripady']
+                                infections_day_results[town_name]['infections_new'] += town['nove_pripady']
+                                infections_day_results[town_name]['infections_active'] += town['aktivni_pripady']
                                 infections_day_results[town_name]['nove_pripady_7'] += town['nove_pripady_7_dni']
                                 infections_day_results[town_name]['nove_pripady_14'] += town['nove_pripady_14_dni']
                                 infections_day_results[town_name]['nove_pripady_65_vek'] += town['nove_pripady_65']
@@ -110,8 +110,8 @@ class Updater:
                                 day_result = {
                                     "date": update_date,
                                     "district": district_name,
-                                    "nove_pripady": infections_day_results[district]['nove_pripady'],
-                                    "aktivni_pripady": infections_day_results[district]['aktivni_pripady'],
+                                    "infections_new": infections_day_results[district]['infections_new'],
+                                    "infections_active": infections_day_results[district]['infections_active'],
                                     "nove_pripady_7": infections_day_results[district]['nove_pripady_7'],
                                     "nove_pripady_14": infections_day_results[district]['nove_pripady_14'],
                                     "nove_pripady_65_vek": infections_day_results[district]['nove_pripady_65_vek'],

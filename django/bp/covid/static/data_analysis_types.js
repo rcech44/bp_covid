@@ -3,23 +3,23 @@
 data_analysis_types = {
     "Současně nakažení":
     {
-        value: "aktivni_pripady",
-        max_value: "max_aktivni",
+        value: "infections_active",
+        max_value: "infections_active_max",
         min_value: "min_aktivni",
-        max_range: 'max_aktivni_pripady',
+        max_range: 'infections_active_max_total',
         text: "Současný počet nakažených",
-        value_100: "aktivni_pripady_sto_tisic",
-        max_value_100: "max_aktivni_sto_tisic",
-        min_value_100: "min_aktivni_sto_tisic",
-        max_range_100: 'max_aktivni_pripady_sto_tisic',
+        value_100: "infections_active_100k",
+        max_value_100: "infections_active_100k_max",
+        min_value_100: "infections_active_100k_min",
+        max_range_100: 'infections_active_100k_max_total',
         text_100: "Současný počet nakažených na 100 tisíc obyvatel"
     },
     "Nové případy":
     {
-        value: "nove_pripady",
-        max_value: "max_nove",
+        value: "infections_new",
+        max_value: "infections_new_max",
         min_value: "min_nove",
-        max_range: 'max_nove_pripady',
+        max_range: 'infections_new_max_total',
         text: "Počet nově nakažených",
         value_100: "nove_pripady_sto_tisic",
         max_value_100: "max_nove_sto_tisic",
