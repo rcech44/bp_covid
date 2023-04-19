@@ -31,9 +31,9 @@ class SQLiteDatabase:
                     record['district'],
                     record['infections_new'],
                     record['infections_active'],
-                    record['nove_pripady_7'],
-                    record['nove_pripady_14'],
-                    record['nove_pripady_65_vek'],
+                    record['infections_new_7'],
+                    record['infections_new_14'],
+                    record['infections_new_65_age'],
                 ])
                 # self.commit()
             if type == "death":
@@ -41,8 +41,8 @@ class SQLiteDatabase:
                 [
                     record['date'],
                     record['district'],
-                    record['umrti_den'],
-                    record['umrti_doposud'],
+                    record['deaths_day'],
+                    record['deaths_alltime'],
                 ])
                 # self.commit()
             if type == "vaccination":
@@ -50,16 +50,16 @@ class SQLiteDatabase:
                 [
                     record['date'],
                     record['district'],
-                    record['davka_1_den'],
-                    record['davka_1_doposud'],
-                    record['davka_2_den'],
-                    record['davka_2_doposud'],
-                    record['davka_3_den'],
-                    record['davka_3_doposud'],
-                    record['davka_4_den'],
-                    record['davka_4_doposud'],
-                    record['davka_celkem_den'],
-                    record['davka_celkem_doposud'],
+                    record['vaccination_1_dose_day'],
+                    record['vaccination_1_dose_alltime'],
+                    record['vaccination_2_dose_day'],
+                    record['vaccination_2_dose_alltime'],
+                    record['vaccination_3_dose_day'],
+                    record['vaccination_3_dose_alltime'],
+                    record['vaccination_4_dose_day'],
+                    record['vaccination_4_dose_alltime'],
+                    record['vaccination_doses_day'],
+                    record['vaccination_doses_alltime'],
                 ])
                 # self.commit()
             if type == "pcr_test":
@@ -67,10 +67,10 @@ class SQLiteDatabase:
                 [
                     record['date'],
                     record['district'],
-                    record['prirustek'],
-                    record['celkem'],
-                    record['prirustek_korekce'],
-                    record['celkem_korekce']
+                    record['pcr_tests_day'],
+                    record['pcr_tests_alltime'],
+                    record['pcr_tests_day_correction'],
+                    record['pcr_tests_alltime_correction']
                     
                 ])
                 # self.commit()

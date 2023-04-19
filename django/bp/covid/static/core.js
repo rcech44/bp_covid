@@ -517,28 +517,28 @@ function updatePage() {
         element_window_warning.style.display = "none";
         switch (current_analysis) {
             case "nakazeni-analyze":
-                element_map_info_1.innerHTML = "<b>Nové případy za tento den:</b> " + numberWithCommas(covid_data[selected_date_text]['nove_celkovy_pocet']);
-                element_map_info_2.innerHTML = "<b>Celkový počet zaznamenaných případů v tento den:</b> " + numberWithCommas(covid_data[selected_date_text]['celkem_pripady']);
+                element_map_info_1.innerHTML = "<b>Nové případy za tento den:</b> " + numberWithCommas(covid_data[selected_date_text]['infections_new_count']);
+                element_map_info_2.innerHTML = "<b>Celkový počet zaznamenaných případů v tento den:</b> " + numberWithCommas(covid_data[selected_date_text]['infections_count']);
                 element_map_info_3.innerHTML = "";
                 element_map_info_3.style.display = "none";
                 break;
             case "ockovani-analyze":
-                element_map_info_1.innerHTML = "<b>Nová očkování za tento den:</b> " + numberWithCommas(covid_data[selected_date_text]['davka_celkem_den']);
-                element_map_info_3.innerHTML = "<b>Celkový počet obyvatel naočkovaných alespoň první a druhou dávkou:</b> " + numberWithCommas(covid_data[selected_date_text]['davka_2_doposud']);
-                element_map_info_2.innerHTML = "<b>Celkový počet zaznamenaných očkování doposud:</b> " + numberWithCommas(covid_data[selected_date_text]['davka_celkem_doposud']);
+                element_map_info_1.innerHTML = "<b>Nová očkování za tento den:</b> " + numberWithCommas(covid_data[selected_date_text]['vaccination_doses_day']);
+                element_map_info_3.innerHTML = "<b>Celkový počet obyvatel naočkovaných alespoň první a druhou dávkou:</b> " + numberWithCommas(covid_data[selected_date_text]['vaccination_2_dose_alltime']);
+                element_map_info_2.innerHTML = "<b>Celkový počet zaznamenaných očkování doposud:</b> " + numberWithCommas(covid_data[selected_date_text]['vaccination_doses_alltime']);
                 element_map_info_3.style.display = "block";
                 if (selected_date < vaccination_start) element_window_warning.style.display = "block";
                 break;
             case "umrti-analyze":
-                element_map_info_1.innerHTML = "<b>Počet zemřelých tento den:</b> " + numberWithCommas(covid_data[selected_date_text]['celkem_den']);
-                element_map_info_2.innerHTML = "<b>Celkový počet zemřelých k tomuto dni:</b> " + numberWithCommas(covid_data[selected_date_text]['celkem_doposud']);
+                element_map_info_1.innerHTML = "<b>Počet zemřelých tento den:</b> " + numberWithCommas(covid_data[selected_date_text]['deaths_day_count']);
+                element_map_info_2.innerHTML = "<b>Celkový počet zemřelých k tomuto dni:</b> " + numberWithCommas(covid_data[selected_date_text]['deaths_alltime_count']);
                 element_map_info_3.innerHTML = "";
                 element_map_info_3.style.display = "none";
                 if (selected_date < deaths_start) element_window_warning.style.display = "block";
                 break;
             case "testovani-analyze":
-                element_map_info_1.innerHTML = "<b>Počet otestovaných tento den:</b> " + numberWithCommas(covid_data[selected_date_text]['celkem_prirustek_den']);
-                element_map_info_2.innerHTML = "<b>Celkový počet otestovaných k tomuto dni:</b> " + numberWithCommas(covid_data[selected_date_text]['celkem_celkem_den']);
+                element_map_info_1.innerHTML = "<b>Počet otestovaných tento den:</b> " + numberWithCommas(covid_data[selected_date_text]['pcr_tests_new_day_count']);
+                element_map_info_2.innerHTML = "<b>Celkový počet otestovaných k tomuto dni:</b> " + numberWithCommas(covid_data[selected_date_text]['pcr_tests_alltime_count']);
                 element_map_info_3.innerHTML = "";
                 element_map_info_3.style.display = "none";
                 if (selected_date < testing_start) element_window_warning.style.display = "block";
@@ -559,7 +559,6 @@ function updatePage() {
             value_name_PIP = data_analysis_types[current_dataset_data_PIP]['value_100'];
             max_value_name = data_analysis_types[current_dataset_data]['max_value_100'];
             max_value_name_PIP = data_analysis_types[current_dataset_data_PIP]['max_value_100'];
-            min_value_name = data_analysis_types[current_dataset_data]['min_value_100'];
             text = data_analysis_types[current_dataset_data]['text_100'];
             if (current_max_recalculation) {
                 max_value_name = data_analysis_types[current_dataset_data]['max_range_100'];
@@ -572,7 +571,6 @@ function updatePage() {
             value_name_PIP = data_analysis_types[current_dataset_data_PIP]['value'];
             max_value_name = data_analysis_types[current_dataset_data]['max_value'];
             max_value_name_PIP = data_analysis_types[current_dataset_data_PIP]['max_value'];
-            min_value_name = data_analysis_types[current_dataset_data]['min_value'];
             text = data_analysis_types[current_dataset_data]['text'];
             if (current_max_recalculation) {
                 max_value_name = data_analysis_types[current_dataset_data]['max_range'];
@@ -601,7 +599,6 @@ function updatePage() {
             okres_value_second = covid_data[selected_date_text][okres_lau][value_name_second].toFixed(2);
             okres_value_PIP = covid_data[selected_date_text][okres_lau][value_name_PIP].toFixed(2);
             analysis_name_value = value_name;
-            analysis_name_min_value = min_value_name;
             analysis_name_max_value = max_value_name;
 
             // Update text if current district is selected
@@ -1280,7 +1277,7 @@ function confirmAnalysis() {
                 covid_data = result;
                 updatePage();
                 element_iframe.contentWindow.document.getElementsByClassName("leaflet-popup-pane")[0].hidden = false;
-                newToast("Byla aktualizována data.");
+                newToast("Data byla aktualizována");
                 initChart();
 
                 // Open animation tab
@@ -1300,7 +1297,7 @@ function confirmAnalysis() {
             },
             error: function (error) {
                 console.log(error);
-                newToast('Prosím vyčkejte před dalším požadavkem')
+                newToast('Došlo k neznámé chybě, její podrobnosti jsou v konzoli')
             }
         })
 

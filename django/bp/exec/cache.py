@@ -49,48 +49,48 @@ class Cache:
         result_values = result.values()
 
         # Maximum - infections
-        max_values['infections_new_max_total'] =                        max(float(d['infections_new_max']) for d in result_values)
-        max_values['max_nove_pripady_sto_tisic'] =              max(float(d['max_nove_sto_tisic']) for d in result_values)
-        max_values['max_nove_pripady_7'] =                      max(float(d['max_nove_7']) for d in result_values)
-        max_values['max_nove_pripady_7_sto_tisic'] =            max(float(d['max_nove_7_sto_tisic']) for d in result_values)
-        max_values['max_nove_pripady_14'] =                     max(float(d['max_nove_14']) for d in result_values)
-        max_values['max_nove_pripady_14_sto_tisic'] =           max(float(d['max_nove_14_sto_tisic']) for d in result_values)
-        max_values['max_nove_pripady_65'] =                     max(float(d['max_nove_65']) for d in result_values)
-        max_values['max_nove_pripady_65_sto_tisic'] =           max(float(d['max_nove_65_sto_tisic']) for d in result_values)
+        max_values['infections_new_max_total'] =             	max(float(d['infections_new_max']) for d in result_values)
+        max_values['infections_new_100k_max_total'] =           max(float(d['infections_new_100k_max']) for d in result_values)
+        max_values['infections_new_7_max_total'] =              max(float(d['infections_new_7_max']) for d in result_values)
+        max_values['infections_new_7_100k_max_total'] =         max(float(d['infections_new_7_100k_max']) for d in result_values)
+        max_values['infections_new_14_max_total'] =           	max(float(d['infections_new_14_max']) for d in result_values)
+        max_values['infections_new_14_100k_max_total'] =        max(float(d['infections_new_14_100k_max']) for d in result_values)
+        max_values['infections_new_65_age_max_total'] =         max(float(d['infections_new_65_age_max']) for d in result_values)
+        max_values['infections_new_65_age_100k_max_total'] =    max(float(d['infections_new_65_age_100k_max']) for d in result_values)
 
         # Maximum - vaccinations
-        max_values['max_celkem_den'] =                          max(float(d['davka_celkem_den_max']) for d in result_values)
-        max_values['max_celkem_den_sto_tisic'] =                max(float(d['davka_celkem_den_max_sto_tisic']) for d in result_values)
-        max_values['max_celkem_doposud'] =                      max(float(d['davka_celkem_doposud_max']) for d in result_values)
-        max_values['max_celkem_doposud_sto_tisic'] =            max(float(d['davka_celkem_doposud_max_sto_tisic']) for d in result_values)
-        max_values['max_celkem_davka_1_den'] =                  max(float(d['davka_1_max']) for d in result_values)
-        max_values['max_celkem_davka_1_den_sto_tisic'] =        max(float(d['davka_1_max_sto_tisic']) for d in result_values)
-        max_values['max_celkem_davka_1_doposud'] =              max(float(d['davka_1_doposud_max']) for d in result_values)
-        max_values['max_celkem_davka_1_doposud_sto_tisic'] =    max(float(d['davka_1_doposud_max_sto_tisic']) for d in result_values)
-        max_values['max_celkem_davka_2_den'] =                  max(float(d['davka_2_max']) for d in result_values)
-        max_values['max_celkem_davka_2_den_sto_tisic'] =        max(float(d['davka_2_max_sto_tisic']) for d in result_values)
-        max_values['max_celkem_davka_2_doposud'] =              max(float(d['davka_2_doposud_max']) for d in result_values)
-        max_values['max_celkem_davka_2_doposud_sto_tisic'] =    max(float(d['davka_2_doposud_max_sto_tisic']) for d in result_values)
-        max_values['max_celkem_davka_3_den'] =                  max(float(d['davka_3_max']) for d in result_values)
-        max_values['max_celkem_davka_3_den_sto_tisic'] =        max(float(d['davka_3_max_sto_tisic']) for d in result_values)
-        max_values['max_celkem_davka_3_doposud'] =              max(float(d['davka_3_doposud_max']) for d in result_values)
-        max_values['max_celkem_davka_3_doposud_sto_tisic'] =    max(float(d['davka_3_doposud_max_sto_tisic']) for d in result_values)
-        max_values['max_celkem_davka_4_den'] =                  max(float(d['davka_4_max']) for d in result_values)
-        max_values['max_celkem_davka_4_den_sto_tisic'] =        max(float(d['davka_4_max_sto_tisic']) for d in result_values)
-        max_values['max_celkem_davka_4_doposud'] =              max(float(d['davka_4_doposud_max']) for d in result_values)
-        max_values['max_celkem_davka_4_doposud_sto_tisic'] =    max(float(d['davka_4_doposud_max_sto_tisic']) for d in result_values)
+        max_values['vaccination_doses_day_total'] =             max(float(d['vaccination_doses_day_max']) for d in result_values)
+        max_values['vaccination_doses_day_100k_total'] =        max(float(d['vaccination_doses_day_100k_max']) for d in result_values)
+        max_values['vaccination_doses_alltime_total'] =         max(float(d['vaccination_doses_alltime_max']) for d in result_values)
+        max_values['vaccination_doses_alltime_100k_total'] =    max(float(d['vaccination_doses_alltime_100k_max']) for d in result_values)
+        max_values['vaccination_1_dose_day_total'] =            max(float(d['vaccination_1_dose_day_max']) for d in result_values)
+        max_values['vaccination_1_dose_day_100k_total'] =       max(float(d['vaccination_1_dose_day_100k_max']) for d in result_values)
+        max_values['vaccination_1_dose_alltime_total'] =        max(float(d['vaccination_1_dose_alltime_max']) for d in result_values)
+        max_values['vaccination_1_dose_alltime_100k_total'] =   max(float(d['vaccination_1_dose_alltime_100_max']) for d in result_values)
+        max_values['vaccination_2_dose_day_total'] =            max(float(d['vaccination_2_dose_day_max']) for d in result_values)
+        max_values['vaccination_2_dose_day_100k_total'] =       max(float(d['vaccination_2_dose_day_100k_max']) for d in result_values)
+        max_values['vaccination_2_dose_alltime_total'] =        max(float(d['vaccination_2_dose_alltime_max']) for d in result_values)
+        max_values['vaccination_2_dose_alltime_100k_total'] =   max(float(d['vaccination_2_dose_alltime_100_max']) for d in result_values)
+        max_values['vaccination_3_dose_day_total'] =            max(float(d['vaccination_3_dose_day_max']) for d in result_values)
+        max_values['vaccination_3_dose_day_100k_total'] =       max(float(d['vaccination_3_dose_day_100k_max']) for d in result_values)
+        max_values['vaccination_3_dose_alltime_total'] =        max(float(d['vaccination_3_dose_alltime_max']) for d in result_values)
+        max_values['vaccination_3_dose_alltime_100k_total'] =   max(float(d['vaccination_3_dose_alltime_100_max']) for d in result_values)
+        max_values['vaccination_4_dose_day_total'] =            max(float(d['vaccination_4_dose_day_max']) for d in result_values)
+        max_values['vaccination_4_dose_day_100k_total'] =       max(float(d['vaccination_4_dose_day_100k_max']) for d in result_values)
+        max_values['vaccination_4_dose_alltime_total'] =        max(float(d['vaccination_4_dose_alltime_max']) for d in result_values)
+        max_values['vaccination_4_dose_alltime_100k_total'] =   max(float(d['vaccination_4_dose_alltime_100_max']) for d in result_values)
 
         # Maximum - deaths
-        max_values['celkem_max_doposud'] =                      max(float(d['max_umrti_doposud']) for d in result_values)
-        max_values['celkem_max_sto_tisic_doposud'] =            max(float(d['max_umrti_doposud_sto_tisic']) for d in result_values)
-        max_values['celkem_max_den'] =                          max(float(d['max_umrti_den']) for d in result_values)
-        max_values['celkem_max_sto_tisic_den'] =                max(float(d['max_umrti_den_sto_tisic']) for d in result_values)
+        max_values['deaths_alltime_total'] =                    max(float(d['deaths_alltime_max']) for d in result_values)
+        max_values['deaths_alltime_100k_total'] =            	max(float(d['deaths_alltime_100k_max']) for d in result_values)
+        max_values['deaths_day_total'] =                        max(float(d['deaths_day_max']) for d in result_values)
+        max_values['deaths_day_100k_total'] =                	max(float(d['deaths_day_100k_max']) for d in result_values)
 
         # Maximum - PCR testing
-        max_values['rozsah_max_celkem'] =                       max(float(d['celkem_max_den']) for d in result_values)
-        max_values['rozsah_max_celkem_sto_tisic'] =             max(float(d['celkem_max_den_sto_tisic']) for d in result_values)
-        max_values['rozsah_max_prirustek'] =                    max(float(d['max_den']) for d in result_values)
-        max_values['rozsah_max_prirustek_sto_tisic'] =          max(float(d['max_den_sto_tisic']) for d in result_values)
+        max_values['pcr_tests_alltime_total'] =                 max(float(d['pcr_tests_alltime_max']) for d in result_values)
+        max_values['pcr_tests_alltime_100k_total'] =            max(float(d['pcr_tests_alltime_100k_max']) for d in result_values)
+        max_values['pcr_tests_day_total'] =                    	max(float(d['pcr_tests_day_max']) for d in result_values)
+        max_values['pcr_tests_day_100k_total'] =          		max(float(d['pcr_tests_day_100k_max']) for d in result_values)
 
         # Merge new dataset with found maximums
         result = result | max_values
@@ -126,239 +126,239 @@ class Cache:
 
                 # Init total values from existing cache
                 if self.get_instance().__initialized:
-                    celkem_pripady = self.__data['celkem_pripady']
-                    davka_2_doposud = self.__data['davka_2_doposud']
-                    absolute_celkem = self.__data['absolute_celkem']
-                    celkem_doposud_testy = self.__data['celkem_doposud_testy']
-                    celkem_doposud_umrti = self.__data['celkem_doposud_umrti']
+                    infections_count = self.__data['infections_count']
+                    vaccination_2_dose_alltime = self.__data['vaccination_2_dose_alltime']
+                    vaccination_doses_count = self.__data['vaccination_doses_count']
+                    pcr_tests_alltime_count = self.__data['pcr_tests_alltime_count']
+                    deaths_alltime_count = self.__data['deaths_alltime_count']
                 
                 else:
-                    davka_2_doposud = absolute_celkem = celkem_doposud_testy = celkem_doposud_umrti = 0
-                    celkem_pripady = 20
+                    vaccination_2_dose_alltime = vaccination_doses_count = pcr_tests_alltime_count = deaths_alltime_count = 0
+                    infections_count = 20
 
 
                 ################################
                 # Download infections
                 ################################
 
-                self.__data['infections_new_max_total'] = self.__data['max_nove_pripady_sto_tisic'] = self.__data['infections_active_max_total'] = self.__data['infections_active_100k_max_total'] = 0
+                self.__data['infections_new_max_total'] = self.__data['infections_new_100k_max_total'] = self.__data['infections_active_max_total'] = self.__data['infections_active_100k_max_total'] = 0
 
                 for date in all_requested_dates:
                     response = db.get_records_day("infection", date)
-                    self.__data[date]['celkem_pripady'] = celkem_pripady
-                    nove_pocet = self.__data[date]['infections_new_max'] = self.__data[date]['max_nove_sto_tisic'] = aktivni_pocet = self.__data[date]['infections_active_max'] = self.__data[date]['infections_active_100k_max'] = self.__data[date]['max_nove_7'] = self.__data[date]['max_nove_7_sto_tisic'] = self.__data[date]['max_nove_14'] = self.__data[date]['max_nove_14_sto_tisic'] = self.__data[date]['max_nove_65'] = self.__data[date]['max_nove_65_sto_tisic'] = 0
-                    for okres in response:
-                        if okres[2] is not None:
-                            self.__data[date][okres[2]] = {}
-                            self.__data[date][okres[2]]['infections_new'] = okres[3]
-                            self.__data[date][okres[2]]['infections_active'] = okres[4]
-                            self.__data[date][okres[2]]['nove_pripady_7'] = okres[5]
-                            self.__data[date][okres[2]]['nove_pripady_14'] = okres[6]
-                            self.__data[date][okres[2]]['nove_pripady_65'] = okres[7]
-                            self.__data[date][okres[2]]['nove_pripady_sto_tisic'] = okres[3] / (self._population[okres[2]] / 100000)
-                            self.__data[date][okres[2]]['infections_active_100k'] = okres[4] / (self._population[okres[2]] / 100000)
-                            self.__data[date][okres[2]]['nove_pripady_7_sto_tisic'] = okres[5] / (self._population[okres[2]] / 100000)
-                            self.__data[date][okres[2]]['nove_pripady_14_sto_tisic'] = okres[6] / (self._population[okres[2]] / 100000)
-                            self.__data[date][okres[2]]['nove_pripady_65_sto_tisic'] = okres[7] / (self._population[okres[2]] / 100000)
+                    self.__data[date]['infections_count'] = infections_count
+                    infections_new_count = self.__data[date]['infections_new_max'] = self.__data[date]['infections_new_100k_max'] = aktivni_pocet = self.__data[date]['infections_active_max'] = self.__data[date]['infections_active_100k_max'] = self.__data[date]['infections_new_7_max'] = self.__data[date]['infections_new_7_100k_max'] = self.__data[date]['infections_new_14_max'] = self.__data[date]['infections_new_14_100k_max'] = self.__data[date]['infections_new_65_age_max'] = self.__data[date]['infections_new_65_age_100k_max'] = 0
+                    for district in response:
+                        if district[2] is not None:
+                            self.__data[date][district[2]] = {}
+                            self.__data[date][district[2]]['infections_new'] = district[3]
+                            self.__data[date][district[2]]['infections_active'] = district[4]
+                            self.__data[date][district[2]]['infections_new_7'] = district[5]
+                            self.__data[date][district[2]]['infections_new_14'] = district[6]
+                            self.__data[date][district[2]]['infections_new_65_age'] = district[7]
+                            self.__data[date][district[2]]['infections_new_100k'] = district[3] / (self._population[district[2]] / 100000)
+                            self.__data[date][district[2]]['infections_active_100k'] = district[4] / (self._population[district[2]] / 100000)
+                            self.__data[date][district[2]]['infections_new_7_100k'] = district[5] / (self._population[district[2]] / 100000)
+                            self.__data[date][district[2]]['infections_new_14_100k'] = district[6] / (self._population[district[2]] / 100000)
+                            self.__data[date][district[2]]['infections_new_65_age_100k'] = district[7] / (self._population[district[2]] / 100000)
 
-                            nove_pocet += okres[3]
-                            aktivni_pocet += okres[4]
+                            infections_new_count += district[3]
+                            aktivni_pocet += district[4]
 
-                            self.__data[date]['infections_new_max'] =                 max(self.__data[date]['infections_new_max'], self.__data[date][okres[2]]['infections_new'])
-                            self.__data[date]['max_nove_sto_tisic'] =       max(self.__data[date]['max_nove_sto_tisic'], self.__data[date][okres[2]]['nove_pripady_sto_tisic'])
-                            self.__data[date]['infections_active_max'] =              max(self.__data[date]['infections_active_max'], self.__data[date][okres[2]]['infections_active'])
-                            self.__data[date]['infections_active_100k_max'] =    max(self.__data[date]['infections_active_100k_max'], self.__data[date][okres[2]]['infections_active_100k'])
-                            self.__data[date]['max_nove_7'] =               max(self.__data[date]['max_nove_7'], self.__data[date][okres[2]]['nove_pripady_7'])
-                            self.__data[date]['max_nove_14'] =              max(self.__data[date]['max_nove_14'], self.__data[date][okres[2]]['nove_pripady_14'])
-                            self.__data[date]['max_nove_65'] =              max(self.__data[date]['max_nove_65'], self.__data[date][okres[2]]['nove_pripady_65'])
-                            self.__data[date]['max_nove_7_sto_tisic'] =     max(self.__data[date]['max_nove_7_sto_tisic'], self.__data[date][okres[2]]['nove_pripady_7_sto_tisic'])
-                            self.__data[date]['max_nove_14_sto_tisic'] =    max(self.__data[date]['max_nove_14_sto_tisic'], self.__data[date][okres[2]]['nove_pripady_14_sto_tisic'])
-                            self.__data[date]['max_nove_65_sto_tisic'] =    max(self.__data[date]['max_nove_65_sto_tisic'], self.__data[date][okres[2]]['nove_pripady_65_sto_tisic'])
-                            self.__data['infections_new_max_total'] =               max(self.__data['infections_new_max_total'], self.__data[date][okres[2]]['infections_new'])
-                            self.__data['max_nove_pripady_sto_tisic'] =     max(self.__data['max_nove_pripady_sto_tisic'], self.__data[date][okres[2]]['nove_pripady_sto_tisic'])
-                            self.__data['infections_active_max_total'] =            max(self.__data['infections_active_max_total'], self.__data[date][okres[2]]['infections_active'])
-                            self.__data['infections_active_100k_max_total'] =  max(self.__data['infections_active_100k_max_total'], self.__data[date][okres[2]]['infections_active_100k'])
+                            self.__data[date]['infections_new_max'] =            	max(self.__data[date]['infections_new_max'], self.__data[date][district[2]]['infections_new'])
+                            self.__data[date]['infections_new_100k_max'] =       	max(self.__data[date]['infections_new_100k_max'], self.__data[date][district[2]]['infections_new_100k'])
+                            self.__data[date]['infections_active_max'] =            max(self.__data[date]['infections_active_max'], self.__data[date][district[2]]['infections_active'])
+                            self.__data[date]['infections_active_100k_max'] =    	max(self.__data[date]['infections_active_100k_max'], self.__data[date][district[2]]['infections_active_100k'])
+                            self.__data[date]['infections_new_7_max'] =             max(self.__data[date]['infections_new_7_max'], self.__data[date][district[2]]['infections_new_7'])
+                            self.__data[date]['infections_new_14_max'] =            max(self.__data[date]['infections_new_14_max'], self.__data[date][district[2]]['infections_new_14'])
+                            self.__data[date]['infections_new_65_age_max'] =        max(self.__data[date]['infections_new_65_age_max'], self.__data[date][district[2]]['infections_new_65_age'])
+                            self.__data[date]['infections_new_7_100k_max'] =     	max(self.__data[date]['infections_new_7_100k_max'], self.__data[date][district[2]]['infections_new_7_100k'])
+                            self.__data[date]['infections_new_14_100k_max'] =    	max(self.__data[date]['infections_new_14_100k_max'], self.__data[date][district[2]]['infections_new_14_100k'])
+                            self.__data[date]['infections_new_65_age_100k_max'] =   max(self.__data[date]['infections_new_65_age_100k_max'], self.__data[date][district[2]]['infections_new_65_age_100k'])
+                            self.__data['infections_new_max_total'] =               max(self.__data['infections_new_max_total'], self.__data[date][district[2]]['infections_new'])
+                            self.__data['infections_new_100k_max_total'] =     		max(self.__data['infections_new_100k_max_total'], self.__data[date][district[2]]['infections_new_100k'])
+                            self.__data['infections_active_max_total'] =            max(self.__data['infections_active_max_total'], self.__data[date][district[2]]['infections_active'])
+                            self.__data['infections_active_100k_max_total'] =  		max(self.__data['infections_active_100k_max_total'], self.__data[date][district[2]]['infections_active_100k'])
                         else:
-                            nove_pocet += okres[3] 
+                            infections_new_count += district[3] 
 
-                    celkem_pripady += nove_pocet
-                    self.__data[date]['celkem_pripady'] = celkem_pripady
-                    self.__data[date]['nove_celkovy_pocet'] = nove_pocet
+                    infections_count += infections_new_count
+                    self.__data[date]['infections_count'] = infections_count
+                    self.__data[date]['infections_new_count'] = infections_new_count
 
-                self.__data['celkem_pripady'] = celkem_pripady
+                self.__data['infections_count'] = infections_count
                 
                 ################################
                 # Download vaccinations
                 ################################
                     
-                okres_absolute_celkem = self.__data['okres_absolute_max'] = self.__data['max_celkem_davka_1_den'] = self.__data['max_celkem_davka_2_den'] = self.__data['max_celkem_davka_3_den'] = self.__data['max_celkem_davka_4_den'] = self.__data['max_celkem_den'] = self.__data['max_celkem_davka_1_doposud'] = self.__data['max_celkem_davka_2_doposud'] = self.__data['max_celkem_davka_3_doposud'] = self.__data['max_celkem_davka_4_doposud'] = self.__data['max_celkem_doposud'] = self.__data['max_celkem_davka_1_den_sto_tisic'] = self.__data['max_celkem_davka_2_den_sto_tisic'] = self.__data['max_celkem_davka_3_den_sto_tisic'] = self.__data['max_celkem_davka_4_den_sto_tisic'] = self.__data['max_celkem_den_sto_tisic'] = self.__data['max_celkem_davka_1_doposud_sto_tisic'] = self.__data['max_celkem_davka_2_doposud_sto_tisic'] = self.__data['max_celkem_davka_3_doposud_sto_tisic'] = self.__data['max_celkem_davka_4_doposud_sto_tisic'] = self.__data['max_celkem_doposud_sto_tisic'] = 0
+                vaccination_doses_district_max = self.__data['vaccination_doses_district_max'] = self.__data['vaccination_1_dose_day_total'] = self.__data['vaccination_2_dose_day_total'] = self.__data['vaccination_3_dose_day_total'] = self.__data['vaccination_4_dose_day_total'] = self.__data['vaccination_doses_day_total'] = self.__data['vaccination_1_dose_alltime_total'] = self.__data['vaccination_2_dose_alltime_total'] = self.__data['vaccination_3_dose_alltime_total'] = self.__data['vaccination_4_dose_alltime_total'] = self.__data['vaccination_doses_alltime_total'] = self.__data['vaccination_1_dose_day_100k_total'] = self.__data['vaccination_2_dose_day_100k_total'] = self.__data['vaccination_3_dose_day_100k_total'] = self.__data['vaccination_4_dose_day_100k_total'] = self.__data['vaccination_doses_day_100k_total'] = self.__data['vaccination_1_dose_alltime_100k_total'] = self.__data['vaccination_2_dose_alltime_100k_total'] = self.__data['vaccination_3_dose_alltime_100k_total'] = self.__data['vaccination_4_dose_alltime_100k_total'] = self.__data['vaccination_doses_alltime_100k_total'] = 0
 
                 for date in all_requested_dates:
                     response = db.get_records_day("vaccination", date)
-                    self.__data[date]['davka_1_max'] = self.__data[date]['davka_2_max'] = self.__data[date]['davka_3_max'] = self.__data[date]['davka_4_max'] = self.__data[date]['davka_1_max_sto_tisic'] = self.__data[date]['davka_2_max_sto_tisic'] = self.__data[date]['davka_3_max_sto_tisic'] = self.__data[date]['davka_4_max_sto_tisic'] = self.__data[date]['davka_1_doposud_max'] = self.__data[date]['davka_2_doposud_max'] = self.__data[date]['davka_3_doposud_max'] = self.__data[date]['davka_4_doposud_max'] = self.__data[date]['davka_1_doposud_max_sto_tisic'] = self.__data[date]['davka_2_doposud_max_sto_tisic'] = self.__data[date]['davka_3_doposud_max_sto_tisic'] = self.__data[date]['davka_4_doposud_max_sto_tisic'] = self.__data[date]['davka_celkem_den_max'] = self.__data[date]['davka_celkem_den_max_sto_tisic'] = self.__data[date]['davka_celkem_doposud_max'] = self.__data[date]['davka_celkem_doposud_max_sto_tisic'] = celkem_den = celkem_doposud = 0
-                    for okres in response:
-                        if okres[2] is not None:
+                    self.__data[date]['vaccination_1_dose_day_max'] = self.__data[date]['vaccination_2_dose_day_max'] = self.__data[date]['vaccination_3_dose_day_max'] = self.__data[date]['vaccination_4_dose_day_max'] = self.__data[date]['vaccination_1_dose_day_100k_max'] = self.__data[date]['vaccination_2_dose_day_100k_max'] = self.__data[date]['vaccination_3_dose_day_100k_max'] = self.__data[date]['vaccination_4_dose_day_100k_max'] = self.__data[date]['vaccination_1_dose_alltime_max'] = self.__data[date]['vaccination_2_dose_alltime_max'] = self.__data[date]['vaccination_3_dose_alltime_max'] = self.__data[date]['vaccination_4_dose_alltime_max'] = self.__data[date]['vaccination_1_dose_alltime_100_max'] = self.__data[date]['vaccination_2_dose_alltime_100_max'] = self.__data[date]['vaccination_3_dose_alltime_100_max'] = self.__data[date]['vaccination_4_dose_alltime_100_max'] = self.__data[date]['vaccination_doses_day_max'] = self.__data[date]['vaccination_doses_day_100k_max'] = self.__data[date]['vaccination_doses_alltime_max'] = self.__data[date]['vaccination_doses_alltime_100k_max'] = vaccination_doses_day = vaccination_doses_alltime = 0
+                    for district in response:
+                        if district[2] is not None:
                             # Process data and get 100 thousand count
-                            self.__data[date][okres[2]]['davka_1_den'] = okres[3]
-                            self.__data[date][okres[2]]['davka_1_den_sto_tisic'] = okres[3] / (self._population[okres[2]] / 100000)
-                            self.__data[date][okres[2]]['davka_1_doposud'] = okres[4]
-                            self.__data[date][okres[2]]['davka_1_doposud_sto_tisic'] = okres[4] / (self._population[okres[2]] / 100000)
-                            self.__data[date][okres[2]]['davka_2_den'] = okres[5]
-                            self.__data[date][okres[2]]['davka_2_den_sto_tisic'] = okres[5] / (self._population[okres[2]] / 100000)
-                            self.__data[date][okres[2]]['davka_2_doposud'] = okres[6]
-                            self.__data[date][okres[2]]['davka_2_doposud_sto_tisic'] = okres[6] / (self._population[okres[2]] / 100000)
-                            self.__data[date][okres[2]]['davka_3_den'] = okres[7]
-                            self.__data[date][okres[2]]['davka_3_den_sto_tisic'] = okres[7] / (self._population[okres[2]] / 100000)
-                            self.__data[date][okres[2]]['davka_3_doposud'] = okres[8]
-                            self.__data[date][okres[2]]['davka_3_doposud_sto_tisic'] = okres[8] / (self._population[okres[2]] / 100000)
-                            self.__data[date][okres[2]]['davka_4_den'] = okres[9]
-                            self.__data[date][okres[2]]['davka_4_den_sto_tisic'] = okres[9] / (self._population[okres[2]] / 100000)
-                            self.__data[date][okres[2]]['davka_4_doposud'] = okres[10]
-                            self.__data[date][okres[2]]['davka_4_doposud_sto_tisic'] = okres[10] / (self._population[okres[2]] / 100000)
-                            self.__data[date][okres[2]]['davka_celkem_den'] = okres[11]
-                            celkem_den += okres[11]
-                            celkem_doposud += okres[12]
-                            davka_2_doposud += okres[5]
-                            absolute_celkem += (okres[3] + okres[5] + okres[7] + okres[9])
-                            self.__data[date][okres[2]]['davka_celkem_den_sto_tisic'] = okres[11] / (self._population[okres[2]] / 100000)
-                            self.__data[date][okres[2]]['davka_celkem_doposud'] = okres[12]
-                            self.__data[date][okres[2]]['davka_celkem_doposud_sto_tisic'] = okres[12] / (self._population[okres[2]] / 100000)
+                            self.__data[date][district[2]]['vaccination_1_dose_day'] = district[3]
+                            self.__data[date][district[2]]['vaccination_1_dose_day_100k'] = district[3] / (self._population[district[2]] / 100000)
+                            self.__data[date][district[2]]['vaccination_1_dose_alltime'] = district[4]
+                            self.__data[date][district[2]]['vaccination_1_dose_alltime_100'] = district[4] / (self._population[district[2]] / 100000)
+                            self.__data[date][district[2]]['vaccination_2_dose_day'] = district[5]
+                            self.__data[date][district[2]]['vaccination_2_dose_day_100k'] = district[5] / (self._population[district[2]] / 100000)
+                            self.__data[date][district[2]]['vaccination_2_dose_alltime'] = district[6]
+                            self.__data[date][district[2]]['vaccination_2_dose_alltime_100'] = district[6] / (self._population[district[2]] / 100000)
+                            self.__data[date][district[2]]['vaccination_3_dose_day'] = district[7]
+                            self.__data[date][district[2]]['vaccination_3_dose_day_100k'] = district[7] / (self._population[district[2]] / 100000)
+                            self.__data[date][district[2]]['vaccination_3_dose_alltime'] = district[8]
+                            self.__data[date][district[2]]['vaccination_3_dose_alltime_100'] = district[8] / (self._population[district[2]] / 100000)
+                            self.__data[date][district[2]]['vaccination_4_dose_day'] = district[9]
+                            self.__data[date][district[2]]['vaccination_4_dose_day_100k'] = district[9] / (self._population[district[2]] / 100000)
+                            self.__data[date][district[2]]['vaccination_4_dose_alltime'] = district[10]
+                            self.__data[date][district[2]]['vaccination_4_dose_alltime_100'] = district[10] / (self._population[district[2]] / 100000)
+                            self.__data[date][district[2]]['vaccination_doses_day'] = district[11]
+                            vaccination_doses_day += district[11]
+                            vaccination_doses_alltime += district[12]
+                            vaccination_2_dose_alltime += district[5]
+                            vaccination_doses_count += (district[3] + district[5] + district[7] + district[9])
+                            self.__data[date][district[2]]['vaccination_doses_day_100k'] = district[11] / (self._population[district[2]] / 100000)
+                            self.__data[date][district[2]]['vaccination_doses_alltime'] = district[12]
+                            self.__data[date][district[2]]['vaccination_doses_alltime_100k'] = district[12] / (self._population[district[2]] / 100000)
 
                             # Get minimums and maximums
-                            self.__data[date]['davka_1_max'] =                              max(self.__data[date]['davka_1_max'], self.__data[date][okres[2]]['davka_1_den'])
-                            self.__data[date]['davka_2_max'] =                              max(self.__data[date]['davka_2_max'], self.__data[date][okres[2]]['davka_2_den'])
-                            self.__data[date]['davka_3_max'] =                              max(self.__data[date]['davka_3_max'], self.__data[date][okres[2]]['davka_3_den'])
-                            self.__data[date]['davka_4_max'] =                              max(self.__data[date]['davka_4_max'], self.__data[date][okres[2]]['davka_4_den'])
-                            self.__data[date]['davka_1_max_sto_tisic'] =                    max(self.__data[date]['davka_1_max_sto_tisic'], self.__data[date][okres[2]]['davka_1_den_sto_tisic'])
-                            self.__data[date]['davka_2_max_sto_tisic'] =                    max(self.__data[date]['davka_2_max_sto_tisic'], self.__data[date][okres[2]]['davka_2_den_sto_tisic'])
-                            self.__data[date]['davka_3_max_sto_tisic'] =                    max(self.__data[date]['davka_3_max_sto_tisic'], self.__data[date][okres[2]]['davka_3_den_sto_tisic'])
-                            self.__data[date]['davka_4_max_sto_tisic'] =                    max(self.__data[date]['davka_4_max_sto_tisic'], self.__data[date][okres[2]]['davka_4_den_sto_tisic'])
-                            self.__data[date]['davka_1_doposud_max'] =                      max(self.__data[date]['davka_1_doposud_max'], self.__data[date][okres[2]]['davka_1_doposud'])
-                            self.__data[date]['davka_2_doposud_max'] =                      max(self.__data[date]['davka_2_doposud_max'], self.__data[date][okres[2]]['davka_2_doposud'])
-                            self.__data[date]['davka_3_doposud_max'] =                      max(self.__data[date]['davka_3_doposud_max'], self.__data[date][okres[2]]['davka_3_doposud'])
-                            self.__data[date]['davka_4_doposud_max'] =                      max(self.__data[date]['davka_4_doposud_max'], self.__data[date][okres[2]]['davka_4_doposud'])
-                            self.__data[date]['davka_1_doposud_max_sto_tisic'] =            max(self.__data[date]['davka_1_doposud_max_sto_tisic'], self.__data[date][okres[2]]['davka_1_doposud_sto_tisic'])
-                            self.__data[date]['davka_2_doposud_max_sto_tisic'] =            max(self.__data[date]['davka_2_doposud_max_sto_tisic'], self.__data[date][okres[2]]['davka_2_doposud_sto_tisic'])
-                            self.__data[date]['davka_3_doposud_max_sto_tisic'] =            max(self.__data[date]['davka_3_doposud_max_sto_tisic'], self.__data[date][okres[2]]['davka_3_doposud_sto_tisic'])
-                            self.__data[date]['davka_4_doposud_max_sto_tisic'] =            max(self.__data[date]['davka_4_doposud_max_sto_tisic'], self.__data[date][okres[2]]['davka_4_doposud_sto_tisic'])
-                            self.__data[date]['davka_celkem_den_max'] =                     max(self.__data[date]['davka_celkem_den_max'], self.__data[date][okres[2]]['davka_celkem_den'])
-                            self.__data[date]['davka_celkem_den_max_sto_tisic'] =           max(self.__data[date]['davka_celkem_den_max_sto_tisic'], self.__data[date][okres[2]]['davka_celkem_den_sto_tisic'])
-                            self.__data[date]['davka_celkem_doposud_max'] =                 max(self.__data[date]['davka_celkem_doposud_max'], self.__data[date][okres[2]]['davka_celkem_doposud'])
-                            self.__data[date]['davka_celkem_doposud_max_sto_tisic'] =       max(self.__data[date]['davka_celkem_doposud_max_sto_tisic'], self.__data[date][okres[2]]['davka_celkem_doposud_sto_tisic'])
-                            self.__data['okres_absolute_max'] =                             max(self.__data['okres_absolute_max'], self.__data[date][okres[2]]['davka_celkem_doposud'])
-                            self.__data['max_celkem_davka_1_den'] =                         max(self.__data['max_celkem_davka_1_den'], self.__data[date][okres[2]]['davka_1_den'])
-                            self.__data['max_celkem_davka_2_den'] =                         max(self.__data['max_celkem_davka_2_den'], self.__data[date][okres[2]]['davka_2_den'])
-                            self.__data['max_celkem_davka_3_den'] =                         max(self.__data['max_celkem_davka_3_den'], self.__data[date][okres[2]]['davka_3_den'])
-                            self.__data['max_celkem_davka_4_den'] =                         max(self.__data['max_celkem_davka_4_den'], self.__data[date][okres[2]]['davka_4_den'])
-                            self.__data['max_celkem_den'] =                                 max(self.__data['max_celkem_den'], self.__data[date][okres[2]]['davka_celkem_den'])
-                            self.__data['max_celkem_davka_1_doposud'] =                     max(self.__data['max_celkem_davka_1_doposud'], self.__data[date][okres[2]]['davka_1_doposud'])
-                            self.__data['max_celkem_davka_2_doposud'] =                     max(self.__data['max_celkem_davka_2_doposud'], self.__data[date][okres[2]]['davka_2_doposud'])
-                            self.__data['max_celkem_davka_3_doposud'] =                     max(self.__data['max_celkem_davka_3_doposud'], self.__data[date][okres[2]]['davka_3_doposud'])
-                            self.__data['max_celkem_davka_4_doposud'] =                     max(self.__data['max_celkem_davka_4_doposud'], self.__data[date][okres[2]]['davka_4_doposud'])
-                            self.__data['max_celkem_doposud'] =                             max(self.__data['max_celkem_doposud'], self.__data[date][okres[2]]['davka_celkem_doposud'])
-                            self.__data['max_celkem_davka_1_den_sto_tisic'] =               max(self.__data['max_celkem_davka_1_den_sto_tisic'], self.__data[date][okres[2]]['davka_1_den_sto_tisic'])
-                            self.__data['max_celkem_davka_2_den_sto_tisic'] =               max(self.__data['max_celkem_davka_2_den_sto_tisic'], self.__data[date][okres[2]]['davka_2_den_sto_tisic'])
-                            self.__data['max_celkem_davka_3_den_sto_tisic'] =               max(self.__data['max_celkem_davka_3_den_sto_tisic'], self.__data[date][okres[2]]['davka_3_den_sto_tisic'])
-                            self.__data['max_celkem_davka_4_den_sto_tisic'] =               max(self.__data['max_celkem_davka_4_den_sto_tisic'], self.__data[date][okres[2]]['davka_4_den_sto_tisic'])
-                            self.__data['max_celkem_den_sto_tisic'] =                       max(self.__data['max_celkem_den_sto_tisic'], self.__data[date][okres[2]]['davka_celkem_den_sto_tisic'])
-                            self.__data['max_celkem_davka_1_doposud_sto_tisic'] =           max(self.__data['max_celkem_davka_1_doposud_sto_tisic'], self.__data[date][okres[2]]['davka_1_doposud_sto_tisic'])
-                            self.__data['max_celkem_davka_2_doposud_sto_tisic'] =           max(self.__data['max_celkem_davka_2_doposud_sto_tisic'], self.__data[date][okres[2]]['davka_2_doposud_sto_tisic'])
-                            self.__data['max_celkem_davka_3_doposud_sto_tisic'] =           max(self.__data['max_celkem_davka_3_doposud_sto_tisic'], self.__data[date][okres[2]]['davka_3_doposud_sto_tisic'])
-                            self.__data['max_celkem_davka_4_doposud_sto_tisic'] =           max(self.__data['max_celkem_davka_4_doposud_sto_tisic'], self.__data[date][okres[2]]['davka_4_doposud_sto_tisic'])
-                            self.__data['max_celkem_doposud_sto_tisic'] =                   max(self.__data['max_celkem_doposud_sto_tisic'], self.__data[date][okres[2]]['davka_celkem_doposud_sto_tisic'])
+                            self.__data[date]['vaccination_1_dose_day_max'] =         		max(self.__data[date]['vaccination_1_dose_day_max'], self.__data[date][district[2]]['vaccination_1_dose_day'])
+                            self.__data[date]['vaccination_4_dose_day_max'] =         		max(self.__data[date]['vaccination_4_dose_day_max'], self.__data[date][district[2]]['vaccination_4_dose_day'])
+                            self.__data[date]['vaccination_2_dose_day_max'] =         		max(self.__data[date]['vaccination_2_dose_day_max'], self.__data[date][district[2]]['vaccination_2_dose_day'])
+                            self.__data[date]['vaccination_3_dose_day_max'] =         		max(self.__data[date]['vaccination_3_dose_day_max'], self.__data[date][district[2]]['vaccination_3_dose_day'])
+                            self.__data[date]['vaccination_1_dose_day_100k_max'] =          max(self.__data[date]['vaccination_1_dose_day_100k_max'], self.__data[date][district[2]]['vaccination_1_dose_day_100k'])
+                            self.__data[date]['vaccination_2_dose_day_100k_max'] =          max(self.__data[date]['vaccination_2_dose_day_100k_max'], self.__data[date][district[2]]['vaccination_2_dose_day_100k'])
+                            self.__data[date]['vaccination_3_dose_day_100k_max'] =          max(self.__data[date]['vaccination_3_dose_day_100k_max'], self.__data[date][district[2]]['vaccination_3_dose_day_100k'])
+                            self.__data[date]['vaccination_4_dose_day_100k_max'] =          max(self.__data[date]['vaccination_4_dose_day_100k_max'], self.__data[date][district[2]]['vaccination_4_dose_day_100k'])
+                            self.__data[date]['vaccination_1_dose_alltime_max'] =           max(self.__data[date]['vaccination_1_dose_alltime_max'], self.__data[date][district[2]]['vaccination_1_dose_alltime'])
+                            self.__data[date]['vaccination_2_dose_alltime_max'] =           max(self.__data[date]['vaccination_2_dose_alltime_max'], self.__data[date][district[2]]['vaccination_2_dose_alltime'])
+                            self.__data[date]['vaccination_3_dose_alltime_max'] =           max(self.__data[date]['vaccination_3_dose_alltime_max'], self.__data[date][district[2]]['vaccination_3_dose_alltime'])
+                            self.__data[date]['vaccination_4_dose_alltime_max'] =           max(self.__data[date]['vaccination_4_dose_alltime_max'], self.__data[date][district[2]]['vaccination_4_dose_alltime'])
+                            self.__data[date]['vaccination_1_dose_alltime_100_max'] =       max(self.__data[date]['vaccination_1_dose_alltime_100_max'], self.__data[date][district[2]]['vaccination_1_dose_alltime_100'])
+                            self.__data[date]['vaccination_2_dose_alltime_100_max'] =       max(self.__data[date]['vaccination_2_dose_alltime_100_max'], self.__data[date][district[2]]['vaccination_2_dose_alltime_100'])
+                            self.__data[date]['vaccination_3_dose_alltime_100_max'] =       max(self.__data[date]['vaccination_3_dose_alltime_100_max'], self.__data[date][district[2]]['vaccination_3_dose_alltime_100'])
+                            self.__data[date]['vaccination_4_dose_alltime_100_max'] =       max(self.__data[date]['vaccination_4_dose_alltime_100_max'], self.__data[date][district[2]]['vaccination_4_dose_alltime_100'])
+                            self.__data[date]['vaccination_doses_day_max'] =                max(self.__data[date]['vaccination_doses_day_max'], self.__data[date][district[2]]['vaccination_doses_day'])
+                            self.__data[date]['vaccination_doses_day_100k_max'] =           max(self.__data[date]['vaccination_doses_day_100k_max'], self.__data[date][district[2]]['vaccination_doses_day_100k'])
+                            self.__data[date]['vaccination_doses_alltime_max'] =            max(self.__data[date]['vaccination_doses_alltime_max'], self.__data[date][district[2]]['vaccination_doses_alltime'])
+                            self.__data[date]['vaccination_doses_alltime_100k_max'] =       max(self.__data[date]['vaccination_doses_alltime_100k_max'], self.__data[date][district[2]]['vaccination_doses_alltime_100k'])
+                            self.__data['vaccination_doses_district_max'] =                 max(self.__data['vaccination_doses_district_max'], self.__data[date][district[2]]['vaccination_doses_alltime'])
+                            self.__data['vaccination_1_dose_day_total'] =                   max(self.__data['vaccination_1_dose_day_total'], self.__data[date][district[2]]['vaccination_1_dose_day'])
+                            self.__data['vaccination_2_dose_day_total'] =                   max(self.__data['vaccination_2_dose_day_total'], self.__data[date][district[2]]['vaccination_2_dose_day'])
+                            self.__data['vaccination_3_dose_day_total'] =                   max(self.__data['vaccination_3_dose_day_total'], self.__data[date][district[2]]['vaccination_3_dose_day'])
+                            self.__data['vaccination_4_dose_day_total'] =                   max(self.__data['vaccination_4_dose_day_total'], self.__data[date][district[2]]['vaccination_4_dose_day'])
+                            self.__data['vaccination_doses_day_total'] =                    max(self.__data['vaccination_doses_day_total'], self.__data[date][district[2]]['vaccination_doses_day'])
+                            self.__data['vaccination_1_dose_alltime_total'] =               max(self.__data['vaccination_1_dose_alltime_total'], self.__data[date][district[2]]['vaccination_1_dose_alltime'])
+                            self.__data['vaccination_2_dose_alltime_total'] =               max(self.__data['vaccination_2_dose_alltime_total'], self.__data[date][district[2]]['vaccination_2_dose_alltime'])
+                            self.__data['vaccination_3_dose_alltime_total'] =               max(self.__data['vaccination_3_dose_alltime_total'], self.__data[date][district[2]]['vaccination_3_dose_alltime'])
+                            self.__data['vaccination_4_dose_alltime_total'] =               max(self.__data['vaccination_4_dose_alltime_total'], self.__data[date][district[2]]['vaccination_4_dose_alltime'])
+                            self.__data['vaccination_doses_alltime_total'] =                max(self.__data['vaccination_doses_alltime_total'], self.__data[date][district[2]]['vaccination_doses_alltime'])
+                            self.__data['vaccination_1_dose_day_100k_total'] =              max(self.__data['vaccination_1_dose_day_100k_total'], self.__data[date][district[2]]['vaccination_1_dose_day_100k'])
+                            self.__data['vaccination_2_dose_day_100k_total'] =              max(self.__data['vaccination_2_dose_day_100k_total'], self.__data[date][district[2]]['vaccination_2_dose_day_100k'])
+                            self.__data['vaccination_3_dose_day_100k_total'] =              max(self.__data['vaccination_3_dose_day_100k_total'], self.__data[date][district[2]]['vaccination_3_dose_day_100k'])
+                            self.__data['vaccination_4_dose_day_100k_total'] =              max(self.__data['vaccination_4_dose_day_100k_total'], self.__data[date][district[2]]['vaccination_4_dose_day_100k'])
+                            self.__data['vaccination_doses_day_100k_total'] =               max(self.__data['vaccination_doses_day_100k_total'], self.__data[date][district[2]]['vaccination_doses_day_100k'])
+                            self.__data['vaccination_1_dose_alltime_100k_total'] =          max(self.__data['vaccination_1_dose_alltime_100k_total'], self.__data[date][district[2]]['vaccination_1_dose_alltime_100'])
+                            self.__data['vaccination_2_dose_alltime_100k_total'] =          max(self.__data['vaccination_2_dose_alltime_100k_total'], self.__data[date][district[2]]['vaccination_2_dose_alltime_100'])
+                            self.__data['vaccination_3_dose_alltime_100k_total'] =          max(self.__data['vaccination_3_dose_alltime_100k_total'], self.__data[date][district[2]]['vaccination_3_dose_alltime_100'])
+                            self.__data['vaccination_4_dose_alltime_100k_total'] =          max(self.__data['vaccination_4_dose_alltime_100k_total'], self.__data[date][district[2]]['vaccination_4_dose_alltime_100'])
+                            self.__data['vaccination_doses_alltime_100k_total'] =           max(self.__data['vaccination_doses_alltime_100k_total'], self.__data[date][district[2]]['vaccination_doses_alltime_100k'])
 
-                    self.__data[date]['davka_celkem_den'] = celkem_den
-                    self.__data[date]['davka_celkem_doposud'] = celkem_doposud
-                    self.__data[date]['davka_2_doposud'] = davka_2_doposud
+                    self.__data[date]['vaccination_doses_day'] = vaccination_doses_day
+                    self.__data[date]['vaccination_doses_alltime'] = vaccination_doses_alltime
+                    self.__data[date]['vaccination_2_dose_alltime'] = vaccination_2_dose_alltime
                 
-                self.__data['absolute_celkem'] = absolute_celkem
-                self.__data['davka_2_doposud'] = davka_2_doposud
-                self.__data['okres_absolute_max'] = okres_absolute_celkem
+                self.__data['vaccination_doses_count'] = vaccination_doses_count
+                self.__data['vaccination_2_dose_alltime'] = vaccination_2_dose_alltime
+                self.__data['vaccination_doses_district_max'] = vaccination_doses_district_max
 
                 ################################
                 # Download deaths
                 ################################
 
-                self.__data['celkem_max_den'] = self.__data['celkem_max_sto_tisic_den'] = self.__data['celkem_max_doposud'] = self.__data['celkem_max_sto_tisic_doposud'] = 0
+                self.__data['deaths_day_total'] = self.__data['deaths_day_100k_total'] = self.__data['deaths_alltime_total'] = self.__data['deaths_alltime_100k_total'] = 0
                 for date in all_requested_dates:
                     response = db.get_records_day("death", date)
-                    self.__data[date]['celkem_umrti'] = celkem_den = self.__data[date]['max_umrti_den'] = self.__data[date]['max_umrti_den_sto_tisic'] = self.__data[date]['max_umrti_doposud'] = self.__data[date]['max_umrti_doposud_sto_tisic'] = 0
-                    for okres in response:
-                        if okres[2] is not None:
-                            celkem_den += okres[3]
-                            celkem_doposud_umrti += okres[3]
-                            self.__data[date][okres[2]]['umrti_den'] = okres[3]
-                            self.__data[date][okres[2]]['umrti_doposud'] = okres[4]
-                            self.__data[date][okres[2]]['umrti_den_sto_tisic'] = okres[3] / (self._population[okres[2]] / 100000)
-                            self.__data[date][okres[2]]['umrti_doposud_sto_tisic'] = okres[4] / (self._population[okres[2]] / 100000)
+                    self.__data[date]['celkem_umrti'] = deaths_day_count = self.__data[date]['deaths_day_max'] = self.__data[date]['deaths_day_100k_max'] = self.__data[date]['deaths_alltime_max'] = self.__data[date]['deaths_alltime_100k_max'] = 0
+                    for district in response:
+                        if district[2] is not None:
+                            deaths_day_count += district[3]
+                            deaths_alltime_count += district[3]
+                            self.__data[date][district[2]]['deaths_day'] = district[3]
+                            self.__data[date][district[2]]['deaths_alltime'] = district[4]
+                            self.__data[date][district[2]]['deaths_day_100k'] = district[3] / (self._population[district[2]] / 100000)
+                            self.__data[date][district[2]]['deaths_alltime_100k'] = district[4] / (self._population[district[2]] / 100000)
                             
-                            self.__data[date]['max_umrti_den'] =                            max(self.__data[date]['max_umrti_den'], self.__data[date][okres[2]]['umrti_den'])
-                            self.__data[date]['max_umrti_den_sto_tisic'] =                  max(self.__data[date]['max_umrti_den_sto_tisic'], self.__data[date][okres[2]]['umrti_den_sto_tisic'])
-                            self.__data[date]['max_umrti_doposud'] =                        max(self.__data[date]['max_umrti_doposud'], self.__data[date][okres[2]]['umrti_doposud'])
-                            self.__data[date]['max_umrti_doposud_sto_tisic'] =              max(self.__data[date]['max_umrti_doposud_sto_tisic'], self.__data[date][okres[2]]['umrti_doposud_sto_tisic'])
-                            self.__data['celkem_max_den'] =                                 max(self.__data['celkem_max_den'], self.__data[date][okres[2]]['umrti_den'])
-                            self.__data['celkem_max_sto_tisic_den'] =                       max(self.__data['celkem_max_sto_tisic_den'], self.__data[date][okres[2]]['umrti_den_sto_tisic'])
-                            self.__data['celkem_max_doposud'] =                             max(self.__data['celkem_max_doposud'], self.__data[date][okres[2]]['umrti_doposud'])
-                            self.__data['celkem_max_sto_tisic_doposud'] =                   max(self.__data['celkem_max_sto_tisic_doposud'], self.__data[date][okres[2]]['umrti_doposud_sto_tisic'])
+                            self.__data[date]['deaths_day_max'] =           max(self.__data[date]['deaths_day_max'], self.__data[date][district[2]]['deaths_day'])
+                            self.__data[date]['deaths_day_100k_max'] =      max(self.__data[date]['deaths_day_100k_max'], self.__data[date][district[2]]['deaths_day_100k'])
+                            self.__data[date]['deaths_alltime_max'] =       max(self.__data[date]['deaths_alltime_max'], self.__data[date][district[2]]['deaths_alltime'])
+                            self.__data[date]['deaths_alltime_100k_max'] = 	max(self.__data[date]['deaths_alltime_100k_max'], self.__data[date][district[2]]['deaths_alltime_100k'])
+                            self.__data['deaths_day_total'] =               max(self.__data['deaths_day_total'], self.__data[date][district[2]]['deaths_day'])
+                            self.__data['deaths_day_100k_total'] =          max(self.__data['deaths_day_100k_total'], self.__data[date][district[2]]['deaths_day_100k'])
+                            self.__data['deaths_alltime_total'] =           max(self.__data['deaths_alltime_total'], self.__data[date][district[2]]['deaths_alltime'])
+                            self.__data['deaths_alltime_100k_total'] =      max(self.__data['deaths_alltime_100k_total'], self.__data[date][district[2]]['deaths_alltime_100k'])
 
-                    self.__data[date]['celkem_den'] = celkem_den
-                    self.__data[date]['celkem_doposud'] = celkem_doposud_umrti
+                    self.__data[date]['deaths_day_count'] = deaths_day_count
+                    self.__data[date]['deaths_alltime_count'] = deaths_alltime_count
                 
-                self.__data['celkem_doposud_umrti'] = celkem_doposud_umrti
+                self.__data['deaths_alltime_count'] = deaths_alltime_count
 
                 ################################
                 # Download testing infromation
                 ################################
 
-                self.__data['rozsah_max_prirustek'] = self.__data['rozsah_max_prirustek_sto_tisic'] = self.__data['rozsah_max_celkem'] = self.__data['rozsah_max_celkem_sto_tisic'] = self.__data['rozsah_max_prirustek_korekce'] = self.__data['rozsah_max_prirustek_korekce_sto_tisic'] = self.__data['rozsah_max_celkem_korekce'] = self.__data['rozsah_max_celkem_korekce_sto_tisic'] = 0
+                self.__data['pcr_tests_day_total'] = self.__data['pcr_tests_day_100k_total'] = self.__data['pcr_tests_alltime_total'] = self.__data['pcr_tests_alltime_100k_total'] = self.__data['rozsah_max_prirustek_korekce'] = self.__data['rozsah_max_prirustek_korekce_sto_tisic'] = self.__data['rozsah_max_celkem_korekce'] = self.__data['rozsah_max_celkem_korekce_sto_tisic'] = 0
 
                 for date in all_requested_dates:
                     response = db.get_records_day("pcr_test", date)
 
-                    self.__data[date]['celkem_testovani'] = celkem_den_prirustek = celkem_den_celkem = self.__data[date]['max_den'] = self.__data[date]['max_den_sto_tisic'] = self.__data[date]['celkem_max_den'] = self.__data[date]['celkem_max_den_sto_tisic'] = self.__data[date]['max_korekce_den'] = self.__data[date]['max_korekce_den_sto_tisic'] = self.__data[date]['celkem_max_korekce_den'] = self.__data[date]['celkem_max_korekce_den_sto_tisic'] = 0
+                    self.__data[date]['celkem_testovani'] = pcr_tests_new_day_count = pcr_tests_alltime_count = self.__data[date]['pcr_tests_day_max'] = self.__data[date]['pcr_tests_day_100k_max'] = self.__data[date]['pcr_tests_alltime_max'] = self.__data[date]['pcr_tests_alltime_100k_max'] = self.__data[date]['max_korekce_den'] = self.__data[date]['max_korekce_den_sto_tisic'] = self.__data[date]['celkem_max_korekce_den'] = self.__data[date]['celkem_max_korekce_den_sto_tisic'] = 0
 
-                    for okres in response:
-                        if okres[2] is not None:
-                            prirustek = celkem = prirustek_korekce = celkem_korekce = 0
-                            if okres[3] is not None: prirustek = okres[3]
-                            if okres[4] is not None: celkem = okres[4]
-                            if okres[5] is not None: prirustek_korekce = okres[5]
-                            if okres[6] is not None: celkem_korekce = okres[6]
+                    for district in response:
+                        if district[2] is not None:
+                            pcr_tests_day = pcr_tests_alltime = prirustek_korekce = celkem_korekce = 0
+                            if district[3] is not None: pcr_tests_day = district[3]
+                            if district[4] is not None: pcr_tests_alltime = district[4]
+                            # if district[5] is not None: prirustek_korekce = district[5]
+                            # if district[6] is not None: celkem_korekce = district[6]
 
-                            celkem_den_prirustek += prirustek
-                            celkem_den_celkem += okres[4]
-                            celkem_doposud_testy += prirustek
-                            self.__data[date][okres[2]]['prirustek'] = prirustek
-                            self.__data[date][okres[2]]['celkem'] = celkem
-                            self.__data[date][okres[2]]['prirustek_sto_tisic'] = prirustek / (self._population[okres[2]] / 100000)
-                            self.__data[date][okres[2]]['celkem_sto_tisic'] = celkem / (self._population[okres[2]] / 100000)
-                            self.__data[date][okres[2]]['prirustek_korekce'] = prirustek_korekce
-                            self.__data[date][okres[2]]['celkem_korekce'] = celkem_korekce
-                            self.__data[date][okres[2]]['prirustek_korekce_sto_tisic'] = prirustek_korekce / (self._population[okres[2]] / 100000)
-                            self.__data[date][okres[2]]['celkem_korekce_sto_tisic'] = celkem_korekce / (self._population[okres[2]] / 100000)
+                            pcr_tests_new_day_count += pcr_tests_day
+                            pcr_tests_alltime_count += district[4]
+                            pcr_tests_alltime_count += pcr_tests_day
+                            self.__data[date][district[2]]['pcr_tests_day'] = pcr_tests_day
+                            self.__data[date][district[2]]['pcr_tests_alltime'] = pcr_tests_alltime
+                            self.__data[date][district[2]]['pcr_tests_day_100k'] = pcr_tests_day / (self._population[district[2]] / 100000)
+                            self.__data[date][district[2]]['pcr_tests_alltime_100k'] = pcr_tests_alltime / (self._population[district[2]] / 100000)
+                            # self.__data[date][district[2]]['prirustek_korekce'] = prirustek_korekce
+                            # self.__data[date][district[2]]['celkem_korekce'] = celkem_korekce
+                            # self.__data[date][district[2]]['prirustek_korekce_sto_tisic'] = prirustek_korekce / (self._population[district[2]] / 100000)
+                            # self.__data[date][district[2]]['celkem_korekce_sto_tisic'] = celkem_korekce / (self._population[district[2]] / 100000)
                             
-                            self.__data[date]['max_den'] =                              max(self.__data[date]['max_den'], prirustek)
-                            self.__data[date]['max_den_sto_tisic'] =                    max(self.__data[date]['max_den_sto_tisic'], self.__data[date][okres[2]]['prirustek_sto_tisic'])
-                            self.__data[date]['celkem_max_den'] =                       max(self.__data[date]['celkem_max_den'], celkem)
-                            self.__data[date]['celkem_max_den_sto_tisic'] =             max(self.__data[date]['celkem_max_den_sto_tisic'], self.__data[date][okres[2]]['celkem_sto_tisic'])
-                            self.__data[date]['max_korekce_den'] =                      max(self.__data[date]['max_korekce_den'], prirustek_korekce)
-                            self.__data[date]['max_korekce_den_sto_tisic'] =            max(self.__data[date]['max_korekce_den_sto_tisic'], self.__data[date][okres[2]]['prirustek_korekce_sto_tisic'])
-                            self.__data[date]['celkem_max_korekce_den'] =               max(self.__data[date]['celkem_max_korekce_den'], celkem_korekce)
-                            self.__data[date]['celkem_max_korekce_den_sto_tisic'] =     max(self.__data[date]['celkem_max_korekce_den_sto_tisic'], self.__data[date][okres[2]]['celkem_korekce_sto_tisic'])
-                            self.__data['rozsah_max_prirustek'] =                       max(self.__data['rozsah_max_prirustek'], prirustek)
-                            self.__data['rozsah_max_prirustek_sto_tisic'] =             max(self.__data['rozsah_max_prirustek_sto_tisic'], self.__data[date][okres[2]]['prirustek_sto_tisic'])
-                            self.__data['rozsah_max_celkem'] =                          max(self.__data['rozsah_max_celkem'], celkem)
-                            self.__data['rozsah_max_celkem_sto_tisic'] =                max(self.__data['rozsah_max_celkem_sto_tisic'], self.__data[date][okres[2]]['celkem_sto_tisic'])
-                            self.__data['rozsah_max_prirustek_korekce'] =               max(self.__data['rozsah_max_prirustek_korekce'], self.__data[date][okres[2]]['prirustek_korekce_sto_tisic'])
-                            self.__data['rozsah_max_prirustek_korekce_sto_tisic'] =     max(self.__data['rozsah_max_prirustek_korekce_sto_tisic'], prirustek_korekce)
-                            self.__data['rozsah_max_celkem_korekce'] =                  max(self.__data['rozsah_max_celkem_korekce'], celkem_korekce)
-                            self.__data['rozsah_max_celkem_korekce_sto_tisic'] =        max(self.__data['rozsah_max_celkem_korekce'], self.__data[date][okres[2]]['celkem_korekce_sto_tisic'])
+                            self.__data[date]['pcr_tests_day_max'] =                max(self.__data[date]['pcr_tests_day_max'], pcr_tests_day)
+                            self.__data[date]['pcr_tests_day_100k_max'] =           max(self.__data[date]['pcr_tests_day_100k_max'], self.__data[date][district[2]]['pcr_tests_day_100k'])
+                            self.__data[date]['pcr_tests_alltime_max'] =            max(self.__data[date]['pcr_tests_alltime_max'], pcr_tests_alltime)
+                            self.__data[date]['pcr_tests_alltime_100k_max'] = 		max(self.__data[date]['pcr_tests_alltime_100k_max'], self.__data[date][district[2]]['pcr_tests_alltime_100k'])
+                            # self.__data[date]['max_korekce_den'] =                      max(self.__data[date]['max_korekce_den'], prirustek_korekce)
+                            # self.__data[date]['max_korekce_den_sto_tisic'] =            max(self.__data[date]['max_korekce_den_sto_tisic'], self.__data[date][district[2]]['prirustek_korekce_sto_tisic'])
+                            # self.__data[date]['celkem_max_korekce_den'] =               max(self.__data[date]['celkem_max_korekce_den'], celkem_korekce)
+                            # self.__data[date]['celkem_max_korekce_den_sto_tisic'] =     max(self.__data[date]['celkem_max_korekce_den_sto_tisic'], self.__data[date][district[2]]['celkem_korekce_sto_tisic'])
+                            self.__data['pcr_tests_day_total'] =                    max(self.__data['pcr_tests_day_total'], pcr_tests_day)
+                            self.__data['pcr_tests_day_100k_total'] =             	max(self.__data['pcr_tests_day_100k_total'], self.__data[date][district[2]]['pcr_tests_day_100k'])
+                            self.__data['pcr_tests_alltime_total'] =                max(self.__data['pcr_tests_alltime_total'], pcr_tests_alltime)
+                            self.__data['pcr_tests_alltime_100k_total'] =           max(self.__data['pcr_tests_alltime_100k_total'], self.__data[date][district[2]]['pcr_tests_alltime_100k'])
+                            # self.__data['rozsah_max_prirustek_korekce'] =               max(self.__data['rozsah_max_prirustek_korekce'], self.__data[date][district[2]]['prirustek_korekce_sto_tisic'])
+                            # self.__data['rozsah_max_prirustek_korekce_sto_tisic'] =     max(self.__data['rozsah_max_prirustek_korekce_sto_tisic'], prirustek_korekce)
+                            # self.__data['rozsah_max_celkem_korekce'] =                  max(self.__data['rozsah_max_celkem_korekce'], celkem_korekce)
+                            # self.__data['rozsah_max_celkem_korekce_sto_tisic'] =        max(self.__data['rozsah_max_celkem_korekce'], self.__data[date][district[2]]['celkem_korekce_sto_tisic'])
 
-                    self.__data[date]['celkem_prirustek_den'] = celkem_den_prirustek
-                    self.__data[date]['celkem_celkem_den'] = celkem_den_celkem
+                    self.__data[date]['pcr_tests_new_day_count'] = pcr_tests_new_day_count
+                    self.__data[date]['pcr_tests_alltime_count'] = pcr_tests_alltime_count
                     self.get_instance().__last_day = date
                 
-                self.__data['celkem_doposud_testy'] = celkem_doposud_testy
+                self.__data['pcr_tests_alltime_count'] = pcr_tests_alltime_count
 
                 # print('[CACHE] Cache is updated (' + str(get_deep_size(self.__data)) + ' bytes)')
                 self.get_instance().__initialized = True

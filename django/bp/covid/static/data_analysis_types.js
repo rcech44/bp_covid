@@ -1,16 +1,14 @@
-// This dictionary holds information about what to draw from data according to current selected analysis when requested
+// This dictionary holds information about what to pick from data according to current selected analysis when requested
 
 data_analysis_types = {
     "Současně nakažení":
     {
         value: "infections_active",
         max_value: "infections_active_max",
-        min_value: "min_aktivni",
         max_range: 'infections_active_max_total',
         text: "Současný počet nakažených",
         value_100: "infections_active_100k",
         max_value_100: "infections_active_100k_max",
-        min_value_100: "infections_active_100k_min",
         max_range_100: 'infections_active_100k_max_total',
         text_100: "Současný počet nakažených na 100 tisíc obyvatel"
     },
@@ -18,234 +16,204 @@ data_analysis_types = {
     {
         value: "infections_new",
         max_value: "infections_new_max",
-        min_value: "min_nove",
         max_range: 'infections_new_max_total',
         text: "Počet nově nakažených",
-        value_100: "nove_pripady_sto_tisic",
-        max_value_100: "max_nove_sto_tisic",
-        min_value_100: "min_nove_sto_tisic",
-        max_range_100: 'max_nove_pripady_sto_tisic',
+        value_100: "infections_new_100k",
+        max_value_100: "infections_new_100k_max",
+        max_range_100: 'infections_new_100k_max_total',
         text_100: "Počet nově nakažených na 100 tisíc obyvatel"
     },
     "Nové případy za poslední týden":
     {
-        value: "nove_pripady_7",
-        max_value: "max_nove_7",
-        min_value: "min_nove_7",
-        max_range: 'max_nove_pripady_7',
+        value: "infections_new_7",
+        max_value: "infections_new_7_max",
+        max_range: 'infections_new_7_max_total',
         text: "Počet nově nakažených za posledních 7 dní",
-        value_100: "nove_pripady_7_sto_tisic",
-        max_value_100: "max_nove_7_sto_tisic",
-        min_value_100: "min_nove_7_sto_tisic",
-        max_range_100: 'max_nove_pripady_7_sto_tisic',
+        value_100: "infections_new_7_100k",
+        max_value_100: "infections_new_7_100k_max",
+        max_range_100: 'infections_new_7_100k_max_total',
         text_100: "Počet nově nakažených za posledních 7 dní na 100 tisíc obyvatel"
     },
     "Nové případy za poslední dva týdny":
     {
-        value: "nove_pripady_14",
-        max_value: "max_nove_14",
-        min_value: "min_nove_14",
-        max_range: 'max_nove_pripady_14',
+        value: "infections_new_14",
+        max_value: "infections_new_14_max",
+        max_range: 'infections_new_14_max_total',
         text: "Počet nově nakažených za posledních 14 dní",
-        value_100: "nove_pripady_14_sto_tisic",
-        max_value_100: "max_nove_14_sto_tisic",
-        min_value_100: "min_nove_14_sto_tisic",
-        max_range_100: 'max_nove_pripady_14_sto_tisic',
+        value_100: "infections_new_14_100k",
+        max_value_100: "infections_new_14_100k_max",
+        max_range_100: 'infections_new_14_100k_max_total',
         text_100: "Počet nově nakažených za posledních 14 dní na 100 tisíc obyvatel"
     },
     "Nové případy lidí starších 65 let":
     {
-        value: "nove_pripady_65",
-        max_value: "max_nove_65",
-        min_value: "min_nove_65",
-        max_range: 'max_nove_pripady_65',
+        value: "infections_new_65_age",
+        max_value: "infections_new_65_age_max",
+        max_range: 'infections_new_65_age_max_total',
         text: "Počet nově nakažených lidí starších 65 let",
-        value_100: "nove_pripady_65_sto_tisic",
-        max_value_100: "max_nove_65_sto_tisic",
-        min_value_100: "min_nove_65_sto_tisic",
-        max_range_100: 'max_nove_pripady_65_sto_tisic',
+        value_100: "infections_new_65_age_100k",
+        max_value_100: "infections_new_65_age_100k_max",
+        max_range_100: 'infections_new_65_age_100k_max_total',
         text_100: "Počet nově nakažených lidí starších 65 let na 100 tisíc obyvatel"
     },
+
+
     "Všechny dávky tento den":
     {
-        value: "davka_celkem_den",
-        max_value: "davka_celkem_den_max",
-        min_value: "davka_celkem_den_min",
+        value: "vaccination_doses_day",
+        max_value: "vaccination_doses_day_max",
         text: "Naočkovaní obyvatelé",
-        value_100: "davka_celkem_den_sto_tisic",
-        max_value_100: "davka_celkem_den_max_sto_tisic",
-        min_value_100: "davka_celkem_den_min_sto_tisic",
+        value_100: "vaccination_doses_day_100k",
+        max_value_100: "vaccination_doses_day_100k_max",
         text_100: "Naočkovaní obyvatelé na 100 tisíc obyvatel",
-        max_range: 'max_celkem_den',
-        max_range_100: 'max_celkem_den_sto_tisic'
+        max_range: 'vaccination_doses_day_total',
+        max_range_100: 'vaccination_doses_day_100k_total'
     },
     "Všechny dávky doposud":
     {
-        value: "davka_celkem_doposud",
-        max_value: "davka_celkem_doposud_max",
-        min_value: "davka_celkem_doposud_min",
+        value: "vaccination_doses_alltime",
+        max_value: "vaccination_doses_alltime_max",
         text: "Naočkovaní obyvatelé",
-        value_100: "davka_celkem_doposud_sto_tisic",
-        max_value_100: "davka_celkem_doposud_max_sto_tisic",
-        min_value_100: "davka_celkem_doposud_min_sto_tisic",
+        value_100: "vaccination_doses_alltime_100k",
+        max_value_100: "vaccination_doses_alltime_100k_max",
         text_100: "Naočkovaní obyvatelé na 100 tisíc obyvatel",
-        max_range: 'max_celkem_doposud',
-        max_range_100: 'max_celkem_doposud_sto_tisic'
+        max_range: 'vaccination_doses_alltime_total',
+        max_range_100: 'vaccination_doses_alltime_100k_total'
     },
     "První dávka tento den":
     {
-        value: "davka_1_den",
-        max_value: "davka_1_max",
-        min_value: "davka_1_min",
+        value: "vaccination_1_dose_day",
+        max_value: "vaccination_1_dose_day_max",
         text: "Naočkovaní obyvatelé první dávkou tento den",
-        value_100: "davka_1_den_sto_tisic",
-        max_value_100: "davka_1_max_sto_tisic",
-        min_value_100: "davka_1_min_sto_tisic",
+        value_100: "vaccination_1_dose_day_100k",
+        max_value_100: "vaccination_1_dose_day_100k_max",
         text_100: "Naočkovaní obyvatelé první dávkou tento den na 100 tisíc obyvatel",
-        max_range: 'max_celkem_davka_1_den',
-        max_range_100: 'max_celkem_davka_1_den_sto_tisic'
+        max_range: 'vaccination_1_dose_day_total',
+        max_range_100: 'vaccination_1_dose_day_100k_total'
     },
     "První dávka doposud":
     {
-        value: "davka_1_doposud",
-        max_value: "davka_1_doposud_max",
-        min_value: "davka_1_doposud_min",
+        value: "vaccination_1_dose_alltime",
+        max_value: "vaccination_1_dose_alltime_max",
         text: "Naočkovaní obyvatelé první dávkou",
-        value_100: "davka_1_doposud_sto_tisic",
-        max_value_100: "davka_1_doposud_max_sto_tisic",
-        min_value_100: "davka_1_doposud_min_sto_tisic",
+        value_100: "vaccination_1_dose_alltime_100",
+        max_value_100: "vaccination_1_dose_alltime_100_max",
         text_100: "Naočkovaní obyvatelé první dávkou na 100 tisíc obyvatel",
-        max_range: 'max_celkem_davka_1_doposud',
-        max_range_100: 'max_celkem_davka_1_doposud_sto_tisic'
+        max_range: 'vaccination_1_dose_alltime_total',
+        max_range_100: 'vaccination_1_dose_alltime_100k_total'
     },
     "Druhá dávka tento den":
     {
-        value: "davka_2_den",
-        max_value: "davka_2_max",
-        min_value: "davka_2_min",
+        value: "vaccination_2_dose_day",
+        max_value: "vaccination_2_dose_day_max",
         text: "Naočkovaní obyvatelé druhou dávkou tento den",
-        value_100: "davka_2_den_sto_tisic",
-        max_value_100: "davka_2_max_sto_tisic",
-        min_value_100: "davka_2_min_sto_tisic",
+        value_100: "vaccination_2_dose_day_100k",
+        max_value_100: "vaccination_2_dose_day_100k_max",
         text_100: "Naočkovaní obyvatelé druhou dávkou tento den na 100 tisíc obyvatel",
-        max_range: 'max_celkem_davka_2_den',
-        max_range_100: 'max_celkem_davka_2_den_sto_tisic'
+        max_range: 'vaccination_2_dose_day_total',
+        max_range_100: 'vaccination_2_dose_day_100k_total'
     },
     "Druhá dávka doposud":
     {
-        value: "davka_2_doposud",
-        max_value: "davka_2_doposud_max",
-        min_value: "davka_2_doposud_min",
+        value: "vaccination_2_dose_alltime",
+        max_value: "vaccination_2_dose_alltime_max",
         text: "Naočkovaní obyvatelé druhou dávkou",
-        value_100: "davka_2_doposud_sto_tisic",
-        max_value_100: "davka_2_doposud_max_sto_tisic",
-        min_value_100: "davka_2_doposud_min_sto_tisic",
+        value_100: "vaccination_2_dose_alltime_100",
+        max_value_100: "vaccination_2_dose_alltime_100_max",
         text_100: "Naočkovaní obyvatelé druhou dávkou na 100 tisíc obyvatel",
-        max_range: 'max_celkem_davka_2_doposud',
-        max_range_100: 'max_celkem_davka_2_doposud_sto_tisic'
+        max_range: 'vaccination_2_dose_alltime_total',
+        max_range_100: 'vaccination_2_dose_alltime_100k_total'
     },
     "Třetí dávka tento den":
     {
-        value: "davka_3_den",
-        max_value: "davka_3_max",
-        min_value: "davka_3_min",
+        value: "vaccination_3_dose_day",
+        max_value: "vaccination_3_dose_day_max",
         text: "Naočkovaní obyvatelé třetí dávkou tento den",
-        value_100: "davka_3_den_sto_tisic",
-        max_value_100: "davka_3_max_sto_tisic",
-        min_value_100: "davka_3_min_sto_tisic",
+        value_100: "vaccination_3_dose_day_100k",
+        max_value_100: "vaccination_3_dose_day_100k_max",
         text_100: "Naočkovaní obyvatelé třetí dávkou tento den na 100 tisíc obyvatel",
-        max_range: 'max_celkem_davka_3_den',
-        max_range_100: 'max_celkem_davka_3_den_sto_tisic'
+        max_range: 'vaccination_3_dose_day_total',
+        max_range_100: 'vaccination_3_dose_day_100k_total'
     },
     "Třetí dávka doposud":
     {
-        value: "davka_3_doposud",
-        max_value: "davka_3_doposud_max",
-        min_value: "davka_3_doposud_min",
+        value: "vaccination_3_dose_alltime",
+        max_value: "vaccination_3_dose_alltime_max",
         text: "Naočkovaní obyvatelé třetí dávkou",
-        value_100: "davka_3_doposud_sto_tisic",
-        max_value_100: "davka_3_doposud_max_sto_tisic",
-        min_value_100: "davka_3_doposud_min_sto_tisic",
+        value_100: "vaccination_3_dose_alltime_100",
+        max_value_100: "vaccination_3_dose_alltime_100_max",
         text_100: "Naočkovaní obyvatelé třetí dávkou na 100 tisíc obyvatel",
-        max_range: 'max_celkem_davka_3_doposud',
-        max_range_100: 'max_celkem_davka_3_doposud_sto_tisic'
+        max_range: 'vaccination_3_dose_alltime_total',
+        max_range_100: 'vaccination_3_dose_alltime_100k_total'
     },
     "Čtvrtá dávka tento den":
     {
-        value: "davka_4_den",
-        max_value: "davka_4_max",
-        min_value: "davka_4_min",
+        value: "vaccination_4_dose_day",
+        max_value: "vaccination_4_dose_day_max",
         text: "Naočkovaní obyvatelé čtvrtou dávkou tento den",
-        value_100: "davka_4_den_sto_tisic",
-        max_value_100: "davka_4_max_sto_tisic",
-        min_value_100: "davka_4_min_sto_tisic",
+        value_100: "vaccination_4_dose_day_100k",
+        max_value_100: "vaccination_4_dose_day_100k_max",
         text_100: "Naočkovaní obyvatelé čtvrtou dávkou tento den na 100 tisíc obyvatel",
-        max_range: 'max_celkem_davka_4_den',
-        max_range_100: 'max_celkem_davka_4_den_sto_tisic'
+        max_range: 'vaccination_4_dose_day_total',
+        max_range_100: 'vaccination_4_dose_day_100k_total'
     },
     "Čtvrtá dávka doposud":
     {
-        value: "davka_4_doposud",
-        max_value: "davka_4_doposud_max",
-        min_value: "davka_4_doposud_min",
+        value: "vaccination_4_dose_alltime",
+        max_value: "vaccination_4_dose_alltime_max",
         text: "Naočkovaní obyvatelé čtvrtou dávkou",
-        value_100: "davka_4_doposud_sto_tisic",
-        max_value_100: "davka_4_doposud_max_sto_tisic",
-        min_value_100: "davka_4_doposud_min_sto_tisic",
+        value_100: "vaccination_4_dose_alltime_100",
+        max_value_100: "vaccination_4_dose_alltime_100_max",
         text_100: "Naočkovaní obyvatelé čtvrtou dávkou na 100 tisíc obyvatel",
-        max_range: 'max_celkem_davka_4_doposud',
-        max_range_100: 'max_celkem_davka_4_doposud_sto_tisic'
+        max_range: 'vaccination_4_dose_alltime_total',
+        max_range_100: 'vaccination_4_dose_alltime_100k_total'
     },
+
+
     "Aktuální celkový počet zemřelých doposud":
     {
-        value: "umrti_doposud",
-        max_value: "max_umrti_doposud",
-        min_value: "min_umrti_doposud",
+        value: "deaths_alltime",
+        max_value: "deaths_alltime_max",
         text: "Celkový počet zemřelých k danému dni",
-        value_100: "umrti_doposud_sto_tisic",
-        max_value_100: "max_umrti_doposud_sto_tisic",
-        min_value_100: "min_umrti_doposud_sto_tisic",
+        value_100: "deaths_alltime_100k",
+        max_value_100: "deaths_alltime_100k_max",
         text_100: "Celkový počet zemřelých k danému dni na 100 tisíc obyvatel",
-        max_range: 'celkem_max_doposud',
-        max_range_100: 'celkem_max_sto_tisic_doposud'
+        max_range: 'deaths_alltime_total',
+        max_range_100: 'deaths_alltime_100k_total'
     },
     "Počet nově zemřelých daný den":
     {
-        value: "umrti_den",
-        max_value: "max_umrti_den",
-        min_value: "min_umrti_den",
+        value: "deaths_day",
+        max_value: "deaths_day_max",
         text: "Počet nově zemřelých daný den",
-        value_100: "umrti_den_sto_tisic",
-        max_value_100: "max_umrti_den_sto_tisic",
-        min_value_100: "min_umrti_den_sto_tisic",
+        value_100: "deaths_day_100k",
+        max_value_100: "deaths_day_100k_max",
         text_100: "Počet nově zemřelých daný den na 100 tisíc obyvatel",
-        max_range: 'celkem_max_den',
-        max_range_100: 'celkem_max_sto_tisic_den'
+        max_range: 'deaths_day_total',
+        max_range_100: 'deaths_day_100k_total'
     },
+
+
     "Aktuální celkový počet otestovaných doposud":
     {
-        value: "celkem",
-        max_value: "celkem_max_den",
-        min_value: "celkem_min_den",
+        value: "pcr_tests_alltime",
+        max_value: "pcr_tests_alltime_max",
         text: "Celkový počet otestovaných k danému dni",
-        value_100: "celkem_sto_tisic",
-        max_value_100: "celkem_max_den_sto_tisic",
-        min_value_100: "celkem_min_den_sto_tisic",
+        value_100: "pcr_tests_alltime_100k",
+        max_value_100: "pcr_tests_alltime_100k_max",
         text_100: "Celkový počet otestovaných k danému dni na 100 tisíc obyvatel",
-        max_range: 'rozsah_max_celkem',
-        max_range_100: 'rozsah_max_celkem_sto_tisic'
+        max_range: 'pcr_tests_alltime_total',
+        max_range_100: 'pcr_tests_alltime_100k_total'
     },
     "Počet nově otestovaných daný den":
     {
-        value: "prirustek",
-        max_value: "max_den",
-        min_value: "min_den",
+        value: "pcr_tests_day",
+        max_value: "pcr_tests_day_max",
         text: "Počet nově otestovaných daný den",
-        value_100: "prirustek_sto_tisic",
-        max_value_100: "max_den_sto_tisic",
-        min_value_100: "min_den_sto_tisic",
+        value_100: "pcr_tests_day_100k",
+        max_value_100: "pcr_tests_day_100k_max",
         text_100: "Počet nově otestovaných daný den na 100 tisíc obyvatel",
-        max_range: 'rozsah_max_prirustek',
-        max_range_100: 'rozsah_max_prirustek_sto_tisic'
+        max_range: 'pcr_tests_day_total',
+        max_range_100: 'pcr_tests_day_100k_total'
     }
 }

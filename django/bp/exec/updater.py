@@ -39,7 +39,7 @@ class Updater:
         db = SQLiteDatabase()
 
         try:
-            with db.get_connection() as conn:
+            with db.get_connection():
 
                 latest_date = db.get_date_of_latest_record(None)
                 if latest_date is not None:
@@ -79,26 +79,26 @@ class Updater:
                                 infections_day_results[district] = {}
                                 infections_day_results[district]['infections_new'] = 0
                                 infections_day_results[district]['infections_active'] = 0
-                                infections_day_results[district]['nove_pripady_7'] = 0
-                                infections_day_results[district]['nove_pripady_14'] = 0
-                                infections_day_results[district]['nove_pripady_65_vek'] = 0
+                                infections_day_results[district]['infections_new_7'] = 0
+                                infections_day_results[district]['infections_new_14'] = 0
+                                infections_day_results[district]['infections_new_65_age'] = 0
 
                             # Initialize empty district
                             infections_day_results["none"] = {}
                             infections_day_results["none"]['infections_new'] = 0
                             infections_day_results["none"]['infections_active'] = 0
-                            infections_day_results["none"]['nove_pripady_7'] = 0
-                            infections_day_results["none"]['nove_pripady_14'] = 0
-                            infections_day_results["none"]['nove_pripady_65_vek'] = 0
+                            infections_day_results["none"]['infections_new_7'] = 0
+                            infections_day_results["none"]['infections_new_14'] = 0
+                            infections_day_results["none"]['infections_new_65_age'] = 0
 
                             # Go through all districts for day
                             for town in towns:
                                 town_name = town['okres_lau_kod'] if town['okres_lau_kod'] != None else "none"
                                 infections_day_results[town_name]['infections_new'] += town['nove_pripady']
                                 infections_day_results[town_name]['infections_active'] += town['aktivni_pripady']
-                                infections_day_results[town_name]['nove_pripady_7'] += town['nove_pripady_7_dni']
-                                infections_day_results[town_name]['nove_pripady_14'] += town['nove_pripady_14_dni']
-                                infections_day_results[town_name]['nove_pripady_65_vek'] += town['nove_pripady_65']
+                                infections_day_results[town_name]['infections_new_7'] += town['nove_pripady_7_dni']
+                                infections_day_results[town_name]['infections_new_14'] += town['nove_pripady_14_dni']
+                                infections_day_results[town_name]['infections_new_65_age'] += town['nove_pripady_65']
 
                             # Save all districts
                             for district in infections_day_results:
@@ -112,9 +112,9 @@ class Updater:
                                     "district": district_name,
                                     "infections_new": infections_day_results[district]['infections_new'],
                                     "infections_active": infections_day_results[district]['infections_active'],
-                                    "nove_pripady_7": infections_day_results[district]['nove_pripady_7'],
-                                    "nove_pripady_14": infections_day_results[district]['nove_pripady_14'],
-                                    "nove_pripady_65_vek": infections_day_results[district]['nove_pripady_65_vek'],
+                                    "infections_new_7": infections_day_results[district]['infections_new_7'],
+                                    "infections_new_14": infections_day_results[district]['infections_new_14'],
+                                    "infections_new_65_age": infections_day_results[district]['infections_new_65_age'],
                                 }
                                 db.insert_record("infection", day_result)
 
@@ -131,24 +131,24 @@ class Updater:
                             # Initialize districts dictionary
                             for district in vaccinations_day_results:
                                 vaccinations_day_results[district] = {}
-                                vaccinations_day_results[district]['davka_1_den'] = 0
-                                vaccinations_day_results[district]['davka_2_den'] = 0
-                                vaccinations_day_results[district]['davka_3_den'] = 0
-                                vaccinations_day_results[district]['davka_4_den'] = 0
-                                vaccinations_day_results[district]['davka_1_doposud'] = 0
-                                vaccinations_day_results[district]['davka_2_doposud'] = 0
-                                vaccinations_day_results[district]['davka_3_doposud'] = 0
-                                vaccinations_day_results[district]['davka_4_doposud'] = 0
-                                vaccinations_day_results[district]['davka_celkem_den'] = 0
-                                vaccinations_day_results[district]['davka_celkem_doposud'] = 0
+                                vaccinations_day_results[district]['vaccination_1_dose_day'] = 0
+                                vaccinations_day_results[district]['vaccination_2_dose_day'] = 0
+                                vaccinations_day_results[district]['vaccination_3_dose_day'] = 0
+                                vaccinations_day_results[district]['vaccination_4_dose_day'] = 0
+                                vaccinations_day_results[district]['vaccination_1_dose_alltime'] = 0
+                                vaccinations_day_results[district]['vaccination_2_dose_alltime'] = 0
+                                vaccinations_day_results[district]['vaccination_3_dose_alltime'] = 0
+                                vaccinations_day_results[district]['vaccination_4_dose_alltime'] = 0
+                                vaccinations_day_results[district]['vaccination_doses_day'] = 0
+                                vaccinations_day_results[district]['vaccination_doses_alltime'] = 0
 
                                 # Add previous day's data to current data
                                 response = db.get_record("vaccination", district, update_date_yesterday)
-                                vaccinations_day_results[district]['davka_1_doposud'] = response[4]
-                                vaccinations_day_results[district]['davka_2_doposud'] = response[6]
-                                vaccinations_day_results[district]['davka_3_doposud'] = response[8]
-                                vaccinations_day_results[district]['davka_4_doposud'] = response[10]
-                                vaccinations_day_results[district]['davka_celkem_doposud'] = response[12]
+                                vaccinations_day_results[district]['vaccination_1_dose_alltime'] = response[4]
+                                vaccinations_day_results[district]['vaccination_2_dose_alltime'] = response[6]
+                                vaccinations_day_results[district]['vaccination_3_dose_alltime'] = response[8]
+                                vaccinations_day_results[district]['vaccination_4_dose_alltime'] = response[10]
+                                vaccinations_day_results[district]['vaccination_doses_alltime'] = response[12]
 
                             # Go through all vaccination records
                             for vaccination in vaccinations:
@@ -169,36 +169,36 @@ class Updater:
 
                                 # Now look at order of dose and add it into result (also add into total)
                                 if vaccination_order == 1:
-                                    vaccinations_day_results[district_code]['davka_1_den'] += number_of_doses
-                                    vaccinations_day_results[district_code]['davka_1_doposud'] += number_of_doses
+                                    vaccinations_day_results[district_code]['vaccination_1_dose_day'] += number_of_doses
+                                    vaccinations_day_results[district_code]['vaccination_1_dose_alltime'] += number_of_doses
                                 if vaccination_order == 2:
-                                    vaccinations_day_results[district_code]['davka_2_den'] += number_of_doses
-                                    vaccinations_day_results[district_code]['davka_2_doposud'] += number_of_doses
+                                    vaccinations_day_results[district_code]['vaccination_2_dose_day'] += number_of_doses
+                                    vaccinations_day_results[district_code]['vaccination_2_dose_alltime'] += number_of_doses
                                 if vaccination_order == 3:
-                                    vaccinations_day_results[district_code]['davka_3_den'] += number_of_doses
-                                    vaccinations_day_results[district_code]['davka_3_doposud'] += number_of_doses
+                                    vaccinations_day_results[district_code]['vaccination_3_dose_day'] += number_of_doses
+                                    vaccinations_day_results[district_code]['vaccination_3_dose_alltime'] += number_of_doses
                                 if vaccination_order == 4:
-                                    vaccinations_day_results[district_code]['davka_4_den'] += number_of_doses
-                                    vaccinations_day_results[district_code]['davka_4_doposud'] += number_of_doses
+                                    vaccinations_day_results[district_code]['vaccination_4_dose_day'] += number_of_doses
+                                    vaccinations_day_results[district_code]['vaccination_4_dose_alltime'] += number_of_doses
 
-                                vaccinations_day_results[district_code]['davka_celkem_den'] += number_of_doses
-                                vaccinations_day_results[district_code]['davka_celkem_doposud'] += number_of_doses
+                                vaccinations_day_results[district_code]['vaccination_doses_day'] += number_of_doses
+                                vaccinations_day_results[district_code]['vaccination_doses_alltime'] += number_of_doses
 
                             # After all records have been saved into result, push it into database
                             for district in vaccinations_day_results:
                                 day_result = {
                                     "date": update_date, 
                                     "district": district, 
-                                    'davka_1_den': vaccinations_day_results[district]['davka_1_den'], 
-                                    'davka_1_doposud': vaccinations_day_results[district]['davka_1_doposud'], 
-                                    'davka_2_den': vaccinations_day_results[district]['davka_2_den'], 
-                                    'davka_2_doposud': vaccinations_day_results[district]['davka_2_doposud'], 
-                                    'davka_3_den': vaccinations_day_results[district]['davka_3_den'], 
-                                    'davka_3_doposud': vaccinations_day_results[district]['davka_3_doposud'], 
-                                    'davka_4_den': vaccinations_day_results[district]['davka_4_den'], 
-                                    'davka_4_doposud': vaccinations_day_results[district]['davka_4_doposud'], 
-                                    'davka_celkem_den': vaccinations_day_results[district]['davka_celkem_den'], 
-                                    'davka_celkem_doposud': vaccinations_day_results[district]['davka_celkem_doposud']
+                                    'vaccination_1_dose_day': vaccinations_day_results[district]['vaccination_1_dose_day'], 
+                                    'vaccination_1_dose_alltime': vaccinations_day_results[district]['vaccination_1_dose_alltime'], 
+                                    'vaccination_2_dose_day': vaccinations_day_results[district]['vaccination_2_dose_day'], 
+                                    'vaccination_2_dose_alltime': vaccinations_day_results[district]['vaccination_2_dose_alltime'], 
+                                    'vaccination_3_dose_day': vaccinations_day_results[district]['vaccination_3_dose_day'], 
+                                    'vaccination_3_dose_alltime': vaccinations_day_results[district]['vaccination_3_dose_alltime'], 
+                                    'vaccination_4_dose_day': vaccinations_day_results[district]['vaccination_4_dose_day'], 
+                                    'vaccination_4_dose_alltime': vaccinations_day_results[district]['vaccination_4_dose_alltime'], 
+                                    'vaccination_doses_day': vaccinations_day_results[district]['vaccination_doses_day'], 
+                                    'vaccination_doses_alltime': vaccinations_day_results[district]['vaccination_doses_alltime']
                                 }
                                 db.insert_record("vaccination", day_result)
                             
@@ -216,25 +216,25 @@ class Updater:
                             # Initialize districts dictionary
                             for district in deaths_day_results:
                                 deaths_day_results[district] = {}
-                                deaths_day_results[district]['umrti_den'] = 0
-                                deaths_day_results[district]['umrti_doposud'] = 0
+                                deaths_day_results[district]['deaths_day'] = 0
+                                deaths_day_results[district]['deaths_alltime'] = 0
 
                                 # Add previous day's data to current data
                                 response = db.get_record("death", district, update_date_yesterday)
-                                deaths_day_results[district]['umrti_doposud'] = response[4]
+                                deaths_day_results[district]['deaths_alltime'] = response[4]
 
                             # Go through all death records
                             for death in deaths:
-                                deaths_day_results[death['okres_lau_kod']]['umrti_den'] += 1
-                                deaths_day_results[death['okres_lau_kod']]['umrti_doposud'] += 1
+                                deaths_day_results[death['okres_lau_kod']]['deaths_day'] += 1
+                                deaths_day_results[death['okres_lau_kod']]['deaths_alltime'] += 1
 
                             # Initialize districts dictionary
                             for district in deaths_day_results:
                                 day_result = {
                                     "date": update_date,
                                     "district": district,
-                                    "umrti_den": deaths_day_results[district]['umrti_den'],
-                                    "umrti_doposud": deaths_day_results[district]['umrti_doposud']
+                                    "deaths_day": deaths_day_results[district]['deaths_day'],
+                                    "deaths_alltime": deaths_day_results[district]['deaths_alltime']
                                 }
                                 db.insert_record("death", day_result)
 
@@ -252,27 +252,27 @@ class Updater:
                             # Initialize districts dictionary
                             for district in pcr_testing_day_results:
                                 pcr_testing_day_results[district] = {}
-                                pcr_testing_day_results[district]['prirustek'] = 0
-                                pcr_testing_day_results[district]['celkem'] = 0
-                                pcr_testing_day_results[district]['prirustek_korekce'] = 0
-                                pcr_testing_day_results[district]['celkem_korekce'] = 0
+                                pcr_testing_day_results[district]['pcr_tests_day'] = 0
+                                pcr_testing_day_results[district]['pcr_tests_alltime'] = 0
+                                pcr_testing_day_results[district]['pcr_tests_day_correction'] = 0
+                                pcr_testing_day_results[district]['pcr_tests_alltime_correction'] = 0
 
                             # Go through all districts for day
                             for district in districts:
-                                pcr_testing_day_results[district['okres_lau_kod']]['prirustek'] = district['prirustkovy_pocet_testu_okres']
-                                pcr_testing_day_results[district['okres_lau_kod']]['celkem'] = district['kumulativni_pocet_testu_okres']
-                                pcr_testing_day_results[district['okres_lau_kod']]['prirustek_korekce'] = district['prirustkovy_pocet_prvnich_testu_okres']
-                                pcr_testing_day_results[district['okres_lau_kod']]['celkem_korekce'] = district['kumulativni_pocet_prvnich_testu_okres']
+                                pcr_testing_day_results[district['okres_lau_kod']]['pcr_tests_day'] = district['prirustkovy_pocet_testu_okres']
+                                pcr_testing_day_results[district['okres_lau_kod']]['pcr_tests_alltime'] = district['kumulativni_pocet_testu_okres']
+                                pcr_testing_day_results[district['okres_lau_kod']]['pcr_tests_day_correction'] = district['prirustkovy_pocet_prvnich_testu_okres']
+                                pcr_testing_day_results[district['okres_lau_kod']]['pcr_tests_alltime_correction'] = district['kumulativni_pocet_prvnich_testu_okres']
 
                             # Save all districts
                             for district in pcr_testing_day_results:
                                 day_result = {
                                     "date": update_date,
                                     "district": district,
-                                    "prirustek": pcr_testing_day_results[district]['prirustek'],
-                                    "celkem": pcr_testing_day_results[district]['celkem'],
-                                    "prirustek_korekce": pcr_testing_day_results[district]['prirustek_korekce'],
-                                    "celkem_korekce": pcr_testing_day_results[district]['celkem_korekce']
+                                    "pcr_tests_day": pcr_testing_day_results[district]['pcr_tests_day'],
+                                    "pcr_tests_alltime": pcr_testing_day_results[district]['pcr_tests_alltime'],
+                                    "pcr_tests_day_correction": pcr_testing_day_results[district]['pcr_tests_day_correction'],
+                                    "pcr_tests_alltime_correction": pcr_testing_day_results[district]['pcr_tests_alltime_correction']
                                 }
                                 db.insert_record("pcr_test", day_result)
 
