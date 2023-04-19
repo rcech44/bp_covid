@@ -10,7 +10,7 @@ class SQLiteDatabase:
         if cls._instance is None:
             try:
                 cls._instance = super().__new__(cls)
-                sqlite3.connect('sql/database.sqlite', check_same_thread=False)
+                # sqlite3.connect('sql/database.sqlite', check_same_thread=False)
                 cls._instance.__conn = sqlite3.connect('sql/database.sqlite', check_same_thread=False)
                 cls._instance.__cursor = cls._instance.__conn.cursor()
                 cls._instance.__conn.execute("PRAGMA read_committed = true;");
@@ -25,7 +25,7 @@ class SQLiteDatabase:
     def insert_record(self, type, record):
         try:
             if type == "infection":
-                self.__cursor.execute('INSERT INTO covid_datum_okres (datum, okres, nove_pripady, aktivni_pripady, nove_pripady_7, nove_pripady_14, nove_pripady_65_vek) VALUES (?, ?, ?, ?, ?, ?, ?)', \
+                self.__cursor.execute('INSERT INTO covid_infections (date, district, infections_new, infections_active, infections_new_7, infections_new_14, infections_new_65_age) VALUES (?, ?, ?, ?, ?, ?, ?)', \
                 [
                     record['date'],
                     record['district'],
@@ -37,7 +37,7 @@ class SQLiteDatabase:
                 ])
                 # self.commit()
             if type == "death":
-                self.__cursor.execute('INSERT INTO umrti_datum_okres (datum, okres, umrti_den, umrti_doposud) VALUES (?, ?, ?, ?)', \
+                self.__cursor.execute('INSERT INTO covid_deaths (date, district, deaths_day, deaths_alltime) VALUES (?, ?, ?, ?)', \
                 [
                     record['date'],
                     record['district'],
@@ -46,7 +46,7 @@ class SQLiteDatabase:
                 ])
                 # self.commit()
             if type == "vaccination":
-                self.__cursor.execute('INSERT INTO ockovani_datum_okres (datum, okres, davka_1_den, davka_1_doposud, davka_2_den, davka_2_doposud, davka_3_den, davka_3_doposud, davka_4_den, davka_4_doposud, davka_celkem_den, davka_celkem_doposud) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', \
+                self.__cursor.execute('INSERT INTO covid_vaccinations (date, district, dose_1_day, dose_1_alltime, dose_2_day, dose_2_alltime, dose_3_day, dose_3_alltime, dose_4_day, dose_4_alltime, doses_day, doses_alltime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', \
                 [
                     record['date'],
                     record['district'],
@@ -63,7 +63,7 @@ class SQLiteDatabase:
                 ])
                 # self.commit()
             if type == "pcr_test":
-                self.__cursor.execute('INSERT INTO testovani_datum_okres (datum, okres, prirustek, celkem, prirustek_korekce, celkem_korekce) VALUES (?, ?, ?, ?, ?, ?)', \
+                self.__cursor.execute('INSERT INTO covid_pcr_tests (date, district, tests_new, tests_alltime, tests_new_correction, tests_alltime_correction) VALUES (?, ?, ?, ?, ?, ?)', \
                 [
                     record['date'],
                     record['district'],
@@ -80,15 +80,15 @@ class SQLiteDatabase:
     def get_date_of_latest_record(self, type):
         try:
             if type is None:
-                table = "SELECT id, datum FROM covid_datum_okres ORDER BY datum DESC LIMIT 1"     
+                table = "SELECT id, date FROM covid_infections ORDER BY date DESC LIMIT 1"     
             elif type == "infection":
-                table = "SELECT id, datum FROM covid_datum_okres ORDER BY datum DESC LIMIT 1"
+                table = "SELECT id, date FROM covid_infections ORDER BY date DESC LIMIT 1"
             elif type == "vaccination":
-                table = "SELECT id, datum FROM ockovani_datum_okres ORDER BY datum DESC LIMIT 1"
+                table = "SELECT id, date FROM covid_vaccinations ORDER BY date DESC LIMIT 1"
             elif type == "death":
-                table = "SELECT id, datum FROM umrti_datum_okres ORDER BY datum DESC LIMIT 1"
+                table = "SELECT id, date FROM covid_deaths ORDER BY date DESC LIMIT 1"
             elif type == "pcr_test":
-                table = "SELECT id, datum FROM testovani_datum_okres ORDER BY datum DESC LIMIT 1"
+                table = "SELECT id, date FROM covid_pcr_tests ORDER BY date DESC LIMIT 1"
 
             self.__cursor.execute(table)
             response = self.__cursor.fetchone()
@@ -98,10 +98,14 @@ class SQLiteDatabase:
 
     def get_record(self, type, district, day):
         try:
+            if type == "infection":
+                table = "SELECT * FROM covid_infections WHERE district = ? AND date = ?"
+            if type == "pcr_test":
+                table = "SELECT * FROM covid_pcr_tests WHERE district = ? AND date = ?"
             if type == "vaccination":
-                table = "SELECT * FROM ockovani_datum_okres WHERE okres = ? AND datum = ?"
+                table = "SELECT * FROM covid_vaccinations WHERE district = ? AND date = ?"
             if type == "death":
-                table = "SELECT * FROM umrti_datum_okres WHERE okres = ? AND datum = ?"
+                table = "SELECT * FROM covid_deaths WHERE district = ? AND date = ?"
 
             self.__cursor.execute(table, [district, day])
             response = self.__cursor.fetchone()
@@ -112,13 +116,13 @@ class SQLiteDatabase:
     def get_records_day(self, type, day):
         try:
             if type == "vaccination":
-                table = "SELECT * FROM ockovani_datum_okres WHERE datum = ?"
+                table = "SELECT * FROM covid_vaccinations WHERE date = ?"
             if type == "death":
-                table = "SELECT * FROM umrti_datum_okres WHERE datum = ?"
+                table = "SELECT * FROM covid_deaths WHERE date = ?"
             if type == "infection":
-                table = "SELECT * FROM covid_datum_okres WHERE datum = ?"
+                table = "SELECT * FROM covid_infections WHERE date = ?"
             if type == "pcr_test":
-                table = "SELECT * FROM testovani_datum_okres WHERE datum = ?"
+                table = "SELECT * FROM covid_pcr_tests WHERE date = ?"
 
             self.__cursor.execute(table, [day])
             response = self.__cursor.fetchall()
@@ -128,7 +132,7 @@ class SQLiteDatabase:
 
     def get_orp(self, code):
         try:
-            self.__cursor.execute("SELECT cislo_okres FROM orp_okres_ciselnik WHERE cislo_orp = ?", [code])
+            self.__cursor.execute("SELECT cislo_okres FROM district_orp_table WHERE cislo_orp = ?", [code])
             response = self.__cursor.fetchone()
             if response is None:
                 return None
