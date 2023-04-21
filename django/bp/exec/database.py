@@ -132,7 +132,7 @@ class SQLiteDatabase:
 
     def get_orp(self, code):
         try:
-            self.__cursor.execute("SELECT cislo_okres FROM district_orp_table WHERE cislo_orp = ?", [code])
+            self.__cursor.execute("SELECT district_code FROM district_orp_table WHERE orp_code = ?", [code])
             response = self.__cursor.fetchone()
             if response is None:
                 return None
