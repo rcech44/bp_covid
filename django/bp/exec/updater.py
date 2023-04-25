@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 import sqlite3
 from exec.cache import *
 from exec.database import *
+from exec.database_models import *
 
 class Updater:
     _population = {"CZ0100": 1275406, "CZ0201": 99323, "CZ0202": 96624,"CZ0203": 164493,"CZ0204": 103894,"CZ0205": 75683,"CZ0206": 109354,"CZ0207": 127592,"CZ0208": 101120,"CZ0209": 188384,"CZ020A": 151093,"CZ020B": 114366,"CZ020C": 54898,"CZ0311": 195533,"CZ0312": 60096,"CZ0313": 89283,"CZ0314": 70769,"CZ0315": 50230,"CZ0316": 69773,"CZ0317": 101363,"CZ0321": 54391,"CZ0322": 84614,"CZ0323": 188407,"CZ0324": 68918,"CZ0325": 80666,"CZ0326": 48770,"CZ0327": 52941,"CZ0411": 87958,"CZ0412": 110052,"CZ0413": 85200,"CZ0421": 126294,"CZ0422": 121480,"CZ0423": 117582,"CZ0424": 85381,"CZ0425": 106773,"CZ0426": 124472,"CZ0427": 116916,"CZ0511": 101962,"CZ0512": 90171,"CZ0513": 173890,"CZ0514": 71547,"CZ0521": 162400,"CZ0522": 78713,"CZ0523": 107973,"CZ0524": 78424,"CZ0525": 115073,"CZ0531": 103746,"CZ0532": 172224,"CZ0533": 102866,"CZ0534": 135682,"CZ0631": 93692,"CZ0632": 112415,"CZ0633": 71571,"CZ0634": 109183,"CZ0635": 117164,"CZ0641": 107912,"CZ0642": 379466,"CZ0643": 225514,"CZ0644": 114801,"CZ0645": 151096,"CZ0646": 92317,"CZ0647": 113462,"CZ0711": 36752,"CZ0712": 233588,"CZ0713": 107580,"CZ0714": 126613,"CZ0715": 118397,"CZ0721": 103445,"CZ0722": 139829,"CZ0723": 140171,"CZ0724": 188987,"CZ0801": 89547,"CZ0802": 212347,"CZ0803": 240319,"CZ0804": 149919,"CZ0805": 173753,"CZ0806": 312104}
@@ -107,16 +108,19 @@ class Updater:
                                 district_name = district if district != "none" else None
 
                                 # All named districts
-                                day_result = {
-                                    "date": update_date,
-                                    "district": district_name,
-                                    "infections_new": infections_day_results[district]['infections_new'],
-                                    "infections_active": infections_day_results[district]['infections_active'],
-                                    "infections_new_7": infections_day_results[district]['infections_new_7'],
-                                    "infections_new_14": infections_day_results[district]['infections_new_14'],
-                                    "infections_new_65_age": infections_day_results[district]['infections_new_65_age'],
-                                }
-                                db.insert_record("infection", day_result)
+
+                                current_record = CovidInfectionDayDistrict.Builder()\
+                                        .set_id(0)\
+                                        .set_date(update_date)\
+                                        .set_district(district_name)\
+                                        .set_infections_new(infections_day_results[district]['infections_new'])\
+                                        .set_infections_active(infections_day_results[district]['infections_active'])\
+                                        .set_infections_new_7(infections_day_results[district]['infections_new_7'])\
+                                        .set_infections_new_14(infections_day_results[district]['infections_new_14'])\
+                                        .set_infections_new_65_age(infections_day_results[district]['infections_new_65_age'])\
+                                        .build()
+                                
+                                db.insert_record("infection", current_record)
 
                             # **********************
                             # UPDATE VACCINATIONS
@@ -186,21 +190,23 @@ class Updater:
 
                             # After all records have been saved into result, push it into database
                             for district in vaccinations_day_results:
-                                day_result = {
-                                    "date": update_date, 
-                                    "district": district, 
-                                    'vaccination_1_dose_day': vaccinations_day_results[district]['vaccination_1_dose_day'], 
-                                    'vaccination_1_dose_alltime': vaccinations_day_results[district]['vaccination_1_dose_alltime'], 
-                                    'vaccination_2_dose_day': vaccinations_day_results[district]['vaccination_2_dose_day'], 
-                                    'vaccination_2_dose_alltime': vaccinations_day_results[district]['vaccination_2_dose_alltime'], 
-                                    'vaccination_3_dose_day': vaccinations_day_results[district]['vaccination_3_dose_day'], 
-                                    'vaccination_3_dose_alltime': vaccinations_day_results[district]['vaccination_3_dose_alltime'], 
-                                    'vaccination_4_dose_day': vaccinations_day_results[district]['vaccination_4_dose_day'], 
-                                    'vaccination_4_dose_alltime': vaccinations_day_results[district]['vaccination_4_dose_alltime'], 
-                                    'vaccination_doses_day': vaccinations_day_results[district]['vaccination_doses_day'], 
-                                    'vaccination_doses_alltime': vaccinations_day_results[district]['vaccination_doses_alltime']
-                                }
-                                db.insert_record("vaccination", day_result)
+                                current_record = CovidVaccinationDayDistrict.Builder()\
+                                        .set_id(0)\
+                                        .set_date(update_date)\
+                                        .set_district(district)\
+                                        .set_dose_1_day(vaccinations_day_results[district]['vaccination_1_dose_day'])\
+                                        .set_dose_1_alltime(vaccinations_day_results[district]['vaccination_1_dose_alltime'])\
+                                        .set_dose_2_day(vaccinations_day_results[district]['vaccination_2_dose_day'])\
+                                        .set_dose_2_alltime(vaccinations_day_results[district]['vaccination_2_dose_alltime'])\
+                                        .set_dose_3_day(vaccinations_day_results[district]['vaccination_3_dose_day'])\
+                                        .set_dose_3_alltime(vaccinations_day_results[district]['vaccination_3_dose_alltime'])\
+                                        .set_dose_4_day(vaccinations_day_results[district]['vaccination_4_dose_day'])\
+                                        .set_dose_4_alltime(vaccinations_day_results[district]['vaccination_4_dose_alltime'])\
+                                        .set_doses_day(vaccinations_day_results[district]['vaccination_doses_day'])\
+                                        .set_doses_alltime(vaccinations_day_results[district]['vaccination_doses_alltime'])\
+                                        .build()
+
+                                db.insert_record("vaccination", current_record)
                             
 
                             # **********************
@@ -230,13 +236,16 @@ class Updater:
 
                             # Initialize districts dictionary
                             for district in deaths_day_results:
-                                day_result = {
-                                    "date": update_date,
-                                    "district": district,
-                                    "deaths_day": deaths_day_results[district]['deaths_day'],
-                                    "deaths_alltime": deaths_day_results[district]['deaths_alltime']
-                                }
-                                db.insert_record("death", day_result)
+
+                                current_record = CovidDeathDayDistrict.Builder()\
+                                        .set_id(0)\
+                                        .set_date(update_date)\
+                                        .set_district(district)\
+                                        .set_deaths_day(deaths_day_results[district]['deaths_day'])\
+                                        .set_deaths_alltime(deaths_day_results[district]['deaths_alltime'])\
+                                        .build()
+                                
+                                db.insert_record("death", current_record)
 
 
                             # **********************
@@ -266,15 +275,19 @@ class Updater:
 
                             # Save all districts
                             for district in pcr_testing_day_results:
-                                day_result = {
-                                    "date": update_date,
-                                    "district": district,
-                                    "pcr_tests_day": pcr_testing_day_results[district]['pcr_tests_day'],
-                                    "pcr_tests_alltime": pcr_testing_day_results[district]['pcr_tests_alltime'],
-                                    "pcr_tests_day_correction": pcr_testing_day_results[district]['pcr_tests_day_correction'],
-                                    "pcr_tests_alltime_correction": pcr_testing_day_results[district]['pcr_tests_alltime_correction']
-                                }
-                                db.insert_record("pcr_test", day_result)
+
+                                # current_record = CovidPcrTestDayDistrict(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p)
+                                current_record = CovidPcrTestDayDistrict.Builder()\
+                                        .set_id(0)\
+                                        .set_date(update_date)\
+                                        .set_district(district)\
+                                        .set_tests_new(pcr_testing_day_results[district]['pcr_tests_day'])\
+                                        .set_tests_alltime(pcr_testing_day_results[district]['pcr_tests_alltime'])\
+                                        .set_tests_new_correction(pcr_testing_day_results[district]['pcr_tests_day_correction'])\
+                                        .set_tests_alltime_correction(pcr_testing_day_results[district]['pcr_tests_alltime_correction'])\
+                                        .build()
+                                
+                                db.insert_record("pcr_test", current_record)
 
                             updated = True
                             db.commit()

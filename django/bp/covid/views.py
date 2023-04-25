@@ -21,7 +21,7 @@ def map_pip(request):
 def root(request):
     return redirect('main')
 
-def api_range_days(request, range_from, range_to):
+def api(request, range_from, range_to):
     x_forwarded_for_header = request.META.get('HTTP_X_FORWARDED_FOR')
 
     if x_forwarded_for_header:
@@ -29,10 +29,10 @@ def api_range_days(request, range_from, range_to):
     else:
         ip = request.META.get('REMOTE_ADDR')
 
-    # if ClientAPI.allow_request(ip) == False:
-    #     print(f"[REQUEST-API] Declined incoming request from {ip}")
-    #     # Return 429 - Too many requests
-    #     return HttpResponse({}, status=429)
+    if ClientAPI.allow_request(ip) == False:
+        # Return 429 - Too many requests
+        print(f"[REQUEST-API] Declined incoming request from {ip}")
+        return HttpResponse({}, status=429)
     
     print(f"[REQUEST-API] Accepted incoming request from {ip}")
     data = ClientAPI.get_data(range_from, range_to)

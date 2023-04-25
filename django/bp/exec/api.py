@@ -12,11 +12,11 @@ class ClientAPI:
     
     @staticmethod
     def allow_request(ip):
-        if ip not in ClientAPI.cached_ips:
+        if ip not in ClientAPI._cached_ips:
             ClientAPI._cached_ips[ip] = datetime.now()
             return True
         
-        if ip in ClientAPI.cached_ips:
+        if ip in ClientAPI._cached_ips:
             time_now = datetime.now()
             time_last_request = ClientAPI._cached_ips[ip]
             difference = (time_now - time_last_request).seconds
