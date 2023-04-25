@@ -1240,7 +1240,7 @@ function confirmAnalysis() {
         current_time_window_low = value_min;
         current_time_window_high = value_max;
 
-        var url = "https://p01--bp-covid-northflank--k4spvy25x5nv.code.run/covid/api/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
+        var url = "https://p02--bp-covid-northflank--k4spvy25x5nv.code.run/covid/api/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
         // var url = "http://127.0.0.1:8000/covid/api/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
 
         // To calculate the time difference of two dates
