@@ -610,7 +610,7 @@ function updatePage() {
                     }
                     else {
                         element_iframe.contentWindow.document.getElementById("text_okres_nakazeni_100").innerHTML = okres_value_second;
-                        element_iframe.contentWindow.document.getElementById("text_okres_nakazeni").innerHTML = Math.round(okres_value);
+                        element_iframe.contentWindow.document.getElementById("text_okres_nakazeni").innerHTML = Math.round(okres_value_second);
                     }
                 }
             }
@@ -914,7 +914,7 @@ function loadTimeFrameSlider() {
         // Create slider with format
         noUiSlider.create(element_nouislider, {
             start: [1, 100],
-            // limit: 200,
+            limit: 200,
             behaviour: 'drag',
 
             // A linear range from 0 to 15 (16 values)
@@ -922,7 +922,7 @@ function loadTimeFrameSlider() {
             connect: [false, true, false],
 
             // steps of 1
-            step: 10,
+            step: 1,
             format: format
         });
 
@@ -1274,24 +1274,8 @@ function confirmAnalysis() {
                         break;
                 }
 
-                if (result == "error")
-                {
-                    return;
-                }
 
-                // Decompression process
-                //      => decode base64 to binary data, then to character array, then to uint8 byte array and then decompress to get string
-                var binary_data = atob(result['encoded_data']);
-                var chararray_data = Array.from(binary_data, x => x.charCodeAt(0));
-                var uint8array_data = new Uint8Array(chararray_data);
-                var data = pako.inflate(uint8array_data);
-
-                // Convert string to JSON
-                covid_data = JSON.parse(new TextDecoder().decode(data));
-
-                // covid_data = result;
-
-                // Update page
+                covid_data = result;
                 updatePage();
                 element_iframe.contentWindow.document.getElementsByClassName("leaflet-popup-pane")[0].hidden = false;
                 newToast("Data byla aktualizována");

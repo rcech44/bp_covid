@@ -29,10 +29,10 @@ def api(request, range_from, range_to):
     else:
         ip = request.META.get('REMOTE_ADDR')
 
-    if ClientAPI.allow_request(ip) == False:
-        # Return 429 - Too many requests
-        print(f"[REQUEST-API] Declined incoming request from {ip}")
-        return HttpResponse({}, status=429)
+    # if ClientAPI.allow_request(ip) == False:
+    #     # Return 429 - Too many requests
+    #     print(f"[REQUEST-API] Declined incoming request from {ip}")
+    #     return HttpResponse({}, status=429)
     
     print(f"[REQUEST-API] Accepted incoming request from {ip}")
     data = ClientAPI.get_data(range_from, range_to)
