@@ -517,28 +517,28 @@ function updatePage() {
         element_window_warning.style.display = "none";
         switch (current_analysis) {
             case "nakazeni-analyze":
-                element_map_info_1.innerHTML = "<b>Nové případy za tento den:</b> " + numberWithCommas(covid_data[selected_date_text]['infections_new_count']);
-                element_map_info_2.innerHTML = "<b>Celkový počet zaznamenaných případů v tento den:</b> " + numberWithCommas(covid_data[selected_date_text]['infections_count']);
+                element_map_info_1.innerHTML = "<b>Nové případy tento den:</b> " + numberWithCommas(covid_data[selected_date_text]['infections_new_count']);
+                element_map_info_2.innerHTML = "<b>Celkový počet zaznamenaných případů doposud:</b> " + numberWithCommas(covid_data[selected_date_text]['infections_count']);
                 element_map_info_3.innerHTML = "";
                 element_map_info_3.style.display = "none";
                 break;
             case "ockovani-analyze":
-                element_map_info_1.innerHTML = "<b>Nová očkování za tento den:</b> " + numberWithCommas(covid_data[selected_date_text]['vaccination_doses_day']);
+                element_map_info_1.innerHTML = "<b>Počet vydaných dávek tento den:</b> " + numberWithCommas(covid_data[selected_date_text]['vaccination_doses_day']);
                 element_map_info_3.innerHTML = "<b>Celkový počet obyvatel naočkovaných alespoň první a druhou dávkou:</b> " + numberWithCommas(covid_data[selected_date_text]['vaccination_2_dose_alltime']);
-                element_map_info_2.innerHTML = "<b>Celkový počet zaznamenaných očkování doposud:</b> " + numberWithCommas(covid_data[selected_date_text]['vaccination_doses_alltime']);
+                element_map_info_2.innerHTML = "<b>Celkový počet vydaných dávek doposud:</b> " + numberWithCommas(covid_data[selected_date_text]['vaccination_doses_alltime']);
                 element_map_info_3.style.display = "block";
                 if (selected_date < vaccination_start) element_window_warning.style.display = "block";
                 break;
             case "umrti-analyze":
                 element_map_info_1.innerHTML = "<b>Počet zemřelých tento den:</b> " + numberWithCommas(covid_data[selected_date_text]['deaths_day_count']);
-                element_map_info_2.innerHTML = "<b>Celkový počet zemřelých k tomuto dni:</b> " + numberWithCommas(covid_data[selected_date_text]['deaths_alltime_count']);
+                element_map_info_2.innerHTML = "<b>Celkový počet zemřelých doposud:</b> " + numberWithCommas(covid_data[selected_date_text]['deaths_alltime_count']);
                 element_map_info_3.innerHTML = "";
                 element_map_info_3.style.display = "none";
                 if (selected_date < deaths_start) element_window_warning.style.display = "block";
                 break;
             case "testovani-analyze":
                 element_map_info_1.innerHTML = "<b>Počet otestovaných tento den:</b> " + numberWithCommas(covid_data[selected_date_text]['pcr_tests_new_day_count']);
-                element_map_info_2.innerHTML = "<b>Celkový počet otestovaných k tomuto dni:</b> " + numberWithCommas(covid_data[selected_date_text]['pcr_tests_alltime_count']);
+                element_map_info_2.innerHTML = "<b>Celkový počet provedených testů doposud:</b> " + numberWithCommas(covid_data[selected_date_text]['pcr_tests_alltime_count']);
                 element_map_info_3.innerHTML = "";
                 element_map_info_3.style.display = "none";
                 if (selected_date < testing_start) element_window_warning.style.display = "block";
