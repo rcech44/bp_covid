@@ -132,7 +132,7 @@ class Cache:
                     vaccination_doses_count = self.__data['vaccination_doses_count']
                     pcr_tests_alltime_count = self.__data['pcr_tests_alltime_count']
                     deaths_alltime_count = self.__data['deaths_alltime_count']
-                    vaccination_doses_alltime = self.__data['vaccination_doses_alltime_total']
+                    vaccination_doses_alltime = self.__data['vaccination_doses_alltime']
                     pcr_tests_alltime_count = self.__data['pcr_tests_alltime_count']
                 
                 else:
