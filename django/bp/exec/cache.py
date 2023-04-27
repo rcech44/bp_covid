@@ -132,11 +132,11 @@ class Cache:
                     vaccination_doses_count = self.__data['vaccination_doses_count']
                     pcr_tests_alltime_count = self.__data['pcr_tests_alltime_count']
                     deaths_alltime_count = self.__data['deaths_alltime_count']
-                    vaccination_doses_alltime = self.__data['vaccination_doses_count']
+                    vaccination_doses_count = self.__data['vaccination_doses_count']
                     pcr_tests_alltime_count = self.__data['pcr_tests_alltime_count']
                 
                 else:
-                    vaccination_2_dose_alltime = vaccination_doses_count = pcr_tests_alltime_count = deaths_alltime_count = vaccination_doses_alltime = pcr_tests_alltime_count = 0
+                    vaccination_2_dose_alltime = vaccination_doses_count = pcr_tests_alltime_count = deaths_alltime_count = vaccination_doses_count = pcr_tests_alltime_count = 0
                     infections_count = 20
 
 
@@ -271,7 +271,7 @@ class Cache:
                             self.__data['vaccination_doses_alltime_100k_total'] =           max(self.__data['vaccination_doses_alltime_100k_total'], self.__data[date][record.district]['vaccination_doses_alltime_100k'])
 
                     self.__data[date]['vaccination_doses_day'] = vaccination_doses_day
-                    self.__data[date]['vaccination_doses_alltime'] = vaccination_doses_alltime
+                    self.__data[date]['vaccination_doses_alltime'] = vaccination_doses_count
                     self.__data[date]['vaccination_2_dose_alltime'] = vaccination_2_dose_alltime
                 
                 self.__data['vaccination_doses_count'] = vaccination_doses_count
