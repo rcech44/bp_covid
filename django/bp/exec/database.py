@@ -123,6 +123,8 @@ class SQLiteDatabase:
                 table = "SELECT * FROM covid_infections WHERE date = ?"
             if type == "pcr_test":
                 table = "SELECT * FROM covid_pcr_tests WHERE date = ?"
+            else:
+                return None
 
             self.__cursor.execute(table, [day])
             response = self.__cursor.fetchall()

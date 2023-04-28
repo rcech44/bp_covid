@@ -165,11 +165,14 @@ class Updater:
 
                                 # Convert ORP code to district
                                 code = db.get_orp(orp_code)
-                                if orp_code == 1000:
-                                    district_code = "CZ0100"
-                                elif code is None:
-                                    continue
-                                else: district_code = code
+                                if code is None:
+                                    # Special Prague situation
+                                    if vaccination['kraj_nuts_kod'] == "CZ010" and vaccination['orp_bydliste_kod'] == 0:
+                                        district_code = "CZ0100"
+                                    else:
+                                        continue
+                                else:
+                                    district_code = code
 
                                 # Now look at order of dose and add it into result (also add into total)
                                 if vaccination_order == 1:
@@ -210,7 +213,7 @@ class Updater:
                             
 
                             # **********************
-                            # UPDATE VACCINATIONS
+                            # UPDATE DEATHS
                             # **********************
 
                             # Save day results here
@@ -249,7 +252,7 @@ class Updater:
 
 
                             # **********************
-                            # UPDATE VACCINATIONS
+                            # UPDATE TESTS
                             # **********************
 
                             # Save day results here
