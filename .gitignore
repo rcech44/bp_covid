@@ -1,4 +1,5 @@
 django/bp/node_modules
+old_files
 web/distictsCzechiaLow.json
 web/twCounty2010.geo.json
 django/bp/bp/__pycache__
