@@ -117,11 +117,11 @@ class SQLiteDatabase:
         try:
             if type == "vaccination":
                 table = "SELECT * FROM covid_vaccinations WHERE date = ?"
-            if type == "death":
+            elif type == "death":
                 table = "SELECT * FROM covid_deaths WHERE date = ?"
-            if type == "infection":
+            elif type == "infection":
                 table = "SELECT * FROM covid_infections WHERE date = ?"
-            if type == "pcr_test":
+            elif type == "pcr_test":
                 table = "SELECT * FROM covid_pcr_tests WHERE date = ?"
             else:
                 return None
