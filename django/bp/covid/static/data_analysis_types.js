@@ -12,7 +12,7 @@ data_analysis_types = {
         max_range_100: 'infections_active_100k_max_total',
         text_100: "Současný počet nakažených na 100 tisíc obyvatel"
     },
-    "Nové případy":
+    "Nové případy - den":
     {
         value: "infections_new",
         max_value: "infections_new_max",
@@ -23,7 +23,7 @@ data_analysis_types = {
         max_range_100: 'infections_new_100k_max_total',
         text_100: "Počet nově nakažených na 100 tisíc obyvatel"
     },
-    "Nové případy za poslední týden":
+    "Nové případy - za poslední týden":
     {
         value: "infections_new_7",
         max_value: "infections_new_7_max",
@@ -34,7 +34,7 @@ data_analysis_types = {
         max_range_100: 'infections_new_7_100k_max_total',
         text_100: "Počet nově nakažených za posledních 7 dní na 100 tisíc obyvatel"
     },
-    "Nové případy za poslední dva týdny":
+    "Nové případy - za poslední dva týdny":
     {
         value: "infections_new_14",
         max_value: "infections_new_14_max",
@@ -45,7 +45,7 @@ data_analysis_types = {
         max_range_100: 'infections_new_14_100k_max_total',
         text_100: "Počet nově nakažených za posledních 14 dní na 100 tisíc obyvatel"
     },
-    "Nové případy lidí starších 65 let":
+    "Nové případy nad 65 let - den":
     {
         value: "infections_new_65_age",
         max_value: "infections_new_65_age_max",
@@ -58,7 +58,7 @@ data_analysis_types = {
     },
 
 
-    "Všechny dávky tento den":
+    "Všechny dávky - den":
     {
         value: "vaccination_doses_day",
         max_value: "vaccination_doses_day_max",
@@ -69,7 +69,7 @@ data_analysis_types = {
         max_range: 'vaccination_doses_day_total',
         max_range_100: 'vaccination_doses_day_100k_total'
     },
-    "Všechny dávky doposud":
+    "Všechny dávky - doposud":
     {
         value: "vaccination_doses_alltime",
         max_value: "vaccination_doses_alltime_max",
@@ -80,7 +80,7 @@ data_analysis_types = {
         max_range: 'vaccination_doses_alltime_total',
         max_range_100: 'vaccination_doses_alltime_100k_total'
     },
-    "První dávka tento den":
+    "První dávka - den":
     {
         value: "vaccination_1_dose_day",
         max_value: "vaccination_1_dose_day_max",
@@ -91,7 +91,7 @@ data_analysis_types = {
         max_range: 'vaccination_1_dose_day_total',
         max_range_100: 'vaccination_1_dose_day_100k_total'
     },
-    "První dávka doposud":
+    "První dávka - doposud":
     {
         value: "vaccination_1_dose_alltime",
         max_value: "vaccination_1_dose_alltime_max",
@@ -102,7 +102,7 @@ data_analysis_types = {
         max_range: 'vaccination_1_dose_alltime_total',
         max_range_100: 'vaccination_1_dose_alltime_100k_total'
     },
-    "Druhá dávka tento den":
+    "Druhá dávka - den":
     {
         value: "vaccination_2_dose_day",
         max_value: "vaccination_2_dose_day_max",
@@ -113,7 +113,7 @@ data_analysis_types = {
         max_range: 'vaccination_2_dose_day_total',
         max_range_100: 'vaccination_2_dose_day_100k_total'
     },
-    "Druhá dávka doposud":
+    "Druhá dávka - doposud":
     {
         value: "vaccination_2_dose_alltime",
         max_value: "vaccination_2_dose_alltime_max",
@@ -124,7 +124,7 @@ data_analysis_types = {
         max_range: 'vaccination_2_dose_alltime_total',
         max_range_100: 'vaccination_2_dose_alltime_100k_total'
     },
-    "Třetí dávka tento den":
+    "Třetí dávka - den":
     {
         value: "vaccination_3_dose_day",
         max_value: "vaccination_3_dose_day_max",
@@ -135,7 +135,7 @@ data_analysis_types = {
         max_range: 'vaccination_3_dose_day_total',
         max_range_100: 'vaccination_3_dose_day_100k_total'
     },
-    "Třetí dávka doposud":
+    "Třetí dávka - doposud":
     {
         value: "vaccination_3_dose_alltime",
         max_value: "vaccination_3_dose_alltime_max",
@@ -146,7 +146,7 @@ data_analysis_types = {
         max_range: 'vaccination_3_dose_alltime_total',
         max_range_100: 'vaccination_3_dose_alltime_100k_total'
     },
-    "Čtvrtá dávka tento den":
+    "Čtvrtá dávka - den":
     {
         value: "vaccination_4_dose_day",
         max_value: "vaccination_4_dose_day_max",
@@ -157,7 +157,7 @@ data_analysis_types = {
         max_range: 'vaccination_4_dose_day_total',
         max_range_100: 'vaccination_4_dose_day_100k_total'
     },
-    "Čtvrtá dávka doposud":
+    "Čtvrtá dávka - doposud":
     {
         value: "vaccination_4_dose_alltime",
         max_value: "vaccination_4_dose_alltime_max",
@@ -170,18 +170,18 @@ data_analysis_types = {
     },
 
 
-    "Aktuální celkový počet zemřelých doposud":
+    "Počet zemřelých - doposud":
     {
         value: "deaths_alltime",
         max_value: "deaths_alltime_max",
         text: "Celkový počet zemřelých k danému dni",
         value_100: "deaths_alltime_100k",
         max_value_100: "deaths_alltime_100k_max",
-        text_100: "Celkový počet zemřelých k danému dni na 100 tisíc obyvatel",
+        text_100: "Počet zemřelých doposud na 100 tisíc obyvatel",
         max_range: 'deaths_alltime_total',
         max_range_100: 'deaths_alltime_100k_total'
     },
-    "Počet nově zemřelých daný den":
+    "Počet zemřelých - den":
     {
         value: "deaths_day",
         max_value: "deaths_day_max",
@@ -194,7 +194,7 @@ data_analysis_types = {
     },
 
 
-    "Aktuální celkový počet otestovaných doposud":
+    "Počet otestovaných - dopsud":
     {
         value: "pcr_tests_alltime",
         max_value: "pcr_tests_alltime_max",
@@ -205,7 +205,7 @@ data_analysis_types = {
         max_range: 'pcr_tests_alltime_total',
         max_range_100: 'pcr_tests_alltime_100k_total'
     },
-    "Počet nově otestovaných daný den":
+    "Počet otestovaných - den":
     {
         value: "pcr_tests_day",
         max_value: "pcr_tests_day_max",

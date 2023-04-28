@@ -10,7 +10,7 @@ loaded_cache = False
 
 def main(request):
     Updater.update_data()
-    return render(request, 'main.html', {'data_covid': {}})
+    return render(request, 'index.html', {'data_covid': {}})
 
 def map(request):
     return render(request, 'map.html', {})

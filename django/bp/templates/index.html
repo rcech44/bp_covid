@@ -68,7 +68,7 @@
     <div id="splashscreen"
         style="position:absolute;top:0;left:0;bottom:0;width:100%;z-index: 99;height:100%;background-color:rgba(0, 0, 0, 0.686);backdrop-filter: blur(20px);">
         <div class="w3-card w3-round-large" id="splashscreen_content"
-            style="position: fixed;top: 50%;left: 50%;-webkit-transform: translate(-50%, -50%);transform: translate(-50%, -50%);opacity: 1;background-color: white;max-width: 1200dpx;">
+            style="position: fixed;top: 50%;left: 50%;-webkit-transform: translate(-50%, -50%);transform: translate(-50%, -50%);opacity: 1;background-color: white;max-width: 1000px;">
             <div style="margin:20px;">
                 <img src="{% static 'pictures/vsb_long_katedra.png' %}"
                     style="display: block;margin-left: auto;margin-right: auto;width: 60%">
@@ -356,7 +356,7 @@
                             <div id="mb_usage" class="w3-center" style="margin-top:12px;font-style:italic">
                                 Při potvrzení dojde ke stažení cca xxx MB dat
                             </div>
-                            <div class="w3-center" style="margin-top:12px; color:red">
+                            <div class="w3-center" style="margin-top:12px; color:red;display: none">
                                 <b>Testování:</b> Momentálně lze stáhnout pouze 200 dní kvůli testování dočasného limitovaného serveru 
                             </div>
                             <div class="w3-center">
@@ -538,10 +538,10 @@
                                         <td style="width:80%;padding-top:5px">
                                             <select oninput="selectDataFromDatasetPIP(this.value)" class="form-control"
                                                 id="sel4" style="margin-top:0px">
-                                                <option>Nové případy</option>
-                                                <option>Nové případy za poslední týden</option>
-                                                <option>Nové případy za poslední dva týdny</option>
-                                                <option>Nové případy lidí starších 65 let</option>
+                                                <option>Nové případy - den</option>
+                                                <option>Nové případy - za poslední týden</option>
+                                                <option>Nové případy - za poslední dva týdny</option>
+                                                <option>Nové případy nad 65 let - den</option>
                                             </select>
                                         </td>
                                     </tr>
