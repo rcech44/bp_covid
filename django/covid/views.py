@@ -25,6 +25,7 @@ def api(request, range_from, range_to):
     x_forwarded_for_header = request.META.get('HTTP_X_FORWARDED_FOR')
 
     if x_forwarded_for_header:
+        # Get first address
         ip = x_forwarded_for_header.split(',')[0]
     else:
         ip = request.META.get('REMOTE_ADDR')

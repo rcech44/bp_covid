@@ -1236,8 +1236,8 @@ function confirmAnalysis() {
         current_time_window_high = value_max;
 
         // GCP -        var url = "https://bp-covid-htvvjjewbq-lz.a.run.app/covid/api/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
-        // var url = "https://p02--thesis-covid--k4spvy25x5nv.code.run/covid/api/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
-        var url = "http://127.0.0.1:8000/covid/api/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
+        var url = "https://p02--thesis-covid--k4spvy25x5nv.code.run/covid/api/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
+        // var url = "http://127.0.0.1:8000/covid/api/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
 
         // To calculate the time difference of two dates
         var difference_in_time = date2.getTime() - date1.getTime();
