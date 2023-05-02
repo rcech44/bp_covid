@@ -31,3 +31,5 @@
 Ukázky:
 ![Screenshot](https://i.imgur.com/fJX4TPa.jpg)
 ![Screenshot](https://i.imgur.com/xJLzfW7.jpg)
+
+GeoJSON mapa byla vytvořena ve spolupráci s Carlosem Moreira, který mi umožnil použít jeho GeoJSON model České republiky rozdělené na okresy. Mapa podléhá GNU GPL licenci.
