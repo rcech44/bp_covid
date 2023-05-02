@@ -27,9 +27,8 @@
 - ve virtuálním počítači občas zlobí mapa (špatně se přibližuje a oddaluje)
 - na prohlížeči Firefox je omezeno pár funkcí (prozatím se jedná pouze o škálování GUI) 
 
+GeoJSON mapa byla vytvořena ve spolupráci s Carlosem Moreira, který mi umožnil použít jeho GeoJSON model České republiky rozdělené na okresy. Mapa podléhá GNU GPL licenci.
 
 Ukázky:
 ![Screenshot](https://i.imgur.com/fJX4TPa.jpg)
 ![Screenshot](https://i.imgur.com/xJLzfW7.jpg)
-
-GeoJSON mapa byla vytvořena ve spolupráci s Carlosem Moreira, který mi umožnil použít jeho GeoJSON model České republiky rozdělené na okresy. Mapa podléhá GNU GPL licenci.
