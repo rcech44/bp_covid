@@ -12,14 +12,14 @@
     - přejít do adresáře Django projektu (adresář 'django', kde se nachází soubor manage.py)
     - spusit aplikaci pomocí ``python3 manage.py runserver``
     - bude spuštěn lokální testovací server, na který lze přistoupit na adrese http://127.0.0.1:8000/covid/
-2. Použít přibalený Dockerfile
+2. Použít přibalený Dockerfile (Linux)
     - nainstalovat prostředí příkazem ``docker build -t cec0144_thesis .``
     - spustit příkazem ``docker run -p 8000:8000 cec0144_thesis:latest``
     - jakmile se aplikace spustí (trvá přibližně minutu), bude aplikace dostupná na adrese http://127.0.0.1:8000/covid/
 3. Využít bezplatný hosting - **UPOZORNĚNÍ**
     - **tento hosting má omezené hardwarové zdroje**, takže doporučuji stahovat maximum 300-400 dní, při pokusu o stažení více dat je vysoce pravděpodobné, že aplikaci dojde paměť a restartuje se
     - aplikace je hostována na hostingu Northflank, je dostupná na adrese https://p02--thesis-covid--k4spvy25x5nv.code.run/covid/
-    - tím, že jsou zde omezené hardwarové zdroje, tak také trvá delší dobu stažení dat
+    - tím, že jsou na hostingu omezené hardwarové zdroje, tak trvá delší dobu stažení dat
 
 **Připomínky k aplikaci:**
 - spuštění aplikace po delší době nepoužívání chvíli trvá - při startu se aktualizují koronavirová data (např. po měsíci nepoužívání může spuštění trvat i pár minut než se stáhnou všechna data)

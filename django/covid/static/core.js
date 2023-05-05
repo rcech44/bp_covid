@@ -1538,16 +1538,16 @@ function initChart() {
             title: {
                 text: current_dataset_data,
                 font: {
-                    size: 20
+                    size: 20 * (current_ui_scale / 100)
                 },
                 y: 0.85
             },
-            height: 300,
+            height: 300 * (current_ui_scale / 100),
             margin: {
-                l: 30,
-                r: 30,
-                b: 30,
-                t: 90,
+                l: 30 * (current_ui_scale / 100),
+                r: 30 * (current_ui_scale / 100),
+                b: 30 * (current_ui_scale / 100),
+                t: 90 * (current_ui_scale / 100),
                 pad: 4
             },
         };
@@ -1565,26 +1565,36 @@ function initChart() {
             title: {
                 text: current_dataset_data,
                 font: {
-                    size: 20,
+                    size: 20 * (current_ui_scale / 100),
                     color: "rgba(255, 255, 255, 1)"
                 },
                 y: 0.85
             },
-            height: 300,
+            height: 300 * (current_ui_scale / 100),
             margin: {
-                l: 30,
-                r: 30,
-                b: 30,
-                t: 90,
+                l: 30 * (current_ui_scale / 100),
+                r: 30 * (current_ui_scale / 100),
+                b: 30 * (current_ui_scale / 100),
+                t: 90 * (current_ui_scale / 100),
                 pad: 4
             },
         };
 
+        // Scale to UI scaling
+        document.getElementById("right_bottom_container").style.width = 570 * (current_ui_scale / 100) + "px";
+        document.getElementById("district_chart").style.maxWidth = 550 * (current_ui_scale / 100) + "px";
+
+        // Graph text
+        document.getElementById("left_bottom_panel_district_text").style.fontSize = 12 * (current_ui_scale / 100) + "px";
+        document.getElementById("left_bottom_panel_time_window_text").style.fontSize = 12 * (current_ui_scale / 100) + "px";
+
+        var display_mode_bar = current_ui_scale >= 80 ? true : false;
+
         // Display using Plotly
         if (current_dark_mode)
-            Plotly.newPlot("district_chart", data, layout_dark, { displayModeBar: true });
+            Plotly.newPlot("district_chart", data, layout_dark, { displayModeBar: display_mode_bar });
         else
-            Plotly.newPlot("district_chart", data, layout_light, { displayModeBar: true });
+            Plotly.newPlot("district_chart", data, layout_light, { displayModeBar: display_mode_bar });
     }
     catch (err_inner) {
         try {
@@ -2187,6 +2197,7 @@ function decreaseUIScale() {
     var graph = document.getElementById("right_bottom_container");
     text.innerHTML = current_ui_scale + "%";
     graph.style.zoom = 100 / current_ui_scale;
+    initChart();
     localStorage.setItem("uiscale", current_ui_scale);
 }
 
@@ -2205,6 +2216,7 @@ function increaseUIScale() {
     var graph = document.getElementById("right_bottom_container");
     text.innerHTML = current_ui_scale + "%";
     graph.style.zoom = 100 / current_ui_scale;
+    initChart();
     localStorage.setItem("uiscale", current_ui_scale);
 }
 
