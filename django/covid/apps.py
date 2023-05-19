@@ -26,7 +26,7 @@ class CovidConfig(AppConfig):
             # Startup code - update data
             print('[BOOT] Updating covid data... (may take a while after long app inactivity)')
             start_time = time.perf_counter()
-            # Updater.update_data()
+            Updater.update_data()
             end_time = time.perf_counter()
             print(f"[BOOT] Updating covid data complete - finished in {end_time - start_time} seconds")
 
