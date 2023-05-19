@@ -129,7 +129,6 @@ class CovidVaccinationDayDistrict(DayDistrict):
             self.record.doses_alltime = item
             return self
 
-    
 class CovidPcrTestDayDistrict(DayDistrict):
     def __init__(self):
         super().__init__()

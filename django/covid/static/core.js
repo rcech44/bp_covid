@@ -485,6 +485,9 @@ function updateMap() {
         var selected_100 = false;
         var selected_date = new Date();
 
+        // To avoid season time changes (GMT+02 x GMT+01)
+        selected_date.setHours(1);
+
         // Get main slider starting date
         switch (current_time_window_fragment) {
             case "Den":
@@ -904,7 +907,7 @@ function loadTimeFrameSlider() {
 
         // Disallow user to get yesterday values if they have not been yet released
 
-        if (today.getHours() >= 10) {
+        if (today.getHours() >= 11) {
             slider_maximum_day = slider_values.length - 8;
         }
         else {
@@ -1235,7 +1238,7 @@ function confirmAnalysis() {
         current_time_window_low = value_min;
         current_time_window_high = value_max;
 
-        // GCP -        var url = "https://bp-covid-htvvjjewbq-lz.a.run.app/covid/api/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
+        // var url = "https://bp-covid-htvvjjewbq-lz.a.run.app/covid/api/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
         var url = "https://p02--thesis-covid--k4spvy25x5nv.code.run/covid/api/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
         // var url = "http://127.0.0.1:8000/covid/api/from=" + getFormattedDate(value_min) + "&to=" + getFormattedDate(value_max);
 
@@ -1259,6 +1262,7 @@ function confirmAnalysis() {
                 // Set slider max to correct value
                 switch (current_time_window_fragment) {
                     case "Den":
+                        console.log(slider_current_values[1] - slider_current_values[0]);
                         element_slider.setAttribute("max", slider_current_values[1] - slider_current_values[0]);
                         break;
                     case "Týden":
@@ -1332,6 +1336,7 @@ function changeDayInDataset(value) {
         // document.getElementById("unsaved_changes").style.display = "";
         return;
     }
+    console.log(parseInt(element_slider.value));
     var curr = parseInt(element_slider.value);
     element_slider.MaterialSlider.change(curr + value);
     // slider.value = curr + value;
@@ -1680,10 +1685,10 @@ function createError() {
 
 // Show new error toast
 function newErrorToast(text) {
-    var element_toast = document.querySelector('#error_toast');
-    element_toast.MaterialSnackbar.queuedNotifications_ = [];
-    var data = { message: "Internal error: " + text, timeout: 5000 };
-    element_toast.MaterialSnackbar.showSnackbar(data);
+    // var element_toast = document.querySelector('#error_toast');
+    // element_toast.MaterialSnackbar.queuedNotifications_ = [];
+    // var data = { message: "Internal error: " + text, timeout: 5000 };
+    // element_toast.MaterialSnackbar.showSnackbar(data);
 }
 
 // Show new toast
