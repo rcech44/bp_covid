@@ -19,14 +19,14 @@ class CovidConfig(AppConfig):
             print('[BOOT] Loading cache...')
             start_time = time.perf_counter()
             cache = Cache()
-            cache.update_data(None)
+            # cache.update_data(None)
             end_time = time.perf_counter()
             print(f"[BOOT] Loading cache complete - finished in {end_time - start_time} seconds")
 
             # Startup code - update data
             print('[BOOT] Updating covid data... (may take a while after long app inactivity)')
             start_time = time.perf_counter()
-            Updater.update_data()
+            # Updater.update_data()
             end_time = time.perf_counter()
             print(f"[BOOT] Updating covid data complete - finished in {end_time - start_time} seconds")
 
