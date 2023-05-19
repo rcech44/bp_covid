@@ -28,7 +28,8 @@ DEBUG = True
 ALLOWED_HOSTS = ['127.0.0.1', 
                  'p01--bp-covid-northflank--k4spvy25x5nv.code.run', 
                  'p02--thesis-covid--k4spvy25x5nv.code.run', 
-                 'bp-covid-htvvjjewbq-lz.a.run.app']
+                 'bp-covid-htvvjjewbq-lz.a.run.app',
+                 'urchin-app-3nzdy.ondigitalocean.app']
 
 # Application definition
 
