@@ -16,10 +16,8 @@
     - nainstalovat prostředí příkazem ``docker build -t cec0144_thesis .``
     - spustit příkazem ``docker run -p 8000:8000 cec0144_thesis:latest``
     - jakmile se aplikace spustí (trvá přibližně minutu), bude aplikace dostupná na adrese http://127.0.0.1:8000/covid/
-3. Využít bezplatný hosting - **UPOZORNĚNÍ**
-    - **tento hosting má omezené hardwarové zdroje**, takže doporučuji stahovat maximum 300-400 dní, při pokusu o stažení více dat je vysoce pravděpodobné, že aplikaci dojde paměť a restartuje se
-    - aplikace je hostována na hostingu Northflank, je dostupná na adrese https://p02--thesis-covid--k4spvy25x5nv.code.run/covid/
-    - tím, že jsou na hostingu omezené hardwarové zdroje, tak trvá delší dobu stažení dat
+3. Využít hosting
+    - hosting je dostupný na adrese https://bpcovid.online
 
 **Připomínky k aplikaci:**
 - spuštění aplikace po delší době nepoužívání chvíli trvá - při startu se aktualizují koronavirová data (např. po měsíci nepoužívání může spuštění trvat i pár minut než se stáhnou všechna data)
