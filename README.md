@@ -1,7 +1,5 @@
 # Bakalářská práce
 
-**Autor**: Radomír Čech (CEC0144)
-
 **Datum poslední úpravy**: 29.4.2023
 
 **O co se jedná?** Jedná se o webovou aplikaci, která využívá framework Django jako backend. Tento backend si uchovává koronavirová data a stará se o jejich aktuálnost. Data předává frontendu (klientovi), který data vizualizuje.
